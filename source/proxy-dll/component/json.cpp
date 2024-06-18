@@ -10,11 +10,20 @@
 #include <utilities/string.hpp>
 
 #include <sstream>
+#include <unordered_set>
 
 namespace json
 {
 	namespace
 	{
+		const std::unordered_set<std::string> valid_types = {
+			"string", "bool", "int32_t", "uint32_t", "int64_t", "uint64_t"
+		};
+
+		bool is_valid_type(const std::string& type) {
+			return valid_types.find(type) != valid_types.end();
+		}
+
 		template <typename T>
 		T convert(const std::string& str)
 		{
@@ -30,16 +39,22 @@ namespace json
 			return result;
 		}
 
-		// std::unordered_map<std::string, std::function<double(const std::string&)>> conversionMap{
-		//     {"bool", [](const std::string& str){ return convert<bool>(str); }},
-		//     {"int32_t", [](const std::string& str){ return convert<int32_t>(str); }},
-		//     {"uint32_t", [](const std::string& str){ return convert<uint32_t>(str); }},
-		//     {"int64_t", [](const std::string& str){ return convert<int64_t>(str); }},
-		//     {"uint64_t", [](const std::string& str){ return convert<uint64_t>(str); }}};
-
-		// 		using VariantType = std::variant<bool, int32_t, uint32_t, int64_t, uint64_t>;
-
-		// #define VISIT_CONVERT(str, type) std::visit([](const auto& val) -> type { return val; }, convert<type>(str))
+		template <>
+		bool convert<bool>(const std::string& str)
+		{
+			std::istringstream iss(str);
+			bool result;
+			if (!(iss >> std::boolalpha >> result))
+			{
+				if (str == "0" || str == "1")
+				{
+					return str == "1";
+				}
+				//logger::write(logger::LOG_TYPE_INFO, "Conversion failed for input: " + str);
+				return false;
+			}
+			return result;
+		}
 	}
 
 	void writejson(const command::params& params)
@@ -54,7 +69,13 @@ namespace json
 		std::string value = params[3];
 		std::string type = utilities::string::to_lower(params[4]);
 		std::string filename = (params.size() >= 6) ? params[5] : utilities::json_config::DEFAULTJSON;
-		
+
+		if (!is_valid_type(type))
+		{
+			//logger::write(logger::LOG_TYPE_INFO, "writejson failed: invalid type");
+			return;
+		}
+
 		if (type == "string")
 		{
 			utilities::json_config::WriteString(section.c_str(), key.c_str(), value, filename);
@@ -79,10 +100,6 @@ namespace json
 		{
 			utilities::json_config::WriteUnsignedInteger64(section.c_str(), key.c_str(), convert<uint64_t>(value), filename);
 		}
-		else
-		{
-			logger::write(logger::LOG_TYPE_INFO, "writejson failed: invalid type");
-		}
 	}
 
 	void readjson2dvar(const command::params& params)
@@ -101,6 +118,12 @@ namespace json
 		std::string defaultValue = (params.size() >= 6) ? params[5] : val;
 		bool readonly = (params.size() >= 7) ? convert<bool>(params[6]) : true;
 		std::string filename = (params.size() >= 8) ? params[7] : utilities::json_config::DEFAULTJSON;
+
+		if (!is_valid_type(type))
+		{
+			//logger::write(logger::LOG_TYPE_INFO, "readjson failed: invalid type");
+			return;
+		}
 
 		if (type == "string")
 		{
@@ -126,11 +149,6 @@ namespace json
 		{
 			val = std::to_string(utilities::json_config::ReadUnsignedInteger64(section.c_str(), key.c_str(), convert<uint64_t>(defaultValue), readonly, filename));
 		}
-		else
-		{
-			logger::write(logger::LOG_TYPE_INFO, "readjson failed: invalid type");
-			return;
-		}
 
 		const char* cmd = utilities::string::va("set %s %s;", dvar.c_str(), val.c_str());
 		logger::write(logger::LOG_TYPE_INFO, cmd);
@@ -142,8 +160,8 @@ namespace json
 	public:
 		void post_unpack() override
 		{
-			command::add("writejson", [&](const command::params& params){ writejson(params); });
-			command::add("readjson", [&](const command::params& params){ readjson2dvar(params); });
+			command::add("writejson", [&](const command::params& params) { writejson(params); });
+			command::add("readjson", [&](const command::params& params) { readjson2dvar(params); });
 		}
 	};
 }
