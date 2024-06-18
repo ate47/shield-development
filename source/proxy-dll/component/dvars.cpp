@@ -5,6 +5,7 @@
 #include "definitions/variables.hpp"
 #include "loader/component_loader.hpp"
 
+#include <utilities/hook.hpp>
 #include <utilities/string.hpp>
 
 namespace dvars
@@ -44,6 +45,16 @@ namespace dvars
 					domain.vector.min, domain.vector.max);
 			}
 		}
+	}
+
+	game::dvar_t*& DvarContainer::get(const std::string& key)
+	{
+		auto [it, inserted] = dvar.try_emplace(key, nullptr);
+		if (inserted)
+		{
+			it->second = find_dvar(key);
+		}
+		return it->second;
 	}
 
 	std::string get_domain_string(const game::dvarType_t type, const game::DvarLimits& domain)
@@ -173,9 +184,23 @@ namespace dvars
 		}
 	}
 
+	game::DvarData* get_session_mode_dvar(const game::dvar_t* dvar)
+	{
+		if (!(dvar->flags & game::DVAR_SESSIONMODE))
+		{
+			return dvar->value;
+		}
+		return &dvar->value[game::Com_SessionMode_GetMode()];
+	}
+
 	std::string get_value_string(const game::dvar_t * dvar, game::DvarValue * value)
 	{
 		std::string result = "N/A";
+
+		if (!value)
+		{
+			value = &get_session_mode_dvar(dvar)->current;
+		}
 
 		switch (dvar->type)
 		{
@@ -244,6 +269,46 @@ namespace dvars
 		return result;
 	}
 
+	bool get_value_bool(const game::dvar_t* dvar, game::DvarValue* value)
+	{
+		if (!value)
+		{
+			value = &get_session_mode_dvar(dvar)->current;
+		}
+
+		switch (dvar->type)
+		{
+		case game::DVAR_TYPE_BOOL:
+			return value->naked.enabled;
+
+		case game::DVAR_TYPE_FLOAT:
+			return value->naked.value;
+
+		case game::DVAR_TYPE_INT:
+			return value->naked.integer;
+
+		case game::DVAR_TYPE_INT64:
+			return value->naked.integer64;
+
+		case game::DVAR_TYPE_UINT64:
+			return value->naked.unsignedInt64;
+
+		case game::DVAR_TYPE_STRING:
+			return value->naked.string && _strcmpi(value->naked.string, "true");
+
+		case game::DVAR_TYPE_FLOAT_2:
+		case game::DVAR_TYPE_FLOAT_3:
+		case game::DVAR_TYPE_LINEAR_COLOR_RGB:
+		case game::DVAR_TYPE_COLOR_XYZ:
+		case game::DVAR_TYPE_COLOR_LAB:
+		case game::DVAR_TYPE_FLOAT_4:
+		case game::DVAR_TYPE_COLOR:
+		case game::DVAR_TYPE_ENUM:
+		default:
+			return false;
+		}
+	}
+
 	game::dvar_t* find_dvar(uint64_t hashRef)
 	{
 		if (hashRef == 0) return NULL;
@@ -275,6 +340,19 @@ namespace dvars
 		return spoofcall::invoke<game::dvar_t*>(game::Dvar_FindVar, nameRef.data());
 	}
 
+	utilities::hook::detour dvar_setfromstringbynamefromsource_hook;
+
+	game::dvar_t* dvar_setfromstringbynamefromsource_stub(const char* name, const char* string, game::dvarSource source, uint32_t flags, bool create_if_missing)
+	{
+		game::BO4_AssetRef_t hash{};
+
+		if (name && *name)
+		{
+			hash.hash = (int64_t)fnv1a::generate_hash_pattern(name);
+		}
+
+		return game::Dvar_SetFromStringByNameFromSourceHashed(&hash, string, source, flags, create_if_missing);
+	}
 
 	class component final : public component_interface
 	{
@@ -282,6 +360,7 @@ namespace dvars
 		void post_unpack() override
 		{
 			scheduler::once(fetch_dvar_pointers, scheduler::pipeline::main);
+			dvar_setfromstringbynamefromsource_hook.create(0x143CF4A10_g, dvar_setfromstringbynamefromsource_stub);
 		}
 	};
 }

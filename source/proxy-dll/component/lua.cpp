@@ -106,6 +106,24 @@ namespace lua {
 		lua_engine_print(logger::LOG_TYPE_ERROR, s);
 	}
 
+	int lua_return_true(game::lua_state* s)
+	{
+		s->m_apistack.top->v.boolean = true;
+		s->m_apistack.top->t = game::HKST_TBOOLEAN;
+		s->m_apistack.top++;
+
+		return 1;
+	}
+
+	int lua_chatclient_get_channel(game::lua_state* s)
+	{
+		s->m_apistack.top->v.number = 3;
+		s->m_apistack.top->t = game::HKST_TNUMBER;
+		s->m_apistack.top++;
+
+		return 1;
+	}
+
 	int lua_unsafe_function_stub(game::lua_state* state)
 	{
 		static std::once_flag f{};
@@ -203,6 +221,16 @@ namespace lua {
 				utilities::hook::jump(0x143955FA0_g, lua_engine_print_error);
 				utilities::hook::jump(0x143956090_g, lua_engine_print_warning);
 			}
+
+#ifdef DEBUG
+			// ChatClientInputTextBoxField: 2224acf9f545df40
+			// chat_client_enabled
+			utilities::hook::jump(0x143A78590_g, lua_return_true);
+			// chat_client_is_available
+			utilities::hook::jump(0x143A782D0_g, lua_return_true);
+
+			utilities::hook::jump(0x143A77ED0_g, lua_chatclient_get_channel);
+#endif
 
 			patch_unsafe_lua_functions();
 		}

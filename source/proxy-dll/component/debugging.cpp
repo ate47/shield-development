@@ -1,4 +1,5 @@
 #include <std_include.hpp>
+#include "component/gsc_custom.hpp"
 #include "definitions/game.hpp"
 #include "component/scheduler.hpp"
 #include "loader/component_loader.hpp"
@@ -73,6 +74,10 @@ namespace debugging
 
 	void sys_error_stub(uint32_t code, const char* message)
 	{
+		if (code == gsc_custom::linking_error) {
+			gsc_custom::find_linking_issues();
+			return; // converted to runtime error to avoid the crash
+		}
 		const char* error_message = runtime_errors::get_error_message(code);
 
 		if (error_message)

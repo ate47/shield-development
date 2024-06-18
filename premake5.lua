@@ -78,6 +78,11 @@ newoption {
 }
 
 newoption {
+	trigger = "online",
+	description = "Builds the online version of shield that uses external demonware connection."
+}
+
+newoption {
 	trigger = "ci-build",
 	description = "Enable CI builds of the client."
 }
@@ -281,6 +286,10 @@ workspace "shield-development"
     if _OPTIONS["dev-build"] then
         defines {"DEV_BUILD"}
     end
+
+	if _OPTIONS["online"] then
+		defines {"ONLINEDLL"}
+	end
 
     if _OPTIONS["ci-build"] then
         defines {"CI"}

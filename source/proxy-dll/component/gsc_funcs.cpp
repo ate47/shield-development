@@ -4,27 +4,20 @@
 #include "hashes.hpp"
 #include "definitions/game.hpp"
 #include "definitions/xassets.hpp"
+#include "definitions/variables.hpp"
 #include "loader/component_loader.hpp"
 #include "component/scheduler.hpp"
 
-
 #include <utilities/hook.hpp>
 #include <utilities/io.hpp>
+#include <utilities/string.hpp>
 #include <utilities/json_config.hpp>
 
 namespace gsc_funcs
 {
 	uint32_t canon_hash(const char* str)
 	{
-		uint32_t hash = 0x4B9ACE2F;
-
-		for (const char* data = str; *data; data++)
-		{
-			char c = (char)tolower(*data);
-			hash = ((c + hash) ^ ((c + hash) << 10)) + (((c + hash) ^ ((c + hash) << 10)) >> 6);
-		}
-
-		uint32_t val = 0x8001 * ((9 * hash) ^ ((9 * hash) >> 11));
+		uint32_t val = canon_hash_const(str);
 
 		hashes::add_hash(val, str);
 
@@ -53,21 +46,6 @@ namespace gsc_funcs
 		va_end(va);
 
 		game::ScrVm_Error(runtime_errors::custom_error_id, inst, buffer[inst], terminal);
-	}
-
-	const char* lookup_hash(game::scriptInstance_t inst, const char* type, uint64_t hash)
-	{
-		static char buffer[game::SCRIPTINSTANCE_MAX][0x50];
-		const char* str = hashes::lookup(hash);
-
-		if (str)
-		{
-			return str;
-		}
-
-		sprintf_s(buffer[inst], "%s_%llx", type, hash);
-
-		return buffer[inst];
 	}
 
 	void ScrVm_AddToArrayIntIndexed(game::scriptInstance_t inst, uint64_t index)
@@ -196,7 +174,7 @@ namespace gsc_funcs
 			case game::TYPE_HASH:
 			{
 				game::BO4_AssetRef_t hash{};
-				logger::write(logger::LOG_TYPE_INFO, "[ %s VM ] %llx", inst ? "CSC" : "GSC", lookup_hash(inst, "hash", game::ScrVm_GetHash(&hash, inst, offset)->hash));
+				logger::write(logger::LOG_TYPE_INFO, "[ %s VM ] %llx", inst ? "CSC" : "GSC", hashes::lookup_tmp("hash", game::ScrVm_GetHash(&hash, inst, offset)->hash));
 			}
 				break;
 			case game::TYPE_INTEGER:
@@ -526,7 +504,7 @@ namespace gsc_funcs
 			}
 			else
 			{
-				gsc_error("compiler::%s not implemented", inst, false, lookup_hash(inst, "function", hash));
+				gsc_error("compiler::%s not implemented", inst, false, hashes::lookup_tmp("function", hash));
 			}
 		}
 
@@ -606,7 +584,8 @@ namespace gsc_funcs
 				auto obj = member.GetObj();
 				obj.AddMember(rapidjson::StringRef(gsc_json_type), "hash", doc.GetAllocator());
 				auto hash = val->u.intValue & 0x7FFFFFFFFFFFFFFF;
-				std::string name = std::format("hash_{:x}", hash);
+				const char* lookup = hashes::lookup(hash);
+				std::string name = lookup ? lookup : std::format("hash_{:x}", hash);
 				obj.AddMember(rapidjson::StringRef("hash"), name, doc.GetAllocator());
 			}
 			break;
@@ -645,7 +624,8 @@ namespace gsc_funcs
 							}
 							else
 							{
-								std::string keyval = std::format("#var_{:x}", var->nameIndex);
+								const char* name = hashes::lookup(var->nameIndex);
+								std::string keyval = name ? std::format("#{}", name) : std::format("#var_{:x}", var->nameIndex);
 								rapidjson::Value keyjson{ rapidjson::kStringType };
 								keyjson.SetString(keyval, doc.GetAllocator());
 								obj.AddMember(keyjson, subval, doc.GetAllocator());
@@ -678,7 +658,8 @@ namespace gsc_funcs
 							// read struct value
 							shield_to_json_val(inst, value, subval, doc, depth + 1);
 
-							std::string keyval = std::format("var_{:x}", var->nameIndex);
+							const char* name = hashes::lookup(var->nameIndex);
+							std::string keyval = name ? name : std::format("var_{:x}", var->nameIndex);
 							rapidjson::Value keyjson{ rapidjson::kStringType };
 							keyjson.SetString(keyval, doc.GetAllocator());
 							obj.AddMember(keyjson, subval, doc.GetAllocator());
@@ -947,15 +928,127 @@ namespace gsc_funcs
 
 			shield_from_json_push_struct(inst, doc);
 		}
-		
+
+		void add_debug_command(game::scriptInstance_t inst)
+		{
+			int localclientnum;
+			const char* cmd;
+
+			if (inst == game::SCRIPTINSTANCE_CLIENT)
+			{
+				// client, using param
+				localclientnum = (int)game::ScrVm_GetInt(inst, 0);
+				cmd = game::ScrVm_GetString(inst, 1);
+			}
+			else
+			{
+				// server, using primary
+				localclientnum = game::Com_LocalClients_GetPrimary();
+				cmd = game::ScrVm_GetString(inst, 0);
+			}
+
+			game::Cbuf_AddText(localclientnum, cmd);
+		}
+
+		void register_hash(game::scriptInstance_t inst)
+		{
+			int64_t type = game::ScrVm_GetInt(inst, 0);
+
+			int params = game::ScrVm_GetNumParam(inst);
+
+			for (int i = 1; i < params; i++)
+			{
+				if (game::ScrVm_GetType(inst, i) != game::TYPE_STRING)
+				{
+					gsc_error("invalid hash param, a string should be used, received: %s at param %i", inst, false, game::var_typename[game::ScrVm_GetType(inst, i)], i);
+					return;
+				}
+				const char* hash = game::ScrVm_GetString(inst, i);
+
+				if (!type || (type & 1))
+				{
+					// the hash is added by the function
+					fnv1a::generate_hash(hash);
+				}
+
+				if (!type || (type & 2))
+				{
+					// the hash is added by the function
+					gsc_funcs::canon_hash(hash);
+				}
+			}
+		}
+
+		void register_dvar_name(game::scriptInstance_t inst)
+		{
+			if (game::ScrVm_GetType(inst, 0) != game::TYPE_STRING)
+			{
+				gsc_error("invalid name param, a string should be used, received: %s", inst, false, game::var_typename[game::ScrVm_GetType(inst, 0)]);
+				return;
+			}
+			const char* name = game::ScrVm_GetString(inst, 0);
+			const char* description = "";
+
+			if (game::ScrVm_GetNumParam(inst) == 2)
+			{
+				if (game::ScrVm_GetType(inst, 1) != game::TYPE_STRING)
+				{
+					gsc_error("invalid description param, a string should be used, received: %s", inst, false, game::var_typename[game::ScrVm_GetType(inst, 1)]);
+					return;
+				}
+				description = game::ScrVm_GetString(inst, 1);
+			}
+
+			uint64_t hash = fnv1a::generate_hash(name);
+
+			// test if already in the set
+			auto it = std::find_if(variables::dvars_table.begin(), variables::dvars_table.end(), [&hash](variables::varEntry& i) { return i.fnv1a == hash; });
+
+			if (it == variables::dvars_table.end())
+			{
+				variables::dvars_table.emplace_back(variables::varInfo{ name, description, hash });
+			}
+		}
+
+		void hash_lookup(game::scriptInstance_t inst)
+		{
+			game::ScrVarType_t type = game::ScrVm_GetType(inst, 0);
+
+			switch (type)
+			{
+			case game::TYPE_STRING:
+				game::ScrVm_AddConstString(inst, game::ScrVm_GetConstString(inst, 0));
+				return;
+			case game::TYPE_HASH:
+			{
+				game::BO4_AssetRef_t hash;
+				const char* lookup = hashes::lookup(game::ScrVm_GetHash(&hash, inst, 0)->hash);
+
+				if (lookup)
+				{
+					game::ScrVm_AddString(inst, lookup);
+				}
+				else
+				{
+					// can't find value, return base hash
+					game::ScrVm_AddHash(inst, &hash);
+				}
+				return;
+			}
+			default:
+				gsc_error("invalid hash param, a hash or a string should be used, received: %s", inst, false, game::var_typename[type]);
+				return;
+			}
+		}
+
 		game::BO4_BuiltinFunctionDef custom_functions_gsc[] =
 		{
 			{ // ShieldLog(message)
 				.canonId = canon_hash("ShieldLog"),
-				.min_args = 1,
-				.max_args = 1,
-				.actionFunc = shield_log,
-				.type = 0,
+					.min_args = 1,
+					.max_args = 1,
+					.actionFunc = shield_log,
+					.type = 0,
 			},
 			{ // ShieldClearHudElems()
 				.canonId = canon_hash("ShieldClearHudElems"),
@@ -1046,6 +1139,27 @@ namespace gsc_funcs
 				.min_args = 1,
 				.max_args = 2,
 				.actionFunc = shield_to_json,
+				.type = 0
+			},
+			{// ShieldRegisterHash(int type, string... values)
+				.canonId = canon_hash("ShieldRegisterHash"),
+				.min_args = 2,
+				.max_args = 200,
+				.actionFunc = register_hash,
+				.type = 0
+			},
+			{// ShieldRegisterHash(string name, string description = "")
+				.canonId = canon_hash("ShieldRegisterDVarName"),
+				.min_args = 1,
+				.max_args = 2,
+				.actionFunc = register_dvar_name,
+				.type = 0
+			},
+			{// ShieldHashLookup(hash hash) -> string
+				.canonId = canon_hash("ShieldHashLookup"),
+				.min_args = 1,
+				.max_args = 1,
+				.actionFunc = hash_lookup,
 				.type = 0
 			}
 		};
@@ -1141,9 +1255,30 @@ namespace gsc_funcs
 				.max_args = 2,
 				.actionFunc = shield_to_json,
 				.type = 0
+			},
+			{// ShieldRegisterHash(int type, string... values)
+				.canonId = canon_hash("ShieldRegisterHash"),
+				.min_args = 2,
+				.max_args = 200,
+				.actionFunc = register_hash,
+				.type = 0
+			},
+			{// ShieldRegisterHash(string name, string description = "")
+				.canonId = canon_hash("ShieldRegisterDVarName"),
+				.min_args = 1,
+				.max_args = 2,
+				.actionFunc = register_dvar_name,
+				.type = 0
+			},
+			{// ShieldHashLookup(hash hash) -> string
+				.canonId = canon_hash("ShieldHashLookup"),
+				.min_args = 1,
+				.max_args = 1,
+				.actionFunc = hash_lookup,
+				.type = 0
 			}
 		};
-
+		
 		void draw_hud()
 		{
 			const game::vec_t screen_width = game::ScrPlace_GetView(0)->realViewportSize[0];
@@ -1171,10 +1306,52 @@ namespace gsc_funcs
 				game::R_AddCmdDrawText(text, 0x7FFFFFFF, font, rx, ry, elem.scale, elem.scale, 0.0f, elem.color, 0);
 			}
 		}
+
+		const char* get_scrvar_type_name(game::ScrVarType_t type)
+		{
+			static const char* names[]
+			{
+				"undefined",
+				"pointer",
+				"string",
+				"vector",
+				"hash",
+				"float",
+				"integer",
+				"uintptr",
+				"entity_offset",
+				"codepos",
+				"precodepos",
+				"api_function",
+				"script_function",
+				"stack",
+				"thread",
+				"notify_thread",
+				"time_thread",
+				"frame_thread",
+				"child_thread",
+				"class",
+				"shared_struct",
+				"struct",
+				"removed_entity",
+				"entity",
+				"array",
+				"removed_thread",
+				"free",
+				"thread_list",
+				"ent_list",
+			};
+			if (type >= 0 && type < ARRAYSIZE(names))
+			{
+				return names[type];
+			}
+			return utilities::string::va("invalid_%x", type);
+		}
 	}
 
 
 	bool enable_dev_func = false;
+	bool enable_stack_dump = false;
 
 	utilities::hook::detour scr_get_function_reverse_lookup;
 	utilities::hook::detour cscr_get_function_reverse_lookup;
@@ -1302,6 +1479,12 @@ namespace gsc_funcs
 	{
 		static char buffer[game::scriptInstance_t::SCRIPTINSTANCE_MAX][0x200] = { 0 };
 
+		byte* lastop = gsc_custom::get_last_opbase(inst);
+		if (lastop)
+		{
+			logger::write(logger::LOG_TYPE_DEBUG, "last oplocation %p : 0x%x", lastop, (int)*reinterpret_cast<uint16_t*>(lastop));
+		}
+
 		// reimplement assert/assertmsg/errormsg functions
 		switch (code)
 		{
@@ -1338,9 +1521,56 @@ namespace gsc_funcs
 			}
 			break;
 		}
-
-		logger::write(terminal ? logger::LOG_TYPE_ERROR : logger::LOG_TYPE_WARN, "[ %s VM ] %s (%lld)", 
+		int log = terminal ? logger::LOG_TYPE_ERROR : logger::LOG_TYPE_WARN;
+		logger::write(log, "[ %s VM ] %s (%lld)",
 			inst ? "CSC" : "GSC", game::scrVarPub[inst].error_message ? game::scrVarPub[inst].error_message : "no message", code);
+
+		if (enable_stack_dump)
+		{
+
+			game::BO4_scrVmPub& vm = game::scrVmPub[inst];
+
+			game::ScrVarValue_t* top = vm.top;
+
+			if (!vm.isShutdown && vm.function_count > 0 && vm.top)
+			{
+				logger::write(log, "==== Stack dump ====");
+
+				int idx{};
+
+				while (top->type != game::TYPE_CODEPOS && vm.top != &vm.stack[0])
+				{
+					switch (top->type)
+					{
+						case game::TYPE_STRING: 
+							logger::write(log, "%d \"%s\"", idx, game::ScrStr_ConvertToString(top->u.pointerValue));
+							break;
+						case game::TYPE_VECTOR: 
+							logger::write(log, "%d (%f, %f, %f)", idx, top->u.vectorValue[0], top->u.vectorValue[1], top->u.vectorValue[2]);
+							break;
+						case game::TYPE_HASH: 
+							logger::write(log, "%d #\"%s\"", idx, hashes::lookup_tmp("hash", top->u.intValue));
+							break;
+						case game::TYPE_FLOAT: 
+							logger::write(log, "%d %f", idx, top->u.floatValue);
+							break;
+						case game::TYPE_INTEGER: 
+							logger::write(log, "%d %lld", idx, top->u.intValue);
+							break;
+						case game::TYPE_UINTPTR: 
+							logger::write(log, "%d ptr[%llx]", idx, top->u.intValue);
+							break;
+						default:
+							logger::write(log, "%d %s", idx, get_scrvar_type_name(top->type));
+							break;
+					}
+					top--;
+					idx--;
+				}
+				logger::write(log, "====================");
+			}
+
+		}
 
 		scrvm_error.invoke<void>(code, inst, unused, terminal);
 	}
@@ -1381,10 +1611,10 @@ namespace gsc_funcs
 
 	void get_gsc_export_info(game::scriptInstance_t inst, byte* codepos, const char** scriptname, int32_t* sloc, int32_t* crc, int32_t* vm)
 	{
-		static char scriptnamebuffer[game::scriptInstance_t::SCRIPTINSTANCE_MAX][0x200];
+		static char scriptnamebuffer[game::scriptInstance_t::SCRIPTINSTANCE_MAX][0x300];
 		game::GSC_OBJ* script_obj = nullptr;
 		{
-			game::scoped_critical_section scs{ 0x36, game::SCOPED_CRITSECT_NORMAL };
+			game::scoped_critical_section scs{ game::CRITSECT_GSC_OBJECTS, game::SCOPED_CRITSECT_NORMAL };
 
 			uint32_t count = game::gObjFileInfoCount[inst];
 
@@ -1430,12 +1660,29 @@ namespace gsc_funcs
 			{
 				if (export_item)
 				{
-					std::string script_name = lookup_hash(inst, "script", script_obj->name & 0x7FFFFFFFFFFFFFFF);
+					const gsc_custom::gsic_detour* detour = gsc_custom::find_detour(inst, script_obj->magic + export_item->address);
+					
+					if (detour)
+					{
+						sprintf_s(scriptnamebuffer[inst], "%s detour %s<%s>::%s@%x",
+							hashes::lookup_tmp("script", script_obj->name & 0x7FFFFFFFFFFFFFFF),
+							hashes::lookup_tmp("namespace", detour->replace_namespace),
+							hashes::lookup_tmp("script", detour->target_script & 0x7FFFFFFFFFFFFFFF),
+							hashes::lookup_tmp("function", detour->replace_function),
+							rloc - export_item->address
+						);
+					}
+					else {
+						sprintf_s(scriptnamebuffer[inst], "%s::%s@%x",
+							hashes::lookup_tmp("script", script_obj->name & 0x7FFFFFFFFFFFFFFF),
+							hashes::lookup_tmp("function", export_item->name),
+							rloc - export_item->address
+						);
+					}
 
-					sprintf_s(scriptnamebuffer[inst], "%s::%s@%x", script_name.c_str(), lookup_hash(inst, "function", export_item->name), rloc - export_item->address);
 				} else
 				{
-					sprintf_s(scriptnamebuffer[inst], "%s", lookup_hash(inst, "script", script_obj->name & 0x7FFFFFFFFFFFFFFF));
+					sprintf_s(scriptnamebuffer[inst], "%s", hashes::lookup_tmp("script", script_obj->name & 0x7FFFFFFFFFFFFFFF));
 				}
 
 				*scriptname = scriptnamebuffer[inst];
@@ -1463,8 +1710,14 @@ namespace gsc_funcs
 	public:
 		void post_unpack() override
 		{
+			// replace nulled function references
+			reinterpret_cast<game::BO4_BuiltinFunctionDef*>(0x144ED5D90_g)->actionFunc = add_debug_command; // csc
+			reinterpret_cast<game::BO4_BuiltinFunctionDef*>(0x1449BAD60_g)->actionFunc = add_debug_command; // gsc
+
 			// enable dev functions still available in the game
 			enable_dev_func = utilities::json_config::ReadBoolean("gsc", "dev_funcs", false);
+			// dump stack on error
+			enable_stack_dump = utilities::json_config::ReadBoolean("gsc", "error_stack_dump", false);
 
 			scr_get_function_reverse_lookup.create(0x1433AF8A0_g, scr_get_function_reverse_lookup_stub);
 			cscr_get_function_reverse_lookup.create(0x141F132A0_g, cscr_get_function_reverse_lookup_stub);
@@ -1478,7 +1731,7 @@ namespace gsc_funcs
 			utilities::hook::jump(0x142890470_g, scrvm_log_compiler_error);
 
 			// better runtime error
-			utilities::hook::jump(0x142748550_g, get_gsc_export_info);
+			utilities::hook::jump(game::Scr_GetGscExportInfo.get(), get_gsc_export_info);
 			patch_scrvm_runtime_error();
 			
 			scheduler::loop(draw_hud, scheduler::renderer);

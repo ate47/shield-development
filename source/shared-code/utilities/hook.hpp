@@ -157,6 +157,9 @@ namespace utilities::hook
 	void copy(void* place, const void* data, size_t length);
 	void copy(size_t place, const void* data, size_t length);
 
+	void copy(void* place, const void* data, const void* mask, size_t length);
+	void copy(size_t place, const void* data, const void* mask, size_t length);
+
 	void copy_string(void* place, const char* str);
 	void copy_string(size_t place, const char* str);
 

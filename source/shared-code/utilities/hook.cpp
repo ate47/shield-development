@@ -399,11 +399,54 @@ namespace utilities::hook
 		FlushInstructionCache(GetCurrentProcess(), place, length);
 	}
 
+	void copy(void* place, const void* data, const void* mask, const size_t length)
+	{
+		store_original_data(place, length);
+
+		DWORD old_protect{};
+		VirtualProtect(place, length, PAGE_EXECUTE_READWRITE, &old_protect);
+
+		size_t len = length;
+
+		uint8_t* place_v = (uint8_t*)place;
+		uint8_t* data_v = (uint8_t*)data;
+		uint8_t* mask_v = (uint8_t*)mask;
+
+		while (len & ~7)
+		{
+			*(uint64_t*)place_v = (*(uint64_t*)place_v & ~(*(uint64_t*)mask_v)) | ((*(uint64_t*)data_v) & (*(uint64_t*)mask_v));
+
+			place_v += 8;
+			data_v += 8;
+			mask_v += 8;
+			len -= 8;
+		}
+
+		while (len)
+		{
+			*place_v = (*place_v & ~*mask_v) | (*data_v & (*mask_v));
+
+			place_v++;
+			data_v++;
+			mask_v++;
+			len--;
+		}
+
+		VirtualProtect(place, length, old_protect, &old_protect);
+		FlushInstructionCache(GetCurrentProcess(), place, length);
+	}
+
 	void copy(const size_t place, const void* data, const size_t length)
 	{
 		copy(reinterpret_cast<void*>(place), data, length);
 	}
 
+	void copy(const size_t place, const void* data, const void* mask, const size_t length)
+	{
+		copy(reinterpret_cast<void*>(place), data, mask, length);
+	}
+
+	
 	void copy_string(void* place, const char* str)
 	{
 		copy(reinterpret_cast<void*>(place), str, strlen(str) + 1);

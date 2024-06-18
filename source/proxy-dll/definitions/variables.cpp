@@ -8,23 +8,7 @@ namespace fnv1a
 {
 	uint64_t generate_hash(const char* string, uint64_t start)
 	{
-		uint64_t res = start;
-
-		for (const char* c = string; *c; c++)
-		{
-			if (*c == '\\')
-			{
-				res ^= '/';
-			}
-			else
-			{
-				res ^= tolower(*c);
-			}
-
-			res *= 0x100000001B3;
-		}
-
-		uint64_t val = res & 0x7FFFFFFFFFFFFFFF;
+		uint64_t val = generate_hash_const(string, start);
 
 		if (start == 0xCBF29CE484222325)
 		{
@@ -69,6467 +53,5286 @@ namespace fnv1a
 
 namespace variables
 {
+	constexpr varEntry create_var_record(const char* name, const char* description)
+	{
+		return { name, description, fnv1a::generate_hash_const(name) };
+	}
 	std::vector<varEntry> dvars_table =
 	{
-		{
+		create_var_record(
 			"aim_slowdown_enabled",
-			"Slowdown the turn rate when the cross hair passes over a target",
-			0x3D607772590C64FC
-		},
-		{
+			"Slowdown the turn rate when the cross hair passes over a target"
+		),
+		create_var_record(
 			"aim_lockon_enabled",
-			"Aim lock on helps the player to stay on target",
-			0xD3FCDCA2CD83783
-		},
-		{
+			"Aim lock on helps the player to stay on target"
+		),
+		create_var_record(
 			"arena_defaultPlaylist",
-			"Default Arena Playlist",
-			0x7D60181470E5E8E8
-		},
-		{
+			"Default Arena Playlist"
+		),
+		create_var_record(
 			"arena_seasonOverride",
-			"Arena Season Override",
-			0x4810417D791DD7F8
-		},
-		{
+			"Arena Season Override"
+		),
+		create_var_record(
 			"arena_enableListenHosting",
-			"Enable listen servers for arena matchmaking",
-			0x181DF5AA7D92095
-		},
-		{
+			"Enable listen servers for arena matchmaking"
+		),
+		create_var_record(
 			"arena_qosSkillStart",
-			"Base arena point skill range, regardless of search duration",
-			0x35A4B7E98B04250D
-		},
-		{
+			"Base arena point skill range, regardless of search duration"
+		),
+		create_var_record(
 			"arena_qosBrodenSkillStep",
-			"Arena points per interval to increase the distance between the skill and the qos skill",
-			0x44A22EC68E0798C5
-		},
-		{
+			"Arena points per interval to increase the distance between the skill and the qos skill"
+		),
+		create_var_record(
 			"arena_qosBrodenSkillFrequency",
-			"Frequency of which the the skill step is increased linearly",
-			0x75215E81615C6A0F
-		},
-		{
+			"Frequency of which the the skill step is increased linearly"
+		),
+		create_var_record(
 			"arena_minHostSkillRange",
-			"Skill range from client's arena skill that must be qos'd before hosting lobby or unparking dedi",
-			0x2A5FFA081C299437
-		},
-		{
+			"Skill range from client's arena skill that must be qos'd before hosting lobby or unparking dedi"
+		),
+		create_var_record(
 			"arena_giveBonusStar",
-			"When enabled, one bonus star will be awarded every n consecutive wins.",
-			0x3F960938DC77B97F
-		},
-		{
+			"When enabled, one bonus star will be awarded every n consecutive wins."
+		),
+		create_var_record(
 			"arena_bonusStarStreak",
-			"Win streak required before awarding bonus star (if enabled)",
-			0x16B8856172F03E5E
-		},
-		{
+			"Win streak required before awarding bonus star (if enabled)"
+		),
+		create_var_record(
 			"arena_minPlayTime",
-			"Time in seconds a player must play an arena match for a loss to count.",
-			0x256BA16072C5A454
-		},
-		{
+			"Time in seconds a player must play an arena match for a loss to count."
+		),
+		create_var_record(
 			"arena_maintenance",
-			"When accessing Arena mode, display a maintenance message.",
-			0x48972F7E0A188F50
-		},
-		{
+			"When accessing Arena mode, display a maintenance message."
+		),
+		create_var_record(
 			"arena_lobbyReloadSearchDelayMin",
-			"Minimum time in seconds to delay the search for a new arena lobby after a match.",
-			0x6ED9351EBCEE08C7
-		},
-		{
+			"Minimum time in seconds to delay the search for a new arena lobby after a match."
+		),
+		create_var_record(
 			"arena_lobbyReloadSearchDelayMax",
-			"Maximum time in seconds to delay the search for a new arena lobby after a match.",
-			0x6EF5231EBD0664E9
-		},
-		{
+			"Maximum time in seconds to delay the search for a new arena lobby after a match."
+		),
+		create_var_record(
 			"arena_enableArenaChallenges",
-			"Enable arena challenges including Season Vet and Best Rank.",
-			0x2E3EEB19A9EE340B
-		},
-		{
+			"Enable arena challenges including Season Vet and Best Rank."
+		),
+		create_var_record(
 			"arena_seasonVetChallengeWins",
-			"Number of arena wins in a season to complete a season vet challenge.",
-			0x2F56FC304D6E61EB
-		},
-		{
+			"Number of arena wins in a season to complete a season vet challenge."
+		),
+		create_var_record(
 			"arena_unfairTeamGap",
-			"This is the gap where if a team is down this many players compaired with the other team then the pentalty is waved.",
-			0x170F0BEC873AC2D3
-		},
-		{
+			"This is the gap where if a team is down this many players compaired with the other team then the pentalty is waved."
+		),
+		create_var_record(
 			"bg_movingPlatformPitchScale",
-			"The scale to apply to pitch from the moving platform that should be applied to the player's pitch",
-			0x29FD42871E7EAED2
-		},
-		{
+			"The scale to apply to pitch from the moving platform that should be applied to the player's pitch"
+		),
+		create_var_record(
 			"player_view_pitch_up",
-			"Maximum angle that the player can look up",
-			0x7ED57F474B124FEF
-		},
-		{
+			"Maximum angle that the player can look up"
+		),
+		create_var_record(
 			"player_view_pitch_down",
-			"Maximum angle that the player can look down",
-			0xDE7DB9DD6AC744A
-		},
-		{
+			"Maximum angle that the player can look down"
+		),
+		create_var_record(
 			"player_view_swim_pitch_up",
-			"Maximum angle that the player can look up while swimming",
-			0x60B713C5A6FCC60C
-		},
-		{
+			"Maximum angle that the player can look up while swimming"
+		),
+		create_var_record(
 			"player_view_swim_pitch_down",
-			"Maximum angle that the player can look up while swimming",
-			0x3997DA36B5C98979
-		},
-		{
+			"Maximum angle that the player can look up while swimming"
+		),
+		create_var_record(
 			"player_lean_shift",
-			"Amount to shift the player 3rd person model when leaning(x:left, y:right)",
-			0xB8EF752D3C087DE
-		},
-		{
+			"Amount to shift the player 3rd person model when leaning(x:left, y:right)"
+		),
+		create_var_record(
 			"player_lean_shift_crouch",
-			"Amount to shift the player 3rd person model when crouch leaning(x:left, y:right)",
-			0x671B0241FC57FA9
-		},
-		{
+			"Amount to shift the player 3rd person model when crouch leaning(x:left, y:right)"
+		),
+		create_var_record(
 			"player_lean_rotate",
-			"Amount to rotate the player 3rd person model when leaning(x:left, y:right)",
-			0x4E6970FC488D8BBD
-		},
-		{
+			"Amount to rotate the player 3rd person model when leaning(x:left, y:right)"
+		),
+		create_var_record(
 			"player_lean_rotate_crouch",
-			"Amount to rotate the player 3rd person model when crouch leaning(x:left, y:right)",
-			0x293B5F04CFDD9DAC
-		},
-		{
+			"Amount to rotate the player 3rd person model when crouch leaning(x:left, y:right)"
+		),
+		create_var_record(
 			"bg_prone_yawcap",
-			"The maximum angle that a player can look around quickly while prone",
-			0x1E0BF5B71128804D
-		},
-		{
+			"The maximum angle that a player can look around quickly while prone"
+		),
+		create_var_record(
 			"bg_aimSpreadMoveSpeedThreshold",
-			"When player is moving faster than this speed, the aim spread will increase",
-			0x25A81EC42CBDFDB4
-		},
-		{
+			"When player is moving faster than this speed, the aim spread will increase"
+		),
+		create_var_record(
 			"bg_maxGrenadeIndicatorSpeed",
-			"Maximum speed of grenade that will show up in indicator and can be thrown back.",
-			0x51A6D8B45C526193
-		},
-		{
+			"Maximum speed of grenade that will show up in indicator and can be thrown back."
+		),
+		create_var_record(
 			"player_scopeExitOnDamage",
-			"Exit the scope if the player takes damage",
-			0x2B90906C1300936B
-		},
-		{
+			"Exit the scope if the player takes damage"
+		),
+		create_var_record(
 			"player_sustainAmmo",
-			"Firing weapon will not decrease clip ammo.",
-			0x47C5EB83E44DCFC4
-		},
-		{
+			"Firing weapon will not decrease clip ammo."
+		),
+		create_var_record(
 			"player_clipSizeMultiplier",
-			"Changes the clip size of weapons with more than one bullet in their clip.",
-			0x68CB46E1460CAB15
-		},
-		{
+			"Changes the clip size of weapons with more than one bullet in their clip."
+		),
+		create_var_record(
 			"player_lastStandSuicideDelay",
-			"The amount of time that must pass before the player is allowed to suicide",
-			0x1038D42009D25460
-		},
-		{
+			"The amount of time that must pass before the player is allowed to suicide"
+		),
+		create_var_record(
 			"player_sprintTime",
-			"The base length of time a player can sprint",
-			0x2C0C64DDCFC802FC
-		},
-		{
+			"The base length of time a player can sprint"
+		),
+		create_var_record(
 			"bg_gravity",
-			"Gravity in inches per second per second",
-			0x30B9B1B37A543E43
-		},
-		{
+			"Gravity in inches per second per second"
+		),
+		create_var_record(
 			"bg_lowGravity",
-			"Low gravity for slow or floaty objects, in inches per second per second",
-			0x2652ABDA75F57CA3
-		},
-		{
+			"Low gravity for slow or floaty objects, in inches per second per second"
+		),
+		create_var_record(
 			"bg_moonGravity",
-			"Gravity on the moon, in inches per second per second",
-			0x7587080AF570DF78
-		},
-		{
+			"Gravity on the moon, in inches per second per second"
+		),
+		create_var_record(
 			"bg_waterGravity",
-			"Gravity for missiles while in water that use tr_watergravity",
-			0x5C5088A687D0F420
-		},
-		{
+			"Gravity for missiles while in water that use tr_watergravity"
+		),
+		create_var_record(
 			"player_viewLockEnt",
-			"Set an entity that the player view will be locked too.",
-			0x3F017ABABB9075D4
-		},
-		{
+			"Set an entity that the player view will be locked too."
+		),
+		create_var_record(
 			"cg_isGameplayActive",
-			"",
-			0x437875777AEF3616
-		},
-		{
+			""
+		),
+		create_var_record(
 			"vehLockTurretToPlayerView",
-			"Locks the turret angles to the player angles and sets the players rotation speed to the turrets rotRate",
-			0x443BAC9ED2A2F4
-		},
-		{
+			"Locks the turret angles to the player angles and sets the players rotation speed to the turrets rotRate"
+		),
+		create_var_record(
 			"mp_blackjack_consumable_wait",
-			"For Blackjack, the time to wait between updating consumable time.",
-			0x7A9105508D8C784D
-		},
-		{
+			"For Blackjack, the time to wait between updating consumable time."
+		),
+		create_var_record(
 			"tu11_enableClassicMode",
-			"",
-			0x11732EEF735B5749
-		},
-		{
+			""
+		),
+		create_var_record(
 			"tu11_enableVehicleMode",
-			"",
-			0x736B3744DE946B29
-		},
-		{
+			""
+		),
+		create_var_record(
 			"bg_shieldHitEncodeWidthWorld",
-			"The encoding range, in width, of a client's world shield.  A hit in this range is encoded into one of 16 collumns.",
-			0x57A8E17675CBFE41LL
-		},
-		{
+			"The encoding range, in width, of a client's world shield.  A hit in this range is encoded into one of 16 collumns."
+		),
+		create_var_record(
 			"bg_shieldHitEncodeHeightWorld",
-			"The encoding range, in height, of a client's world shield.  A hit in this range is encoded into one of 8 rows.",
-			0x5D1E511BDF96E56ALL
-		},
-		{
+			"The encoding range, in height, of a client's world shield.  A hit in this range is encoded into one of 8 rows."
+		),
+		create_var_record(
 			"bg_shieldHitEncodeWidthVM",
-			"The decoding range, in width, of a client's viewmodel shield.",
-			0xC5F06C878CFD2FE
-		},
-		{
+			"The decoding range, in width, of a client's viewmodel shield."
+		),
+		create_var_record(
 			"bg_shieldHitEncodeHeightVM",
-			"The decoding range, in height, of a client's viewmodel shield.",
-			0x5CFD635A296ED3C7
-		},
-		{
+			"The decoding range, in height, of a client's viewmodel shield."
+		),
+		create_var_record(
 			"bg_disableWeaponPlantingInWater",
-			"Disables being able to plant mines in the water.",
-			0x7D4734AAB01CCAC0
-		},
-		{
+			"Disables being able to plant mines in the water."
+		),
+		create_var_record(
 			"disable_rope",
-			"Disables the rope system",
-			0x589543C5CA4AA0B0
-		},
-		{
+			"Disables the rope system"
+		),
+		create_var_record(
 			"waterbrush_entity",
-			"CM_GetWaterHeight function will test against this enitty. Can be used on brushmodels to move the water level",
-			0x6D05F3E31E627502
-		},
-		{
+			"CM_GetWaterHeight function will test against this enitty. Can be used on brushmodels to move the water level"
+		),
+		create_var_record(
 			"playerPushAmount",
-			"If this value is set the player will get pushed away from AIs by the amount specified.",
-			0x536C6409B3369248
-		},
-		{
+			"If this value is set the player will get pushed away from AIs by the amount specified."
+		),
+		create_var_record(
 			"bg_serverDelayDamageKickForPing",
-			"Turn on delayed damage kick on server to allow for client ping",
-			0x3CB742BC7C5039B3
-		},
-		{
+			"Turn on delayed damage kick on server to allow for client ping"
+		),
+		create_var_record(
 			"bg_useClientDamageKick",
-			"Turn on to make the server use the damage kick angles from the client usercmd",
-			0x66718A7BBE48B522
-		},
-		{
+			"Turn on to make the server use the damage kick angles from the client usercmd"
+		),
+		create_var_record(
 			"slam_enabled",
-			"Enable slam activation",
-			0x3DF86A5C80DE5AFA
-		},
-		{
+			"Enable slam activation"
+		),
+		create_var_record(
 			"playerWeaponRaisePostIGC",
-			"Temp dvar to give script control over which wepaon anim plays after an IGC",
-			0x48B28EA7A73F4D7F
-		},
-		{
+			"Temp dvar to give script control over which wepaon anim plays after an IGC"
+		),
+		create_var_record(
 			"bg_allowPlayerRoleTemplateButtonOverrides",
-			"When true the PlayerRoleTemplates are allowed to define button overrides per the enum PlayerRoleButtonOverrideTypes.",
-			0x39DAA8BF95AE47A0
-		},
-		{
+			"When true the PlayerRoleTemplates are allowed to define button overrides per the enum PlayerRoleButtonOverrideTypes."
+		),
+		create_var_record(
 			"bg_aqs",
-			"",
-			0x28A5EA43BB11E71A
-		},
-		{
+			""
+		),
+		create_var_record(
 			"bg_aqsStyle",
-			"",
-			0x629275EC97C1ED2F
-		},
-		{
+			""
+		),
+		create_var_record(
 			"bg_ads",
-			"",
-			0x285DEA43BAD43177
-		},
-		{
+			""
+		),
+		create_var_record(
 			"bg_bobcycleResetThreshold",
-			"The difference between the new and old bob cycle before we treat as if the server reset its bob cycle.",
-			0x78821CC8458682CE
-		},
-		{
+			"The difference between the new and old bob cycle before we treat as if the server reset its bob cycle."
+		),
+		create_var_record(
 			"adsZeroSpread",
-			"Immediately zero spreadAmount when fully ADS",
-			0x630AAA3ED87A2CD0
-		},
-		{
+			"Immediately zero spreadAmount when fully ADS"
+		),
+		create_var_record(
 			"bg_deferScriptMissileDetonation",
-			"Defer G_ExplodeMissile() till after origin is updated in G_RunMissile()",
-			0x9AC21A6A320098B
-		},
-		{
+			"Defer G_ExplodeMissile() till after origin is updated in G_RunMissile()"
+		),
+		create_var_record(
 			"bg_isolateDamageFlash",
-			"Drive damage flash overlay from isolated variable instead of view kick pitch",
-			0x5C7202461031C541
-		},
-		{
+			"Drive damage flash overlay from isolated variable instead of view kick pitch"
+		),
+		create_var_record(
 			"bg_limitGrenadeImpacts",
-			"Use missileTargetEnt to limit impact damage to the first impact",
-			0x1B4BC4AC24D6A8B7
-		},
-		{
+			"Use missileTargetEnt to limit impact damage to the first impact"
+		),
+		create_var_record(
 			"bg_zombiePlayerUsesUtilityClip",
-			"Use utility clip for zombie player movement",
-			0x4C3B22F554427952
-		},
-		{
+			"Use utility clip for zombie player movement"
+		),
+		create_var_record(
 			"bg_warmode_version",
-			"Temp dvar to control the war mode gametype",
-			0x62CE61CC049BBAF
-		},
-		{
+			"Temp dvar to control the war mode gametype"
+		),
+		create_var_record(
 			"gadgetPowerOverrideFactor",
-			"Override power factor",
-			0x6358FE7CC1E358D9
-		},
-		{
+			"Override power factor"
+		),
+		create_var_record(
 			"gadgetPowerOverchargePerkTimeFactor",
-			"Overcharge perk charge over time multiplier",
-			0x72F867BAEAFFED96
-		},
-		{
+			"Overcharge perk charge over time multiplier"
+		),
+		create_var_record(
 			"gadgetPowerOverchargePerkScoreFactor",
-			"Overcharge perk score multiplier",
-			0x342CA843EBD8A6D9
-		},
-		{
+			"Overcharge perk score multiplier"
+		),
+		create_var_record(
 			"gadgetThiefShutdownFullCharge",
-			"If this is set to true then the users will recieve a full gadget charge if they shutdown an enemy. ",
-			0x7C3412AD9BC26114
-		},
-		{
+			"If this is set to true then the users will recieve a full gadget charge if they shutdown an enemy. "
+		),
+		create_var_record(
 			"gadget_force_slots",
-			"Force the gadget slots to be in a defined order: primary, secondary, ability, heavy",
-			0x1E1071C9F9971C53
-		},
-		{
+			"Force the gadget slots to be in a defined order: primary, secondary, ability, heavy"
+		),
+		create_var_record(
 			"mm_keyframeUsageAnimIndex",
-			"anim to watch usage graph of",
-			0x58BA8669CAF26406
-		},
-		{
+			"anim to watch usage graph of"
+		),
+		create_var_record(
 			"cg_minimapPadding",
-			"The amount of padding to apply to the circular minimap",
-			0x61C6A72FF051961C
-		},
-		{
+			"The amount of padding to apply to the circular minimap"
+		),
+		create_var_record(
 			"shoutcastHighlightedClient",
-			"Shoutcaster's currently highlighted clientNum.",
-			0x69E29B87C17AED9
-		},
-		{
+			"Shoutcaster's currently highlighted clientNum."
+		),
+		create_var_record(
 			"cg_hudMapFriendlyWidth",
-			"The size of the friendly icon on the full map",
-			0x7F519E0BEE1AB1CA
-		},
-		{
+			"The size of the friendly icon on the full map"
+		),
+		create_var_record(
 			"cg_hudMapFriendlyHeight",
-			"The size of the friendly icon on the full map",
-			0x4619BD1BC36D8445
-		},
-		{
+			"The size of the friendly icon on the full map"
+		),
+		create_var_record(
 			"cg_hudMapPlayerWidth",
-			"The size of the player's icon on the full map",
-			0x6178FDF4AAD2F55C
-		},
-		{
+			"The size of the player's icon on the full map"
+		),
+		create_var_record(
 			"cg_hudMapPlayerHeight",
-			"The size of the player's icon on the full map",
-			0x24B133C70747FCEB
-		},
-		{
+			"The size of the player's icon on the full map"
+		),
+		create_var_record(
 			"waypointIconWidth",
-			"Width of the offscreen pointer.",
-			0x7D914A08D198D4D9
-		},
-		{
+			"Width of the offscreen pointer."
+		),
+		create_var_record(
 			"waypointIconHeight",
-			"Height of the offscreen pointer.",
-			0x7E8A5C6D93107AC8
-		},
-		{
+			"Height of the offscreen pointer."
+		),
+		create_var_record(
 			"waypointOffscreenPointerDistance",
-			"Distance from the center of the offscreen objective icon to the center its arrow.",
-			0x678EB86FAC35A1BB
-		},
-		{
+			"Distance from the center of the offscreen objective icon to the center its arrow."
+		),
+		create_var_record(
 			"cg_threatDetectorRadius",
-			"The radius of the threat detector scan.",
-			0x6D04072BA075F624
-		},
-		{
+			"The radius of the threat detector scan."
+		),
+		create_var_record(
 			"cg_usingClientScripts",
-			"True, if client scripts are enabled.",
-			0x2651402F8E72FD35
-		},
-		{
+			"True, if client scripts are enabled."
+		),
+		create_var_record(
 			"cg_drawGun",
-			"Draw the view model",
-			0x21ECB143EDAE83C0
-		},
-		{
+			"Draw the view model"
+		),
+		create_var_record(
 			"cg_weaponHintsCoD1Style",
-			"Draw weapon hints in CoD1 style: with the weapon name, and with the icon below",
-			0x386051E08C3DBFCC
-		},
-		{
+			"Draw weapon hints in CoD1 style: with the weapon name, and with the icon below"
+		),
+		create_var_record(
 			"cg_focalLength",
-			"Lens focal length for 3-perf 16x9 super 35mm (24.89mm x 14mm)",
-			0x76CB476AD96F6429
-		},
-		{
+			"Lens focal length for 3-perf 16x9 super 35mm (24.89mm x 14mm)"
+		),
+		create_var_record(
 			"cg_fov",
-			"The field of view angle in degrees",
-			0x68E6BD38B3C5F133
-		},
-		{
+			"The field of view angle in degrees"
+		),
+		create_var_record(
 			"cg_fovExtraCam",
-			"The field of view angle in degrees for the extra cam",
-			0x619179B3BFB57936
-		},
-		{
+			"The field of view angle in degrees for the extra cam"
+		),
+		create_var_record(
 			"cg_useWeaponBasedVariableZoom",
-			"Use weapon based variable zoom instead of player based.",
-			0x5F0E3C836B0F7251
-		},
-		{
+			"Use weapon based variable zoom instead of player based."
+		),
+		create_var_record(
 			"cg_viewVehicleInfluenceGunner",
-			"The influence on the view from being a vehicle gunner",
-			0x6CAE8CF76050DCCD
-		},
-		{
+			"The influence on the view from being a vehicle gunner"
+		),
+		create_var_record(
 			"cg_viewVehicleInfluenceGunnerFiring",
-			"The influence on the view from being a vehicle gunner while firing",
-			0x2A04D21251DFF822LL
-		},
-		{
+			"The influence on the view from being a vehicle gunner while firing"
+		),
+		create_var_record(
 			"cg_viewVehicleInfluenceGunner_mode",
-			"Controls when the viewVehicleInfluenceGunnerFiring is effective. 0 - only on ADS and firing; 1 - on ADS, firing, or moving camera; 2 - always on",
-			0x292947732E98C3DD
-		},
-		{
+			"Controls when the viewVehicleInfluenceGunnerFiring is effective. 0 - only on ADS and firing; 1 - on ADS, firing, or moving camera; 2 - always on"
+		),
+		create_var_record(
 			"cg_draw2D",
-			"Draw 2D screen elements",
-			0x578107FC9F13DAEC
-		},
-		{
+			"Draw 2D screen elements"
+		),
+		create_var_record(
 			"cg_drawLagometer",
-			"Draw lagometer",
-			0x548B3E93CD81FC04
-		},
-		{
+			"Draw lagometer"
+		),
+		create_var_record(
 			"cg_drawFPS",
-			"Draw frames per second",
-			0x1A9A9543E9EA5C55
-		},
-		{
+			"Draw frames per second"
+		),
+		create_var_record(
 			"cg_drawMaterialImageNum",
-			"Use up/down on the dpad to select an image when cg_drawMaterial is enabled.  Press right for more info on that image.",
-			0x62201416DD316B1C
-		},
-		{
+			"Use up/down on the dpad to select an image when cg_drawMaterial is enabled.  Press right for more info on that image."
+		),
+		create_var_record(
 			"cg_drawMaterialImageName",
-			"Do not use (set by cg_drawMaterialImageNum code)",
-			0x1B45AFDA3D2F6497
-		},
-		{
+			"Do not use (set by cg_drawMaterialImageNum code)"
+		),
+		create_var_record(
 			"cg_drawCrosshair",
-			"Turn on weapon crosshair",
-			0x28A680A206CE7AA
-		},
-		{
+			"Turn on weapon crosshair"
+		),
+		create_var_record(
 			"cg_drawCrosshairCooker",
-			"Turn on cook indicator for cooked grenades. Use 1 for cookOffHoldTime grenades and 2 cookOffHoldTime and cookOffHold ones.",
-			0x28B74F0EA64BBD81
-		},
-		{
+			"Turn on cook indicator for cooked grenades. Use 1 for cookOffHoldTime grenades and 2 cookOffHoldTime and cookOffHold ones."
+		),
+		create_var_record(
 			"cg_drawCrosshairNames",
-			"Draw the name of an enemy under the crosshair",
-			0x3DFF0D6F30875126
-		},
-		{
+			"Draw the name of an enemy under the crosshair"
+		),
+		create_var_record(
 			"cg_hudGrenadeIconMaxRangeFrag",
-			"The minimum distance that a grenade has to be from a player in order to be shown on the grenade indicator",
-			0x7E10D8205D5FB7A3
-		},
-		{
+			"The minimum distance that a grenade has to be from a player in order to be shown on the grenade indicator"
+		),
+		create_var_record(
 			"cg_lagometer_pos",
-			"lagometer position",
-			0x2369C26464214397
-		},
-		{
+			"lagometer position"
+		),
+		create_var_record(
 			"cg_thirdPersonRange",
-			"The range of the camera from the player in third person view",
-			0x7721647E3B677041
-		},
-		{
+			"The range of the camera from the player in third person view"
+		),
+		create_var_record(
 			"cg_thirdPersonAngle",
-			"The angle of the camera from the player in third person view",
-			0x3B52B3027049DD27
-		},
-		{
+			"The angle of the camera from the player in third person view"
+		),
+		create_var_record(
 			"cg_thirdPersonRoll",
-			"The roll of the camera from the player in third person view",
-			0x69BF0372ED5290BF
-		},
-		{
+			"The roll of the camera from the player in third person view"
+		),
+		create_var_record(
 			"cg_thirdPersonSideOffset",
-			"The side offset for the camera from the player in third person view",
-			0x137F72894198596C
-		},
-		{
+			"The side offset for the camera from the player in third person view"
+		),
+		create_var_record(
 			"cg_thirdPersonUpOffset",
-			"The up offset for the camera from the player in third person view",
-			0x1E667A2FDB87697E
-		},
-		{
+			"The up offset for the camera from the player in third person view"
+		),
+		create_var_record(
 			"cg_thirdPersonFocusDist",
-			"The distance infront of the player to aim the 3rd person camera at",
-			0x4709868684DEF034
-		},
-		{
+			"The distance infront of the player to aim the 3rd person camera at"
+		),
+		create_var_record(
 			"cg_thirdPersonFocusOffsetUp",
-			"An offset to add to the position the camera is looking at",
-			0x4AE8BBC003F5814A
-		},
-		{
+			"An offset to add to the position the camera is looking at"
+		),
+		create_var_record(
 			"cg_thirdPersonCamOffsetUp",
-			"An offset to add to the camera position",
-			0x69C3ABA3C8961E95
-		},
-		{
+			"An offset to add to the camera position"
+		),
+		create_var_record(
 			"cg_thirdPersonCamLerpScale",
-			"Lerp amount for the camera in 3rd person mode",
-			0x38173B979832E468
-		},
-		{
+			"Lerp amount for the camera in 3rd person mode"
+		),
+		create_var_record(
 			"cg_thirdPerson",
-			"Use third person view",
-			0x39575543F27BBB7C
-		},
-		{
+			"Use third person view"
+		),
+		create_var_record(
 			"cg_thirdPersonMode",
-			"How the camera behaves in third person",
-			0x17D6FA8AFA02D41F
-		},
-		{
+			"How the camera behaves in third person"
+		),
+		create_var_record(
 			"cg_subtitleWidthWidescreen",
-			"The width of the subtitle on a wide-screen",
-			0x592E4EB48B2992B3
-		},
-		{
+			"The width of the subtitle on a wide-screen"
+		),
+		create_var_record(
 			"cg_headIconMinScreenRadius",
-			"The minumum radius of a head icon on the screen",
-			0x577DAAC9CC20E5DB
-		},
-		{
+			"The minumum radius of a head icon on the screen"
+		),
+		create_var_record(
 			"cg_overheadNamesSize",
-			"The maximum size to show overhead names",
-			0x18CD0DE6C7E17CD
-		},
-		{
+			"The maximum size to show overhead names"
+		),
+		create_var_record(
 			"cg_overheadIconSize",
-			"The maximum size to show overhead icons like 'rank'",
-			0x6A685E4DC639DB4C
-		},
-		{
+			"The maximum size to show overhead icons like 'rank'"
+		),
+		create_var_record(
 			"cg_overheadRankSize",
-			"The size to show rank text",
-			0x13A81F9AA23A7593
-		},
-		{
+			"The size to show rank text"
+		),
+		create_var_record(
 			"cg_healthPerBar",
-			"How much health is represented per health bar",
-			0x442D42EFC73D739A
-		},
-		{
+			"How much health is represented per health bar"
+		),
+		create_var_record(
 			"cg_drawFriendlyNames",
-			"Whether to show friendly names in game",
-			0x58DD8654FFC55717
-		},
-		{
+			"Whether to show friendly names in game"
+		),
+		create_var_record(
 			"cg_playerHighlightTargetSize",
-			"Size of player target highlights.",
-			0x20568A24245D86D3
-		},
-		{
+			"Size of player target highlights."
+		),
+		create_var_record(
 			"cg_ScoresColor_Gamertag_0",
-			"player gamertag color on scoreboard",
-			0x66BEE54AB204EDA4
-		},
-		{
+			"player gamertag color on scoreboard"
+		),
+		create_var_record(
 			"cg_ScoresColor_Gamertag_1",
-			"player gamertag color on scoreboard",
-			0x66BEE64AB204EF57
-		},
-		{
+			"player gamertag color on scoreboard"
+		),
+		create_var_record(
 			"cg_ScoresColor_Gamertag_2",
-			"player gamertag color on scoreboard",
-			0x66BEE74AB204F10A
-		},
-		{
+			"player gamertag color on scoreboard"
+		),
+		create_var_record(
 			"cg_ScoresColor_Gamertag_3",
-			"player gamertag color on scoreboard",
-			0x66BEE84AB204F2BD
-		},
-		{
+			"player gamertag color on scoreboard"
+		),
+		create_var_record(
 			"hud_healthOverlay_pulseStart",
-			"The percentage of full health at which the low-health warning overlay begins flashing",
-			0x62097F9D5D1CCCD7
-		},
-		{
+			"The percentage of full health at which the low-health warning overlay begins flashing"
+		),
+		create_var_record(
 			"cg_drawTalk",
-			"Controls which icons CG_TALKER ownerdraw draws",
-			0x1CAE64EFA0B7AC5C
-		},
-		{
+			"Controls which icons CG_TALKER ownerdraw draws"
+		),
+		create_var_record(
 			"cg_drawJobsPerf",
-			"draw jobs performance information",
-			0x666AE70D31B8A985
-		},
-		{
+			"draw jobs performance information"
+		),
+		create_var_record(
 			"flareDisableEffects",
-			"",
-			0xA05647541297479
-		},
-		{
+			""
+		),
+		create_var_record(
 			"showVisionSetDebugInfo",
-			"Enables visionset debug info",
-			0x3109253A0366F337
-		},
-		{
+			"Enables visionset debug info"
+		),
+		create_var_record(
 			"cl_smoothSnapInterval",
-			"Length of the buffer smoothing the snap interval when adjusting the time delta. Value must be a power of 2.",
-			0x61D822229C373508
-		},
-		{
+			"Length of the buffer smoothing the snap interval when adjusting the time delta. Value must be a power of 2."
+		),
+		create_var_record(
 			"con_typewriterColorBase",
-			"Base color of typewritten objective text.",
-			0x43271A84C67417BF
-		},
-		{
+			"Base color of typewritten objective text."
+		),
+		create_var_record(
 			"cl_deathMessageWidth",
-			"Pixel width of the obituary area",
-			0x1A60BB02342FD5F6
-		},
-		{
+			"Pixel width of the obituary area"
+		),
+		create_var_record(
 			"m_pitch",
-			"Default pitch",
-			0x68045F57217A8E71
-		},
-		{
+			"Default pitch"
+		),
+		create_var_record(
 			"m_filter",
-			"Allow mouse movement smoothing",
-			0x68CB4EF34E0CEDB7
-		},
-		{
+			"Allow mouse movement smoothing"
+		),
+		create_var_record(
 			"m_mouseFilter",
-			"Mouse filter",
-			0x626B0DAB7BF45F06
-		},
-		{
+			"Mouse filter"
+		),
+		create_var_record(
 			"m_mouseAcceleration",
-			"Mouse acceleration",
-			0x24898FD2F3E6C0D8
-		},
-		{
+			"Mouse acceleration"
+		),
+		create_var_record(
 			"m_mouseSensitivity",
-			"Mouse sensitivity",
-			0x7659B9A54E5830C7
-		},
-		{
+			"Mouse sensitivity"
+		),
+		create_var_record(
 			"cl_freelook",
-			"Enable looking with mouse",
-			0x1B49BFBB87BE110E
-		},
-		{
+			"Enable looking with mouse"
+		),
+		create_var_record(
 			"cl_motdString",
-			"Message of the day",
-			0x370CC5B56A1F2E1E
-		},
-		{
+			"Message of the day"
+		),
+		create_var_record(
 			"cl_ingame",
-			"True if the game is active",
-			0x64F0BE81B0EA8E0E
-		},
-		{
+			"True if the game is active"
+		),
+		create_var_record(
 			"player_name",
-			"Player name",
-			0x13A62F542CF8E86E
-		},
-		{
+			"Player name"
+		),
+		create_var_record(
 			"maxVoicePacketsPerFrame",
-			"The max number of voice packets that a local client will process per frame",
-			0x415248C9D932B45E
-		},
-		{
+			"The max number of voice packets that a local client will process per frame"
+		),
+		create_var_record(
 			"splitscreen_playerCount",
-			"The number of players in a splitscreen game",
-			0x6CDDC2FC45915C64
-		},
-		{
+			"The number of players in a splitscreen game"
+		),
+		create_var_record(
 			"splitscreen_horizontal",
-			"Draw splitscreen views horizontally",
-			0x11734D8E2969A720
-		},
-		{
+			"Draw splitscreen views horizontally"
+		),
+		create_var_record(
 			"cl_migrationPingTime",
-			"how many seconds between client pings.  used to determine hosting suitability.",
-			0x605F4A6B9253BE84
-		},
-		{
+			"how many seconds between client pings.  used to determine hosting suitability."
+		),
+		create_var_record(
 			"con_label_filter_mask",
-			"mask to filter tty by label, if flag set then visible (1<<label)",
-			0x7673C35E3BC579EA
-		},
-		{
+			"mask to filter tty by label, if flag set then visible (1<<label)"
+		),
+		create_var_record(
 			"live_whitelistFatal",
-			"Sys_error on whitelist failure",
-			0x63DE3D28FB03C6BD
-		},
-		{
+			"Sys_error on whitelist failure"
+		),
+		create_var_record(
 			"saveLocalMatchRecordBinaryFile",
-			"If set to true, and development-build, save out local copy of match_record",
-			0x528D0D816A279C66
-		},
-		{
+			"If set to true, and development-build, save out local copy of match_record"
+		),
+		create_var_record(
 			"boostcheatIntercept",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x77D6C1D95CEC3AEB
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatHeadshotsTotalMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x2E459C1F4981CC19
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatHeadshotsTotalStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x2E4171E6C7482B48
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatHeadshotsTotalCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x34872A4F326806C1
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatMeanDistanceVictimTraveledMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x3C6DF05BDD412A49
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatMeanDistanceVictimTraveledStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x5EEEB9C944871998
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatMeanDistanceVictimTraveledCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x43893E8BC6E09BF1
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchKillsTotalMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0xFD28CF5C8641BE1
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchKillsTotalStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x6BD387C583F22B10
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchKillsTotalCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x62425AA274DFDE59
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchKillsRatioMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x6EDFF35B6BEE21A4
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchKillsRatioStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x110F3F193C008039
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchKillsRatioCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x379D1549A22DAA30
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatMeanDistanceBitchTraveledMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x205FE014B751A6E3
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatMeanDistanceBitchTraveledStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x22749EF17882566
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatMeanDistanceBitchTraveledCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x5171C2680DD10033
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchHKRatioMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x62048D28DDFE1C32
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchHKRatioStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0xC5EC3AFB326CC03
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchHKRatioCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x77A2AB7C6C7B086E
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatMeanBitchLifetimeMillisecondsMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x50B51916D812938A
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatMeanBitchLifetimeMillisecondsStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x785FE2A3C47E1E5B
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatMeanBitchLifetimeMillisecondsCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x5DCD76E1076CA156
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatKillerXAnomalyMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x67E0A27774065998
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatKillerXAnomalyStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x1ABBB3EAF8DC2ACD
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatKillerXAnomalyCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x5C1C642433688094
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatKillerYAnomalyMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x4765F5181BF5008D
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatKillerYAnomalyStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x3BC1A44CF0C42D6C
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatKillerYAnomalyCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x6CA433063DDCAB45
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatVictimXAnomalyMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x176DAD5D2149C62B
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatVictimXAnomalyStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x23DCE595A940480E
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatVictimXAnomalyCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x106E4F2D37C2B40B
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatVictimYAnomalyMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0xC2488A3B8FCF73E
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatVictimYAnomalyStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x37AB4E985AFE3FBF
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatVictimYAnomalyCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x760B1631A59F3B1A
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchKillTimestampsAnomalyMean",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x669A1B5569515FA4
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchKillTimestampsAnomalyStddev",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x63FA4C984CDF6E39
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"boostcheatBitchKillTimestampsAnomalyCoef",
-			"Boosting detector parameter (64 bits should be cast to double)",
-			0x2F573D439F90E830
-		},
-		{
+			"Boosting detector parameter (64 bits should be cast to double)"
+		),
+		create_var_record(
 			"fx_marks_draw",
-			"Toggles whether decals are rendered",
-			0x554F283CF5BBB40D
-		},
-		{
+			"Toggles whether decals are rendered"
+		),
+		create_var_record(
 			"fx_debugBolt",
-			"Debug effects bolt",
-			0x13715E5F63F75BB4
-		},
-		{
+			"Debug effects bolt"
+		),
+		create_var_record(
 			"fx_visMinTraceDist",
-			"Minimum visibility trace size",
-			0x689DAFFEFBC5B8A3
-		},
-		{
+			"Minimum visibility trace size"
+		),
+		create_var_record(
 			"fx_profile",
-			"Turn on FX profiling (specify which local client, with '1' being the first.)",
-			0x2828BD4F09D20C31
-		},
-		{
+			"Turn on FX profiling (specify which local client, with '1' being the first.)"
+		),
+		create_var_record(
 			"fx_mark_profile",
-			"Turn on FX profiling for marks (specify which local client, with '1' being the first.)",
-			0x6025BE4FF3B6DC0B
-		},
-		{
+			"Turn on FX profiling for marks (specify which local client, with '1' being the first.)"
+		),
+		create_var_record(
 			"fx_drawClouds",
-			"Toggles the drawing of particle clouds",
-			0x67E5F2422228DF00
-		},
-		{
+			"Toggles the drawing of particle clouds"
+		),
+		create_var_record(
 			"fx_occlusion_max_player_count",
-			"Maximium number of local clients that FX is drawing sprite with occlusion test.)",
-			0x7A04AB2A40DD934C
-		},
-		{
+			"Maximium number of local clients that FX is drawing sprite with occlusion test.)"
+		),
+		create_var_record(
 			"ai_useTacticalInfluencers",
-			"Tactical Influencers : Debug draw tactical influencers.",
-			0xE64F867441D32D2
-		},
-		{
+			"Tactical Influencers : Debug draw tactical influencers."
+		),
+		create_var_record(
 			"ai_tacticalInfluencersDebug",
-			"Tactical Influencers : Debug draw tactical influencers.",
-			0x15BD02D3438184FE
-		},
-		{
+			"Tactical Influencers : Debug draw tactical influencers."
+		),
+		create_var_record(
 			"ai_tacticalInfluencersThreatDebug",
-			"Tactical Influencers : Debug draw tactical threat.",
-			0x4E9695DF71A2B13E
-		},
-		{
+			"Tactical Influencers : Debug draw tactical threat."
+		),
+		create_var_record(
 			"ui_blocksaves",
-			"prevents level progression in saves, does not block player progression",
-			0x30A8D8634A92B501
-		},
-		{
+			"prevents level progression in saves, does not block player progression"
+		),
+		create_var_record(
 			"settings_defaultSubtitles",
-			"Any language that allows subtitles (except English) defaults to turn them on",
-			0x6A3882A8980DD4B
-		},
-		{
+			"Any language that allows subtitles (except English) defaults to turn them on"
+		),
+		create_var_record(
 			"tgraph_debugDrawPoints",
-			"Draw points in the graph",
-			0x404206C0DE7A2000
-		},
-		{
+			"Draw points in the graph"
+		),
+		create_var_record(
 			"tgraph_debugShowStats",
-			"Show stats information of tgraph",
-			0xE9361E3BCD4825F
-		},
-		{
+			"Show stats information of tgraph"
+		),
+		create_var_record(
 			"tgraph_debugDrawPointNavFace",
-			"Draw the navmesh face points are linked to",
-			0x385F502007EBCC1D
-		},
-		{
+			"Draw the navmesh face points are linked to"
+		),
+		create_var_record(
 			"tgraph_debugTargetPointId",
-			"Debug the point with this ID",
-			0x4B79E47CE500ED2B
-		},
-		{
+			"Debug the point with this ID"
+		),
+		create_var_record(
 			"tgraph_debugVisMapPointId",
-			"Debug the visibility map on this point",
-			0x6606CB6775DA0EC
-		},
-		{
+			"Debug the visibility map on this point"
+		),
+		create_var_record(
 			"tgraph_debugVisMapDrawNonVisible",
-			"When debugging vismap, should the blocked sight be drawn (with different color)",
-			0x7FB5A6BF01DCCE1C
-		},
-		{
+			"When debugging vismap, should the blocked sight be drawn (with different color)"
+		),
+		create_var_record(
 			"tgraph_debugClearancePointId",
-			"Debug the clearance value on this point",
-			0x651888DC9308757C
-		},
-		{
+			"Debug the clearance value on this point"
+		),
+		create_var_record(
 			"tquery_drawQuery",
-			"Draw debug information for specific querydef",
-			0x1DF75E1978789CF0
-		},
-		{
+			"Draw debug information for specific querydef"
+		),
+		create_var_record(
 			"bot_supported",
-			"Whether bots are supported",
-			0x1E7ACE24E5F53BFF
-		},
-		{
+			"Whether bots are supported"
+		),
+		create_var_record(
 			"bot_friends",
-			"Number of friends allowed in basic training",
-			0x6BAB37F70CE6DC2C
-		},
-		{
+			"Number of friends allowed in basic training"
+		),
+		create_var_record(
 			"bot_enemies",
-			"Number of enemies allowed in basic training",
-			0x4A8F7194BE344C15
-		},
-		{
+			"Number of enemies allowed in basic training"
+		),
+		create_var_record(
 			"bot_difficulty",
-			"Difficulty level of the basic training bots",
-			0x25BBE9E88BDC0BB2
-		},
-		{
+			"Difficulty level of the basic training bots"
+		),
+		create_var_record(
 			"bot_maxFree",
-			"Maximum number of bots for TEAM_FREE",
-			0x7892BE2130E23461
-		},
-		{
+			"Maximum number of bots for TEAM_FREE"
+		),
+		create_var_record(
 			"bot_maxAllies",
-			"Maximum number of bots for TEAM_ALLIES",
-			0x6D3130B2EC402E19
-		},
-		{
+			"Maximum number of bots for TEAM_ALLIES"
+		),
+		create_var_record(
 			"bot_maxAxis",
-			"Maximum number of bots for TEAM_AXIS",
-			0x11C4E0094D23D4C6
-		},
-		{
+			"Maximum number of bots for TEAM_AXIS"
+		),
+		create_var_record(
 			"bot_maxMantleHeight",
-			"Max height a bot will attempt a mantle traversal",
-			0x281E02EB013CEF23
-		},
-		{
+			"Max height a bot will attempt a mantle traversal"
+		),
+		create_var_record(
 			"bot_AllowMelee",
-			"Allow bots to press the melee button",
-			0x79BF75D9C3E06DC0
-		},
-		{
+			"Allow bots to press the melee button"
+		),
+		create_var_record(
 			"bot_AllowGrenades",
-			"Allow bots to throw lethal and tactical grenades",
-			0x7441BDEA89ABB723
-		},
-		{
+			"Allow bots to throw lethal and tactical grenades"
+		),
+		create_var_record(
 			"bot_AllowHeroGadgets",
-			"Allow bots to use hero gadgets",
-			0x122642EF8BF88909
-		},
-		{
+			"Allow bots to use hero gadgets"
+		),
+		create_var_record(
 			"g_loadScripts",
-			"Disable scripts from loading",
-			0xF9EE6F4CF38FDED
-		},
-		{
+			"Disable scripts from loading"
+		),
+		create_var_record(
 			"ui_doa_unlocked",
-			"unlock doa in the mission list",
-			0x69795D7673E89E70
-		},
-		{
+			"unlock doa in the mission list"
+		),
+		create_var_record(
 			"ui_codexindex_unlocked",
-			"add the master index to the bookmarks list",
-			0x77902CF694444B1F
-		},
-		{
+			"add the master index to the bookmarks list"
+		),
+		create_var_record(
 			"g_password",
-			"Password",
-			0x7CC5023AED7FBBFA
-		},
-		{
+			"Password"
+		),
+		create_var_record(
 			"g_speed",
-			"Player speed",
-			0x3D668E8FB0FEA3A6
-		},
-		{
+			"Player speed"
+		),
+		create_var_record(
 			"g_debugDamage",
-			"Show debug information for damage",
-			0x4855D10120F3F81F
-		},
-		{
+			"Show debug information for damage"
+		),
+		create_var_record(
 			"g_vehicleDrawSplines",
-			"Draws the vehicles splines",
-			0x756B9210B98A662F
-		},
-		{
+			"Draws the vehicles splines"
+		),
+		create_var_record(
 			"g_vehicleBypassFriendlyFire",
-			"Make vehicle always damagable regardless of team",
-			0x2120543394DF2956
-		},
-		{
+			"Make vehicle always damagable regardless of team"
+		),
+		create_var_record(
 			"ai_useLeanRunAnimations",
-			"whether to use lean run animations instead of strafes",
-			0x40D79AF37BA8815F
-		},
-		{
+			"whether to use lean run animations instead of strafes"
+		),
+		create_var_record(
 			"ai_showNodesDist",
-			"Maximum distance from the camera at which AI nodes are shown",
-			0x2D6C6DEC81F8F2EA
-		},
-		{
+			"Maximum distance from the camera at which AI nodes are shown"
+		),
+		create_var_record(
 			"ai_showNearestNode",
-			"Show nodes closest to AI",
-			0x178313DF9CCD820D
-		},
-		{
+			"Show nodes closest to AI"
+		),
+		create_var_record(
 			"ai_debugVolumeTool",
-			"Show AI navigation volume debug information",
-			0x2A6130184529EA53
-		},
-		{
+			"Show AI navigation volume debug information"
+		),
+		create_var_record(
 			"ai_showPaths",
-			"Show AI navigation paths",
-			0x503E418BF304A803
-		},
-		{
+			"Show AI navigation paths"
+		),
+		create_var_record(
 			"ai_clampToNavMeshEnabled",
-			"Periodically clamp actors to the navmesh if they get off it.",
-			0x5499795E080D6AC3
-		},
-		{
+			"Periodically clamp actors to the navmesh if they get off it."
+		),
+		create_var_record(
 			"ai_debugCoverEntityNum",
-			"Display debug info for cover",
-			0x284D591C2F10FCB
-		},
-		{
+			"Display debug info for cover"
+		),
+		create_var_record(
 			"ai_showDodge",
-			"Display debug information for AI dodging",
-			0x31C69EEDA406C6A4
-		},
-		{
+			"Display debug information for AI dodging"
+		),
+		create_var_record(
 			"ai_debugAnimScripted",
-			"Enable debugging information for anim scripted AI.",
-			0x350D3015C1C91094
-		},
-		{
+			"Enable debugging information for anim scripted AI."
+		),
+		create_var_record(
 			"ai_debugEntIndex",
-			"Entity index of an entity to debug",
-			0x2F1E9D0E9CA7FE80
-		},
-		{
+			"Entity index of an entity to debug"
+		),
+		create_var_record(
 			"ai_debugArrivals",
-			"Record AI arrival and exit debug information",
-			0xFE513FF6FBCEB55
-		},
-		{
+			"Record AI arrival and exit debug information"
+		),
+		create_var_record(
 			"ai_meleeDamage",
-			"The amount of damage dealt by AI's melee attack",
-			0x6D790B88D21C115D
-		},
-		{
+			"The amount of damage dealt by AI's melee attack"
+		),
+		create_var_record(
 			"ai_scaleSightUpdateLatency",
-			"Scale actor sight update latency based on distance to the nearest player",
-			0x2BD4960B68DC94EC
-		},
-		{
+			"Scale actor sight update latency based on distance to the nearest player"
+		),
+		create_var_record(
 			"ai_accuracy_attackerCountDecrease",
-			"Accuracy multiplied by this number for each additional attacker upto ai_accuracy_attackerCountMax",
-			0xD5DB8A3B1E7D340
-		},
-		{
+			"Accuracy multiplied by this number for each additional attacker upto ai_accuracy_attackerCountMax"
+		),
+		create_var_record(
 			"g_motd",
-			"The message of the day",
-			0x6EBC397E70F45327
-		},
-		{
+			"The message of the day"
+		),
+		create_var_record(
 			"g_allowVote",
-			"Enable voting on this server",
-			0x4DCD3D13CB022B30
-		},
-		{
+			"Enable voting on this server"
+		),
+		create_var_record(
 			"g_customTeamName_Allies",
-			"User assigned allied team name",
-			0x311512429BB852D5
-		},
-		{
+			"User assigned allied team name"
+		),
+		create_var_record(
 			"g_customTeamName_Axis",
-			"User assigned axis team name",
-			0x38BE7B1FE08578FA
-		},
-		{
+			"User assigned axis team name"
+		),
+		create_var_record(
 			"g_TeamName_Allies",
-			"Allied team name",
-			0xBA6F504C6BB64C4
-		},
-		{
+			"Allied team name"
+		),
+		create_var_record(
 			"g_TeamName_Axis",
-			"Axis team name",
-			0x59060A425875477
-		},
-		{
+			"Axis team name"
+		),
+		create_var_record(
 			"g_quadrotorFlyHeight",
-			"Default fly height of the quadrotors",
-			0x7BFD916C78DBFEC6
-		},
-		{
+			"Default fly height of the quadrotors"
+		),
+		create_var_record(
 			"g_fogColorReadOnly",
-			"Fog color that was set in the most recent call to \"setexpfog\"",
-			0x48D7E6F93726DFEE
-		},
-		{
+			"Fog color that was set in the most recent call to \"setexpfog\""
+		),
+		create_var_record(
 			"g_fogStartDistReadOnly",
-			"Fog start distance that was set in the most recent call to \"setexpfog\"",
-			0x1EBF456A7F4465A5
-		},
-		{
+			"Fog start distance that was set in the most recent call to \"setexpfog\""
+		),
+		create_var_record(
 			"g_fogHalfDistReadOnly",
-			"Fog start distance that was set in the most recent call to \"setexpfog\"",
-			0x5798E3AB5484E6F2
-		},
-		{
+			"Fog start distance that was set in the most recent call to \"setexpfog\""
+		),
+		create_var_record(
 			"spawnsystem_convert_spawns_to_structs",
-			"parse all map placed spawns to structs",
-			0x1CA87A4ECD338EE3
-		},
-		{
+			"parse all map placed spawns to structs"
+		),
+		create_var_record(
 			"spawnsystem_player_explored_radius",
-			"How close a spawn point has to be to be considered 'explored'",
-			0x658A64A49033AFCC
-		},
-		{
+			"How close a spawn point has to be to be considered 'explored'"
+		),
+		create_var_record(
 			"spawnsystem_use_code_point_enabled",
-			"Use code to filter enabled and disabled spawn points",
-			0x556525B235545E4
-		},
-		{
+			"Use code to filter enabled and disabled spawn points"
+		),
+		create_var_record(
 			"vehicle_collision_prediction_time",
-			"How far ahead of the vehicle it should predict to do collision damage.",
-			0x37A9B3F84D528AE8
-		},
-		{
+			"How far ahead of the vehicle it should predict to do collision damage."
+		),
+		create_var_record(
 			"vehicle_collision_prediction_crash_time",
-			"How far ahead of the vehicle it should predict to do collision.",
-			0x2D5CE660D3E8EB00
-		},
-		{
+			"How far ahead of the vehicle it should predict to do collision."
+		),
+		create_var_record(
 			"r_lightingSunShadowCacheDynamicSiegeDistance",
-			"Inches from camera to draw dynamic siege shadows",
-			0xFB15EB644CC51ED
-		},
-		{
+			"Inches from camera to draw dynamic siege shadows"
+		),
+		create_var_record(
 			"nv_textureReleaseFrameDelay",
-			"nv_textureReleaseFrameDelay",
-			0x74772F5FEAB31BB2
-		},
-		{
+			"nv_textureReleaseFrameDelay"
+		),
+		create_var_record(
 			"nv_textureReleaseMaxPerFrame",
-			"nv_textureReleaseMaxPerFrame",
-			0x15B112392F74E6C0
-		},
-		{
+			"nv_textureReleaseMaxPerFrame"
+		),
+		create_var_record(
 			"amd_useShaderExtension",
-			"use read first lane",
-			0x2035B9CFCA6E21A1
-		},
-		{
+			"use read first lane"
+		),
+		create_var_record(
 			"r_drawFrameDurationGraph",
-			"Display a graph of the frame durations.",
-			0x3F6C02556D8ADFDF
-		},
-		{
+			"Display a graph of the frame durations."
+		),
+		create_var_record(
 			"r_lateAllocLimit",
-			"Set the VS late alloc limit for parameter cache",
-			0x7D131D753AF12A8E
-		},
-		{
+			"Set the VS late alloc limit for parameter cache"
+		),
+		create_var_record(
 			"r_OIT",
-			"Enable Order Independant Transperancy.",
-			0x4F1BFEB2452744FE
-		},
-		{
+			"Enable Order Independant Transperancy."
+		),
+		create_var_record(
 			"r_backBufferCount",
-			"Number of backbuffer, set to 3 to enable triple buffering",
-			0x1FA529540F1E4CB2
-		},
-		{
+			"Number of backbuffer, set to 3 to enable triple buffering"
+		),
+		create_var_record(
 			"r_fullscreen",
-			"Game window mode (window, fullscreen, fullscreen window)",
-			0x17119D0EEFF392AB
-		},
-		{
+			"Game window mode (window, fullscreen, fullscreen window)"
+		),
+		create_var_record(
 			"r_convergence",
-			"Change 3D convergence",
-			0x1022AF0F7BA8C9AB
-		},
-		{
+			"Change 3D convergence"
+		),
+		create_var_record(
 			"r_deferredIgnoreShadowUpdate",
-			"Lighting: Ignore the shadow update flag",
-			0x2FC480AE9FE2162A
-		},
-		{
+			"Lighting: Ignore the shadow update flag"
+		),
+		create_var_record(
 			"r_deferredForceShadowNeverUpdate",
-			"Lighting: Always render shadow only once",
-			0x7584D68D5979628B
-		},
-		{
+			"Lighting: Always render shadow only once"
+		),
+		create_var_record(
 			"r_viewmodelSelfShadow",
-			"Enable viewmodel self shadowing",
-			0x90E076F4ED4DA9E
-		},
-		{
+			"Enable viewmodel self shadowing"
+		),
+		create_var_record(
 			"r_dedicatedPlayerShadow",
-			"Enable player dedicated shadowing",
-			0x6FDA5D20BF93E4D6
-		},
-		{
+			"Enable player dedicated shadowing"
+		),
+		create_var_record(
 			"r_dedicatedPlayerSunShadowPenumbraScale",
-			"Change player shadow penumbra in sun",
-			0x107A4E5B51797B2A
-		},
-		{
+			"Change player shadow penumbra in sun"
+		),
+		create_var_record(
 			"r_lightingSunShadowDisableDynamicDraw",
-			"Disable rendering to the sun shadow splits",
-			0x1FF11E85689F1D27
-		},
-		{
+			"Disable rendering to the sun shadow splits"
+		),
+		create_var_record(
 			"r_lightingSunShadowCacheEnable",
-			"Enable caching for sun shadows",
-			0x2B8F13916B447A95
-		},
-		{
+			"Enable caching for sun shadows"
+		),
+		create_var_record(
 			"r_lightingSunShadowSSTMipDrop",
-			"Drop mips from the SST (saving GPU memory)",
-			0x31FA6BCF24DD9989
-		},
-		{
+			"Drop mips from the SST (saving GPU memory)"
+		),
+		create_var_record(
 			"r_lightingReflectionProbeMipDrop",
-			"Number of mips to drop from the reflection probes",
-			0x5A46991F6490D9D2
-		},
-		{
+			"Number of mips to drop from the reflection probes"
+		),
+		create_var_record(
 			"r_lightingSpotOmniShadowMaxQuality",
-			"Set the maximum spot/omni shadow quality",
-			0x6FAD994D7EA928D4
-		},
-		{
+			"Set the maximum spot/omni shadow quality"
+		),
+		create_var_record(
 			"r_lightingSpotShadowForceSize",
-			"Set the maximum spot shadows size",
-			0xCD712C427611FC
-		},
-		{
+			"Set the maximum spot shadows size"
+		),
+		create_var_record(
 			"r_lightingShadowFiltering",
-			"Enable shadow filtering",
-			0x31DB03CD6D2C3A30
-		},
-		{
+			"Enable shadow filtering"
+		),
+		create_var_record(
 			"r_lightingOmniShadowForceSize",
-			"Set the maximum spot shadows size",
-			0x4C29E8FDE4B16EBB
-		},
-		{
+			"Set the maximum spot shadows size"
+		),
+		create_var_record(
 			"r_dedicatedPlayerSunShadowResolution",
-			"Set the sun dedicated shadow resolution",
-			0x628B9435BE1BC22E
-		},
-		{
+			"Set the sun dedicated shadow resolution"
+		),
+		create_var_record(
 			"r_dedicatedPlayerSpotOmniShadowResolution",
-			"Set the spot/omni dedicated shadow resolution",
-			0xA1970050D530DBD
-		},
-		{
+			"Set the spot/omni dedicated shadow resolution"
+		),
+		create_var_record(
 			"r_viewModelSunShadowResolution",
-			"Set the sun view model shadow resolution",
-			0x5B5E7FECA1C1E820
-		},
-		{
+			"Set the sun view model shadow resolution"
+		),
+		create_var_record(
 			"r_viewModelSpotOmniShadowResolution",
-			"Set the spot/omni view mode shadow resolution",
-			0x4AD4EB0B31BED373
-		},
-		{
+			"Set the spot/omni view mode shadow resolution"
+		),
+		create_var_record(
 			"r_spotShadowRes",
-			"Spot shadow resolution",
-			0x3007F3D0B2A87CE0
-		},
-		{
+			"Spot shadow resolution"
+		),
+		create_var_record(
 			"r_omniShadowRes",
-			"Omni shadow resolution",
-			0xAB8A3CBD4C298D7
-		},
-		{
+			"Omni shadow resolution"
+		),
+		create_var_record(
 			"r_asyncCompute",
-			"Enable all async compute that uses the GfxAsyncComputeScope class.",
-			0x4CAE2BA1B11793F7
-		},
-		{
+			"Enable all async compute that uses the GfxAsyncComputeScope class."
+		),
+		create_var_record(
 			"r_extracamDisable",
-			"Disable extracam rendering",
-			0x22F1E77CFA52C6C5
-		},
-		{
+			"Disable extracam rendering"
+		),
+		create_var_record(
 			"r_forceTextureAniso",
-			"Force Anisotropy filter level",
-			0x6075FAB09C00BEF8
-		},
-		{
+			"Force Anisotropy filter level"
+		),
+		create_var_record(
 			"r_forceMaxTextureSize",
-			"Force max texture sizes",
-			0x36BA04D92CEBDAF9
-		},
-		{
+			"Force max texture sizes"
+		),
+		create_var_record(
 			"r_autoLodCullRadius",
-			"Auto-lod culling radius in screen pixels.",
-			0x68D3B225F9F1007E
-		},
-		{
+			"Auto-lod culling radius in screen pixels."
+		),
+		create_var_record(
 			"r_lodScaleRigid",
-			"Scale the level of detail distance for rigid models (larger reduces detail)",
-			0x66F441B5D3DA7128
-		},
-		{
+			"Scale the level of detail distance for rigid models (larger reduces detail)"
+		),
+		create_var_record(
 			"r_lodBiasRigid",
-			"Bias the level of detail distance for rigid models (negative increases detail)",
-			0x1237E8F3F6E82437
-		},
-		{
+			"Bias the level of detail distance for rigid models (negative increases detail)"
+		),
+		create_var_record(
 			"r_modelLodBias",
-			"LOD scale",
-			0x1158EBB90220A543
-		},
-		{
+			"LOD scale"
+		),
+		create_var_record(
 			"r_modelLodLimit",
-			"Hard limit to reject higher lod from being picked",
-			0x5D679AB6B6B38EFD
-		},
-		{
+			"Hard limit to reject higher lod from being picked"
+		),
+		create_var_record(
 			"r_lodThresholdPixelArea",
-			"When screen-space average triangle area falls below this threshold, switch LODs",
-			0x64B64F67362C4D71
-		},
-		{
+			"When screen-space average triangle area falls below this threshold, switch LODs"
+		),
+		create_var_record(
 			"r_zfar",
-			"Change the distance at which culling fog reaches 100% opacity; 0 is off",
-			0x51A6C7802FCD8D4D
-		},
-		{
+			"Change the distance at which culling fog reaches 100% opacity; 0 is off"
+		),
+		create_var_record(
 			"r_fog",
-			"Set to 0 to disable fog",
-			0xC7CFCB268217646
-		},
-		{
+			"Set to 0 to disable fog"
+		),
+		create_var_record(
 			"r_norefresh",
-			"Skips all rendering.  Useful for benchmarking.",
-			0x7436EE050770275C
-		},
-		{
+			"Skips all rendering.  Useful for benchmarking."
+		),
+		create_var_record(
 			"r_scaleViewport",
-			"Scale 3D viewports by this fraction.  Use this to see if framerate is pixel shader bound.",
-			0x7D9F9D5F2716D806
-		},
-		{
+			"Scale 3D viewports by this fraction.  Use this to see if framerate is pixel shader bound."
+		),
+		create_var_record(
 			"r_vsync",
-			"Enable v-sync before drawing the next frame to avoid 'tearing' artifacts.",
-			0x2CED14A629F3C33
-		},
-		{
+			"Enable v-sync before drawing the next frame to avoid 'tearing' artifacts."
+		),
+		create_var_record(
 			"r_clearColor",
-			"Color to clear the screen to when clearing the frame buffer",
-			0xD1E5694DBB641FE
-		},
-		{
+			"Color to clear the screen to when clearing the frame buffer"
+		),
+		create_var_record(
 			"r_clearColor2",
-			"Color to clear every second frame to (for use during development)",
-			0xCEEAF156B1CDA4
-		},
-		{
+			"Color to clear every second frame to (for use during development)"
+		),
+		create_var_record(
 			"r_viewportBackingColor",
-			"Color to clear the frame buffer with before compositing viewports",
-			0x1FE25AD5F9AE4378
-		},
-		{
+			"Color to clear the frame buffer with before compositing viewports"
+		),
+		create_var_record(
 			"r_spotLightShadows",
-			"Enable shadows for spot lights.",
-			0x6A858EA14B4A96AB
-		},
-		{
+			"Enable shadows for spot lights."
+		),
+		create_var_record(
 			"r_spotLightSModelShadows",
-			"Enable static model shadows for spot lights.",
-			0x53BD27FD02686355
-		},
-		{
+			"Enable static model shadows for spot lights."
+		),
+		create_var_record(
 			"r_spotLightEntityShadows",
-			"Enable entity shadows for spot lights.",
-			0x390B0B07740A02
-		},
-		{
+			"Enable entity shadows for spot lights."
+		),
+		create_var_record(
 			"r_lockPvsInCode",
-			"Indicates if pvslock is currently on, in code. Only code should modified this dvar",
-			0x4D3C80F0FCB83C0A
-		},
-		{
+			"Indicates if pvslock is currently on, in code. Only code should modified this dvar"
+		),
+		create_var_record(
 			"r_lockFrameRateTo30Hz",
-			"Locks Frame Rate to 30Hz: -1:Nochange 0:60Hz 1:30Hz",
-			0x302C3DFAB639D8C
-		},
-		{
+			"Locks Frame Rate to 30Hz: -1:Nochange 0:60Hz 1:30Hz"
+		),
+		create_var_record(
 			"r_lockFrameRateTo30Hz_enable",
-			"Enable 30Hz frame rate lock",
-			0x311DAA8036698392
-		},
-		{
+			"Enable 30Hz frame rate lock"
+		),
+		create_var_record(
 			"r_lockFrameRateTo30Hz_dynResOff",
-			"Disable dynamic resolution when 30Hz is forced",
-			0x4B7CAAE12A82F877
-		},
-		{
+			"Disable dynamic resolution when 30Hz is forced"
+		),
+		create_var_record(
 			"r_useStrict30HzConditions",
-			"",
-			0x192AC9C8F6A3F513
-		},
-		{
+			""
+		),
+		create_var_record(
 			"r_forceLod",
-			"Force all level of detail to this level",
-			0x1B7AD1C68F68858
-		},
-		{
+			"Force all level of detail to this level"
+		),
+		create_var_record(
 			"r_zombieNameAllowFriendsList",
-			"Allow zombie name to be from friends list",
-			0x2C17001DFE001EC5
-		},
-		{
+			"Allow zombie name to be from friends list"
+		),
+		create_var_record(
 			"r_zombieNameAllowDevList",
-			"Allow zombie name to be from dev list",
-			0x5B8AA65489D0E9B7
-		},
-		{
+			"Allow zombie name to be from dev list"
+		),
+		create_var_record(
 			"r_tilingHighlight",
-			"",
-			0x9372FCBFC7AACAF
-		},
-		{
+			""
+		),
+		create_var_record(
 			"r_tilingLightCount",
-			"",
-			0x177A63C69A2A005E
-		},
-		{
+			""
+		),
+		create_var_record(
 			"r_tilingProbeCount",
-			"",
-			0x4ADBA09931E2FDB0
-		},
-		{
+			""
+		),
+		create_var_record(
 			"r_tilingSunShadow",
-			"",
-			0x24FB014803E1807D
-		},
-		{
+			""
+		),
+		create_var_record(
 			"r_streamReadLog",
-			"Log image and mesh reading",
-			0x7A1AD490F5DE6EDC
-		},
-		{
+			"Log image and mesh reading"
+		),
+		create_var_record(
 			"r_streamTextureMemoryMax",
-			"Limit size of stream buffer in MB (0 is no limit)",
-			0x1EB239BAB8F4C64C
-		},
-		{
+			"Limit size of stream buffer in MB (0 is no limit)"
+		),
+		create_var_record(
 			"r_streamFreezeState",
-			"Freeze the state of all streaming memory - don't allow streaming or un-streaming of any images.",
-			0x64A44B0A964FE5C6
-		},
-		{
+			"Freeze the state of all streaming memory - don't allow streaming or un-streaming of any images."
+		),
+		create_var_record(
 			"r_stereo3DAvailable",
-			"3D Mode available",
-			0x69D310DFC9DB3A64
-		},
-		{
+			"3D Mode available"
+		),
+		create_var_record(
 			"r_stereo3DOn",
-			"3D on off toggle",
-			0x79AE57C71B3EE024
-		},
-		{
+			"3D on off toggle"
+		),
+		create_var_record(
 			"r_stereo3DMode",
-			"3D Rendering mode",
-			0xED4A478D5975BD6
-		},
-		{
+			"3D Rendering mode"
+		),
+		create_var_record(
 			"r_gpuCullingDisableDepthTest",
-			"disable the gpu culling depth part",
-			0x28E84101A211F0B1
-		},
-		{
+			"disable the gpu culling depth part"
+		),
+		create_var_record(
 			"r_dedicatedShadowsUmbra",
-			"Cull dedicated player and viewmodel shadows",
-			0x26AC75F33E63A84D
-		},
-		{
+			"Cull dedicated player and viewmodel shadows"
+		),
+		create_var_record(
 			"r_cachedSpotShadowCopyMode",
-			"spot shadow copy mode",
-			0x605E17F1604A24B6
-		},
-		{
+			"spot shadow copy mode"
+		),
+		create_var_record(
 			"r_smaaQuincunx",
-			"Enables quincunx temporal resolve (for T2x modes)",
-			0x3F2D6BC066490BC7
-		},
-		{
+			"Enables quincunx temporal resolve (for T2x modes)"
+		),
+		create_var_record(
 			"r_fxaaDebug",
-			"FXAA debug mode",
-			0x64A37EC518A161A1
-		},
-		{
+			"FXAA debug mode"
+		),
+		create_var_record(
 			"r_fxaaContrastThreshold",
-			"FXAA contrast threshold",
-			0x4DED251EC3283C07
-		},
-		{
+			"FXAA contrast threshold"
+		),
+		create_var_record(
 			"r_fxaaSubpixelRemoval",
-			"FXAA subpixel removal",
-			0x54AD7417CE2CC11C
-		},
-		{
+			"FXAA subpixel removal"
+		),
+		create_var_record(
 			"r_aaTechnique",
-			"Anti-aliasing technique",
-			0x24B8757D7CB6ED3A
-		},
-		{
+			"Anti-aliasing technique"
+		),
+		create_var_record(
 			"r_aaAllowTemporalMultiGpu",
-			"Anti-aliasing temporal overide for SLI",
-			0x24718B7D628332CA
-		},
-		{
+			"Anti-aliasing temporal overide for SLI"
+		),
+		create_var_record(
 			"r_ssaoTechnique",
-			"SSAO technique.",
-			0x210198A6861793FE
-		},
-		{
+			"SSAO technique."
+		),
+		create_var_record(
 			"r_smodel_partialSortWorkers",
-			"Number of workers to sort the smodel",
-			0x799AB83AEF380629
-		},
-		{
+			"Number of workers to sort the smodel"
+		),
+		create_var_record(
 			"r_smodel_splitWorkers",
-			"Number of workers to split smodel",
-			0x7AD33EF60F4D0E12
-		},
-		{
+			"Number of workers to split smodel"
+		),
+		create_var_record(
 			"r_smodel_combineWorkers",
-			"Number of workers to combine smodel",
-			0x43257AF5C86D9659
-		},
-		{
+			"Number of workers to combine smodel"
+		),
+		create_var_record(
 			"r_ssao_gtaoTweak",
-			"Turn on to tweak ssao",
-			0x62F7477D896BDACE
-		},
-		{
+			"Turn on to tweak ssao"
+		),
+		create_var_record(
 			"r_ssao_gtaoStrength",
-			"GTAO strength value. The default (1.0) will produce ground truth values",
-			0x69AC7C51E47AC9A7
-		},
-		{
+			"GTAO strength value. The default (1.0) will produce ground truth values"
+		),
+		create_var_record(
 			"r_ssao_gtaoLow",
-			"GTAO shadow tone",
-			0x495EA0E56358BEA4
-		},
-		{
+			"GTAO shadow tone"
+		),
+		create_var_record(
 			"r_ssao_gtaoMid",
-			"GTAO mid tone",
-			0x502CA6E566AD0FEC
-		},
-		{
+			"GTAO mid tone"
+		),
+		create_var_record(
 			"r_ssao_gtaoHigh",
-			"GTAO high tone",
-			0x6236BBEA7F9351DE
-		},
-		{
+			"GTAO high tone"
+		),
+		create_var_record(
 			"r_sssblurEnable",
-			"SSS Blur enable",
-			0x6C71069B8320C70F
-		},
-		{
+			"SSS Blur enable"
+		),
+		create_var_record(
 			"r_flame_allowed",
-			"Allow flame effect.",
-			0x577E65B2DE936C16
-		},
-		{
+			"Allow flame effect."
+		),
+		create_var_record(
 			"r_filmTweakLut",
-			"Tweak Film LUT Index.",
-			0xDDF8EF33974A79
-		},
-		{
+			"Tweak Film LUT Index."
+		),
+		create_var_record(
 			"r_enablePlayerShadow",
-			"Enable First Person Player Shadow.",
-			0x6A609E5D7353A45C
-		},
-		{
+			"Enable First Person Player Shadow."
+		),
+		create_var_record(
 			"r_xcamsEnabled",
-			"Enable/disable the xcam system controlling the camera (does not effect scene playback).",
-			0x60A9D9F8E304DF73
-		},
-		{
+			"Enable/disable the xcam system controlling the camera (does not effect scene playback)."
+		),
+		create_var_record(
 			"r_expAuto",
-			"toggle auto exposure",
-			0x7695E873F54C6DBA
-		},
-		{
+			"toggle auto exposure"
+		),
+		create_var_record(
 			"r_bloomUseLutALT",
-			"enable alternate lut",
-			0x207D6F85DC11BB4C
-		},
-		{
+			"enable alternate lut"
+		),
+		create_var_record(
 			"vc_LUT",
-			"Lut index",
-			0x516AD05C93DC83B4
-		},
-		{
+			"Lut index"
+		),
+		create_var_record(
 			"r_adsWorldFocalDistanceMax",
-			"Ads World Blur max focalDistance",
-			0x6E13DDF7E61BF9CC
-		},
-		{
+			"Ads World Blur max focalDistance"
+		),
+		create_var_record(
 			"r_adsWorldFocalDistanceMin",
-			"Ads World Blur min focalDistance",
-			0x6E2FEBF7E6348C4E
-		},
-		{
+			"Ads World Blur min focalDistance"
+		),
+		create_var_record(
 			"r_adsWorldFocalDistanceTrackBackScale",
-			"Ads World Blur track back distance scale",
-			0x13E1438EE9AFCB64
-		},
-		{
+			"Ads World Blur track back distance scale"
+		),
+		create_var_record(
 			"r_adsBloomDownsample",
-			"Enables Ads Blur shared bloom downsample",
-			0x78496CBA0C7280D
-		},
-		{
+			"Enables Ads Blur shared bloom downsample"
+		),
+		create_var_record(
 			"r_flameFX_distortionScaleFactor",
-			"Distortion uv scales (Default to 1)",
-			0x6141FA14F5864298
-		},
-		{
+			"Distortion uv scales (Default to 1)"
+		),
+		create_var_record(
 			"r_flameFX_magnitude",
-			"Distortion magnitude",
-			0x1D2E80C7447180D6
-		},
-		{
+			"Distortion magnitude"
+		),
+		create_var_record(
 			"r_flameFX_FPS",
-			"fire frames per sec",
-			0x39EE849E99489A77
-		},
-		{
+			"fire frames per sec"
+		),
+		create_var_record(
 			"r_flameFX_fadeDuration",
-			"Sets fade duration in seconds",
-			0x1978F0B7F3D90962
-		},
-		{
+			"Sets fade duration in seconds"
+		),
+		create_var_record(
 			"r_waterSheetingFX_allowed",
-			"Enable the water sheeting effect",
-			0x1DBAB58A4A6E1991
-		},
-		{
+			"Enable the water sheeting effect"
+		),
+		create_var_record(
 			"r_waterSheetingFX_enable",
-			"Enable the water sheeting effect",
-			0x367DA853EE82C020
-		},
-		{
+			"Enable the water sheeting effect"
+		),
+		create_var_record(
 			"r_waterSheetingFX_distortionScaleFactor",
-			"Distortion uv scales (Default to 1)",
-			0x12DD20A3B2700945
-		},
-		{
+			"Distortion uv scales (Default to 1)"
+		),
+		create_var_record(
 			"r_waterSheetingFX_magnitude",
-			"Distortion magnitude",
-			0x1F0CEC3072D042B3
-		},
-		{
+			"Distortion magnitude"
+		),
+		create_var_record(
 			"r_waterSheetingFX_radius",
-			"Tweak dev var; Glow radius in pixels at 640x480",
-			0x123CB1F564CA51C5
-		},
-		{
+			"Tweak dev var; Glow radius in pixels at 640x480"
+		),
+		create_var_record(
 			"r_anaglyphFX_enable",
-			"Enable red/green Anaglyph 3DS",
-			0x5004E7975889CB2E
-		},
-		{
+			"Enable red/green Anaglyph 3DS"
+		),
+		create_var_record(
 			"r_graphicContentBlur",
-			"Enable Fullscreen Blur",
-			0x10F2E56A987A88FE
-		},
-		{
+			"Enable Fullscreen Blur"
+		),
+		create_var_record(
 			"r_postFxWobble",
-			"Enable Fullscreen Wobble",
-			0x4EF76460F853E0EB
-		},
-		{
+			"Enable Fullscreen Wobble"
+		),
+		create_var_record(
 			"r_eacPathFX_enable",
-			"Enable EAC path overlay",
-			0x541FA64C61C05142
-		},
-		{
+			"Enable EAC path overlay"
+		),
+		create_var_record(
 			"r_eacPath_Posn",
-			"EAC Path drone position",
-			0x40106F7467E0D12B
-		},
-		{
+			"EAC Path drone position"
+		),
+		create_var_record(
 			"r_eacPath_Radius",
-			"EAC Path Radius",
-			0x2ED1AF502DD3BFD5
-		},
-		{
+			"EAC Path Radius"
+		),
+		create_var_record(
 			"r_eacPath_Step",
-			"EAC Path Step",
-			0x3383BA5C25ED0DB5
-		},
-		{
+			"EAC Path Step"
+		),
+		create_var_record(
 			"r_blurAndTintEnable",
-			"Enable Blur and Tint",
-			0x4671CE3EBE139326
-		},
-		{
+			"Enable Blur and Tint"
+		),
+		create_var_record(
 			"r_blurAndTintLevel",
-			"Blur Level",
-			0x42C0B0567E60F185
-		},
-		{
+			"Blur Level"
+		),
+		create_var_record(
 			"r_circleMaskRadius",
-			"Circle Mask Enable",
-			0x7366BAF9D9024CD4
-		},
-		{
+			"Circle Mask Enable"
+		),
+		create_var_record(
 			"r_splitScreenExpandFull",
-			"Split Screen is expanded to Fullscreen",
-			0x21DEC544A0C3A8B7
-		},
-		{
+			"Split Screen is expanded to Fullscreen"
+		),
+		create_var_record(
 			"cl_secondaryPlayerMenuControlDisable",
-			"Disable menu control for the secondary player",
-			0x1DA89F87A79F721E
-		},
-		{
+			"Disable menu control for the secondary player"
+		),
+		create_var_record(
 			"r_ev_distance",
-			"EV distance",
-			0x4618C3DA2528EEA5
-		},
-		{
+			"EV distance"
+		),
+		create_var_record(
 			"r_ev_width",
-			"EV pulse width",
-			0x384825CC11C53C3A
-		},
-		{
+			"EV pulse width"
+		),
+		create_var_record(
 			"r_ev_targetwidth",
-			"EV pulse target width",
-			0xE876CF04933E061
-		},
-		{
+			"EV pulse target width"
+		),
+		create_var_record(
 			"r_ev_rate",
-			"EV pulse rate",
-			0x8DDD7E5D456DCFC
-		},
-		{
+			"EV pulse rate"
+		),
+		create_var_record(
 			"r_ev_geometryrange",
-			"EV geometry range",
-			0x3332E69B8FF565F
-		},
-		{
+			"EV geometry range"
+		),
+		create_var_record(
 			"r_ev_targetrange",
-			"EV target range",
-			0x420C13F6DEAB7184
-		},
-		{
+			"EV target range"
+		),
+		create_var_record(
 			"r_ev_edgewidth",
-			"EV edge pulse width",
-			0x7B38CBCEFB71DB39
-		},
-		{
+			"EV edge pulse width"
+		),
+		create_var_record(
 			"r_ev_edgethickness",
-			"EV edge thickness",
-			0x27652C3FA638B3DF
-		},
-		{
+			"EV edge thickness"
+		),
+		create_var_record(
 			"r_ev_testenable",
-			"EV test enable",
-			0x486204D2814A6D05
-		},
-		{
+			"EV test enable"
+		),
+		create_var_record(
 			"r_ev_screen_scale",
-			"EV screen scale",
-			0x1C3FFACB79E52597
-		},
-		{
+			"EV screen scale"
+		),
+		create_var_record(
 			"r_ev_screen_threshold",
-			"EV screen threshold",
-			0x419B0C4F1BBD16C2
-		},
-		{
+			"EV screen threshold"
+		),
+		create_var_record(
 			"r_ev_random_ground",
-			"EV random ground",
-			0x4DADFA65C0869B7D
-		},
-		{
+			"EV random ground"
+		),
+		create_var_record(
 			"r_ev_random_edge",
-			"EV random edge",
-			0x3271B40FCCE6C5FB
-		},
-		{
+			"EV random edge"
+		),
+		create_var_record(
 			"r_aberrationFX_enable",
-			"Enable Aberration",
-			0xE00C20B4C9BA4A7
-		},
-		{
+			"Enable Aberration"
+		),
+		create_var_record(
 			"r_postFxIndex",
-			"Display PostFx with this index",
-			0x4D2B35C9F7F30A92
-		},
-		{
+			"Display PostFx with this index"
+		),
+		create_var_record(
 			"r_postFxSubIndex",
-			"Tweak PostFx sub index for keyline variants",
-			0x7EC250F3FB82DDD8
-		},
-		{
+			"Tweak PostFx sub index for keyline variants"
+		),
+		create_var_record(
 			"r_postFxUseTweaks",
-			"Override PostFx Params with dvars",
-			0x76D972344D0D0BE0
-		},
-		{
+			"Override PostFx Params with dvars"
+		),
+		create_var_record(
 			"r_catsEyeReset",
-			"Reset CatsEye dvars to default",
-			0x4D6CAAC1E88A8C7B
-		},
-		{
+			"Reset CatsEye dvars to default"
+		),
+		create_var_record(
 			"r_catsEyeDecolor",
-			"Cats Eye: decolor",
-			0x4E99EE8A9A403A76
-		},
-		{
+			"Cats Eye: decolor"
+		),
+		create_var_record(
 			"r_catsEyeNoise",
-			"Cats Eye: noise",
-			0x1E0A6709CD45271E
-		},
-		{
+			"Cats Eye: noise"
+		),
+		create_var_record(
 			"r_catsEyeTexture",
-			"Cats Eye: texture level",
-			0x2B698574B4648EC7
-		},
-		{
+			"Cats Eye: texture level"
+		),
+		create_var_record(
 			"r_catsEyeDistortion",
-			"Cats Eye: distortion &scale",
-			0x49F7AC0C7A4D50BB
-		},
-		{
+			"Cats Eye: distortion &scale"
+		),
+		create_var_record(
 			"r_catsEyeAberation",
-			"Cats Eye: aberation",
-			0xA9505FAF22F71B1
-		},
-		{
+			"Cats Eye: aberation"
+		),
+		create_var_record(
 			"r_catsEyeBlur",
-			"Cats Eye: blur amount",
-			0x112C91F71C6B78B5
-		},
-		{
+			"Cats Eye: blur amount"
+		),
+		create_var_record(
 			"r_catsEyeBlurTint",
-			"Cats Eye: blur tint",
-			0x126DF1AD270E7C5C
-		},
-		{
+			"Cats Eye: blur tint"
+		),
+		create_var_record(
 			"r_chaserFX_enable",
-			"Enable Chaser PostFX",
-			0x46DB079A3DB9210E
-		},
-		{
+			"Enable Chaser PostFX"
+		),
+		create_var_record(
 			"r_heatPulseFX_enable",
-			"Enable Heat Pulse Gun Effect",
-			0x6A38D430C5FF06CF
-		},
-		{
+			"Enable Heat Pulse Gun Effect"
+		),
+		create_var_record(
 			"r_radioactiveFX_enable",
-			"Enable Radiaoctive Effect",
-			0x12630EAD38002B61
-		},
-		{
+			"Enable Radiaoctive Effect"
+		),
+		create_var_record(
 			"r_radioactiveBlur",
-			"Radioactive: blur",
-			0x4893B293B2E5673A
-		},
-		{
+			"Radioactive: blur"
+		),
+		create_var_record(
 			"r_radioactiveSpeed",
-			"Radioactive: fire animation speed",
-			0x62A25B76918294BA
-		},
-		{
+			"Radioactive: fire animation speed"
+		),
+		create_var_record(
 			"r_radioactiveIntensity",
-			"Radioactive: fire intensity",
-			0x39E525954A1F963C
-		},
-		{
+			"Radioactive: fire intensity"
+		),
+		create_var_record(
 			"r_uiHudFX_enable",
-			"Enable UI HUD Effect",
-			0x377F54AB10632357
-		},
-		{
+			"Enable UI HUD Effect"
+		),
+		create_var_record(
 			"r_maxPOMSamples",
-			"Additional ceiling on maximum number of samples in POM raycast, scales performance for testing",
-			0x14F0D7A5C690A863
-		},
-		{
+			"Additional ceiling on maximum number of samples in POM raycast, scales performance for testing"
+		),
+		create_var_record(
 			"r_POMLODStart",
-			"Distance to begin scaling down POM effect",
-			0x7CAABBBF6AA68E2F
-		},
-		{
+			"Distance to begin scaling down POM effect"
+		),
+		create_var_record(
 			"r_POMLODEnd",
-			"Distance to finish scaling down POM effect",
-			0x2CF0E69797B7BADA
-		},
-		{
+			"Distance to finish scaling down POM effect"
+		),
+		create_var_record(
 			"r_poisonFX_pulse",
-			"pulse rate for distortion",
-			0x102E887BB790736
-		},
-		{
+			"pulse rate for distortion"
+		),
+		create_var_record(
 			"r_poisonFX_blurMin",
-			"blur min",
-			0x1072C8A66BA085DC
-		},
-		{
+			"blur min"
+		),
+		create_var_record(
 			"r_poisonFX_blurMax",
-			"blur max",
-			0x1057B6A66B899F8E
-		},
-		{
+			"blur max"
+		),
+		create_var_record(
 			"r_fogTweak",
-			"enable dvar tweaks",
-			0x2E30FB8B48D71276
-		},
-		{
+			"enable dvar tweaks"
+		),
+		create_var_record(
 			"r_fogBaseDist",
-			"start distance",
-			0x410DDEFA7BFABCEB
-		},
-		{
+			"start distance"
+		),
+		create_var_record(
 			"r_fogHalfDist",
-			"distance at which fog is 50%",
-			0x1436D6A4846E4543
-		},
-		{
+			"distance at which fog is 50%"
+		),
+		create_var_record(
 			"r_fogBaseHeight",
-			"start height",
-			0x3178DC89624DE864
-		},
-		{
+			"start height"
+		),
+		create_var_record(
 			"r_fogHalfHeight",
-			"height at which fog is 50%",
-			0x26D7B47F7E253EFC
-		},
-		{
+			"height at which fog is 50%"
+		),
+		create_var_record(
 			"r_fogSkyHalfHeightOffset",
-			"sky fog density half height offset",
-			0x380C854BFB372DBE
-		},
-		{
+			"sky fog density half height offset"
+		),
+		create_var_record(
 			"r_fogColor",
-			"color",
-			0x40434CABE4B9C409
-		},
-		{
+			"color"
+		),
+		create_var_record(
 			"r_fogIntensity",
-			"intensity",
-			0x2D068F6D38A1EB17
-		},
-		{
+			"intensity"
+		),
+		create_var_record(
 			"r_fogOpacity",
-			"opacity",
-			0x44E211D9E74864CF
-		},
-		{
+			"opacity"
+		),
+		create_var_record(
 			"r_fogSunColor",
-			"sun color",
-			0x70BED414D474FC17
-		},
-		{
+			"sun color"
+		),
+		create_var_record(
 			"r_fogSunIntensity",
-			"sun color",
-			0x4859CD09327426A1
-		},
-		{
+			"sun color"
+		),
+		create_var_record(
 			"r_fogSunOpacity",
-			"sun opacity",
-			0x7452B1925FC01AF5
-		},
-		{
+			"sun opacity"
+		),
+		create_var_record(
 			"r_fogSunPitchOffset",
-			"sun pitch offset",
-			0x11CD5A11136723D1
-		},
-		{
+			"sun pitch offset"
+		),
+		create_var_record(
 			"r_fogSunYawOffset",
-			"sun yaw offset",
-			0x7428F54EE23C07F8
-		},
-		{
+			"sun yaw offset"
+		),
+		create_var_record(
 			"r_fogSunInner",
-			"sun angle start",
-			0x2A9390CCB413F320
-		},
-		{
+			"sun angle start"
+		),
+		create_var_record(
 			"r_fogSunOuter",
-			"sun angle end",
-			0x5F3B8889FB93
-		},
-		{
+			"sun angle end"
+		),
+		create_var_record(
 			"r_atmospherefogcolor",
-			"atmosphere fog color (Raleigh)",
-			0xBEC84CC65CA975D
-		},
-		{
+			"atmosphere fog color (Raleigh)"
+		),
+		create_var_record(
 			"r_atmospherefogdensity",
-			"atmosphere fog density",
-			0x19B5AA85A8E03DAE
-		},
-		{
+			"atmosphere fog density"
+		),
+		create_var_record(
 			"r_atmospherehazecolor",
-			"atmosphere haze color (Mie)",
-			0x2C4BA6B721F10B7
-		},
-		{
+			"atmosphere haze color (Mie)"
+		),
+		create_var_record(
 			"r_atmospherehazedensity",
-			"atmosphere sun haze strength (overall density that is allocated to haze with the remainder assigned to fog)",
-			0x2B1CA97A67160D20
-		},
-		{
+			"atmosphere sun haze strength (overall density that is allocated to haze with the remainder assigned to fog)"
+		),
+		create_var_record(
 			"r_atmospherehazespread",
-			"atmosphere sun haze spread",
-			0x6987E682ECA9322F
-		},
-		{
+			"atmosphere sun haze spread"
+		),
+		create_var_record(
 			"r_atmosphereinscatterstrength",
-			"atmosphere fog Brightnesss/In-scatter strength",
-			0x4428C3E62FD3EB8C
-		},
-		{
+			"atmosphere fog Brightnesss/In-scatter strength"
+		),
+		create_var_record(
 			"r_atmosphereextinctionstrength",
-			"atmosphere fog Opacity/Extinction strength",
-			0x53ED525094455850
-		},
-		{
+			"atmosphere fog Opacity/Extinction strength"
+		),
+		create_var_record(
 			"r_atmospheresunstrength",
-			"atmosphere enable sun",
-			0x2BEC3A68814687FD
-		},
-		{
+			"atmosphere enable sun"
+		),
+		create_var_record(
 			"r_atmospherehazebasedist",
-			"Distance at which haze density is 0",
-			0x43DFBAD6F4986AC9
-		},
-		{
+			"Distance at which haze density is 0"
+		),
+		create_var_record(
 			"r_atmospherehazefadedist",
-			"Distance over which to fade in the haze density to 1.0",
-			0x4F6DDD5AEBFA892A
-		},
-		{
+			"Distance over which to fade in the haze density to 1.0"
+		),
+		create_var_record(
 			"r_atmospherepbramount",
-			"0 == Not PBR, 1 == PBR ",
-			0x6067CE892BFA6F56
-		},
-		{
+			"0 == Not PBR, 1 == PBR "
+		),
+		create_var_record(
 			"r_worldfogskysize",
-			"world fog sky distance",
-			0xC1419241263B92A
-		},
-		{
+			"world fog sky distance"
+		),
+		create_var_record(
 			"r_exposureTweak",
-			"enable the exposure dvar tweak",
-			0x3610F004E5080F3D
-		},
-		{
+			"enable the exposure dvar tweak"
+		),
+		create_var_record(
 			"r_exposureValue",
-			"exposure ev stops",
-			0x5038383CD3B3CB5C
-		},
-		{
+			"exposure ev stops"
+		),
+		create_var_record(
 			"r_exposureEyeWeight",
-			"exposure eye vs. probe ratio",
-			0x6223A653E39487B8
-		},
-		{
+			"exposure eye vs. probe ratio"
+		),
+		create_var_record(
 			"r_num_viewports",
-			"number of viewports to expect to render",
-			0x3396B8EB8A8C97BE
-		},
-		{
+			"number of viewports to expect to render"
+		),
+		create_var_record(
 			"r_takeScreenShot",
-			"Takes a screenshot",
-			0x12C1333189502381
-		},
-		{
+			"Takes a screenshot"
+		),
+		create_var_record(
 			"r_skyRotation",
-			"Sky rotation angle.",
-			0x58B46C9D56BC459
-		},
-		{
+			"Sky rotation angle."
+		),
+		create_var_record(
 			"r_skyBoxColorIDX",
-			"SkyBox Color Index",
-			0x2F32973828BFE33E
-		},
-		{
+			"SkyBox Color Index"
+		),
+		create_var_record(
 			"r_sortDrawSurfsBsp",
-			"Sort BSP draw surfaces.",
-			0x15E374A6B3422E76
-		},
-		{
+			"Sort BSP draw surfaces."
+		),
+		create_var_record(
 			"r_sortDrawSurfsStaticModel",
-			"Sort static model draw surfaces.",
-			0x72E8837AB9A41238
-		},
-		{
+			"Sort static model draw surfaces."
+		),
+		create_var_record(
 			"r_videoMode",
-			"pc video output setting",
-			0x5AAA15D9B94E876A
-		},
-		{
+			"pc video output setting"
+		),
+		create_var_record(
 			"r_foveaAcuityColorMin",
-			"full color angle",
-			0x7155492C9BB4388F
-		},
-		{
+			"full color angle"
+		),
+		create_var_record(
 			"r_foveaAcuityColorMax",
-			"reduced color angle",
-			0x713A372C9B9D5241
-		},
-		{
+			"reduced color angle"
+		),
+		create_var_record(
 			"r_FilmIsoMin",
-			"sensor / film min ISO",
-			0x3680E6DF58DDD0F7
-		},
-		{
+			"sensor / film min ISO"
+		),
+		create_var_record(
 			"r_FilmIsoMax",
-			"sensor / film max ISO",
-			0x369BF4DF58F4B079
-		},
-		{
+			"sensor / film max ISO"
+		),
+		create_var_record(
 			"r_FilmIsoNoise",
-			"ISO noise scale",
-			0x1267B15CA6DF0D51
-		},
-		{
+			"ISO noise scale"
+		),
+		create_var_record(
 			"r_dof_aperture_override",
-			"Overrides the aperture of the lens when the dofMode is set to DOF_MAX_BLUR",
-			0x4E57F35E1924ADE5
-		},
-		{
+			"Overrides the aperture of the lens when the dofMode is set to DOF_MAX_BLUR"
+		),
+		create_var_record(
 			"r_dof_max_override",
-			"Overrides the dof max value when the dofMode is set to DOF_MAX_BLUR and the override is non-negative",
-			0x7010715C03B0A7B
-		},
-		{
+			"Overrides the dof max value when the dofMode is set to DOF_MAX_BLUR and the override is non-negative"
+		),
+		create_var_record(
 			"r_dof_min_override",
-			"Overrides the dof min value when the dofMode is set to DOF_MAX_BLUR and the override is non-negative",
-			0x45F7E34E32545A39
-		},
-		{
+			"Overrides the dof min value when the dofMode is set to DOF_MAX_BLUR and the override is non-negative"
+		),
+		create_var_record(
 			"r_volumetric_lighting_blur_depth_threshold",
-			"Set volumetrics blur edge threshold",
-			0xB64218EB27216B3
-		},
-		{
+			"Set volumetrics blur edge threshold"
+		),
+		create_var_record(
 			"r_volumetric_lighting_upsample_depth_threshold",
-			"Set volumetrics upsample edge threshold",
-			0x3B54ADB06BC6423D
-		},
-		{
+			"Set volumetrics upsample edge threshold"
+		),
+		create_var_record(
 			"r_litfog_bank_select",
-			"bank select",
-			0x6E8B45A795354905
-		},
-		{
+			"bank select"
+		),
+		create_var_record(
 			"r_fx_backlighting_amount",
-			"",
-			0x4CE72EBCA3906B63
-		},
-		{
+			""
+		),
+		create_var_record(
 			"r_paperWhite",
-			"SDR paperWhite nits value",
-			0x43F74403764FA29D
-		},
-		{
+			"SDR paperWhite nits value"
+		),
+		create_var_record(
 			"r_newLensFlares_offscreen_buffer_size",
-			"Set the size of the out of screen buffer (in pixels based on a 1080p resolution) ",
-			0x33DAD47783A23FEA
-		},
-		{
+			"Set the size of the out of screen buffer (in pixels based on a 1080p resolution) "
+		),
+		create_var_record(
 			"r_newLensFlares",
-			"enable the new lens flare system",
-			0x7E8391792B3ABC71
-		},
-		{
+			"enable the new lens flare system"
+		),
+		create_var_record(
 			"r_motionVectorGenerateEnable",
-			"toggles motion vector generation",
-			0x2A44F5D7F6E54233
-		},
-		{
+			"toggles motion vector generation"
+		),
+		create_var_record(
 			"r_motionVectorStaticComputeAsync",
-			"enables static motion vector generation to run async",
-			0x7653BCA0DD5DDC6A
-		},
-		{
+			"enables static motion vector generation to run async"
+		),
+		create_var_record(
 			"r_motionBlurMode",
-			"motion blur mode",
-			0x44F87480528FF262
-		},
-		{
+			"motion blur mode"
+		),
+		create_var_record(
 			"r_motionBlurStrength",
-			"control motion blur strength",
-			0x38C17AD45D6603C0
-		},
-		{
+			"control motion blur strength"
+		),
+		create_var_record(
 			"r_motionBlurQuality",
-			"motion blur quality preset",
-			0x6BCA444A94600EF6
-		},
-		{
+			"motion blur quality preset"
+		),
+		create_var_record(
 			"r_shaderDebug",
-			"r_shaderDebug",
-			0x47C54C7B96974FA6
-		},
-		{
+			"r_shaderDebug"
+		),
+		create_var_record(
 			"r_useCachedSpotShadow",
-			"Enable pre-built spot shadow map rendering",
-			0x4F314A20067FE2D7
-		},
-		{
+			"Enable pre-built spot shadow map rendering"
+		),
+		create_var_record(
 			"r_fxShadows",
-			"Particle shadow support",
-			0x519546D6E70793A5
-		},
-		{
+			"Particle shadow support"
+		),
+		create_var_record(
 			"r_xanim_disableExtraChannel",
-			"Disable the extra channel (tension) calculation",
-			0x1E2D0174CE8089F9
-		},
-		{
+			"Disable the extra channel (tension) calculation"
+		),
+		create_var_record(
 			"r_xanim_disableCosmeticBones",
-			"Disable the cosmetic bones calculation",
-			0x5ABF7E0574DF8EEA
-		},
-		{
+			"Disable the cosmetic bones calculation"
+		),
+		create_var_record(
 			"r_dedicatedPlayerShadowCull",
-			"Does not render shadow map if light is facing player",
-			0x3B81AB5A52AAAD5E
-		},
-		{
+			"Does not render shadow map if light is facing player"
+		),
+		create_var_record(
 			"r_dedicatedPlayerShadowCullAngle",
-			"Angle from the foot to the view forward axis where the view model culling cuts off",
-			0x4ADAAB8F89145425
-		},
-		{
+			"Angle from the foot to the view forward axis where the view model culling cuts off"
+		),
+		create_var_record(
 			"r_cmdbuf_worker",
-			"Process command buffer in a separate thread",
-			0x1779BB751B7E4D3E
-		},
-		{
+			"Process command buffer in a separate thread"
+		),
+		create_var_record(
 			"r_addLightWorker",
-			"use a worker for the add lights and probes",
-			0x5C3305FC7FF11965
-		},
-		{
+			"use a worker for the add lights and probes"
+		),
+		create_var_record(
 			"r_useSimpleDObj",
-			"use the simple dobj render path",
-			0x14CE64D0C0288A02
-		},
-		{
+			"use the simple dobj render path"
+		),
+		create_var_record(
 			"hkai_pathfindIterationLimit",
-			"The maximum number of iterations that the astar algorithm is allowed to execute before giving up.",
-			0x6FA90AF593EF6209
-		},
-		{
+			"The maximum number of iterations that the astar algorithm is allowed to execute before giving up."
+		),
+		create_var_record(
 			"hkai_additionalPathfindIterationLimit",
-			"Additional number of iterations added to hkai_pathfindIterationLimit only for GenerateNavmeshPath requests.",
-			0x499D8F9966887540
-		},
-		{
+			"Additional number of iterations added to hkai_pathfindIterationLimit only for GenerateNavmeshPath requests."
+		),
+		create_var_record(
 			"hkai_showTimers",
-			"Whether or not to show the hkai timer debug information.",
-			0x68E7AD0193C9C678
-		},
-		{
+			"Whether or not to show the hkai timer debug information."
+		),
+		create_var_record(
 			"hkai_resetTimers",
-			"Reset the hkai timer debug information.",
-			0x28CF02874DF8931C
-		},
-		{
+			"Reset the hkai timer debug information."
+		),
+		create_var_record(
 			"hkai_timerTestActive",
-			"Whether we're currently engaged in a timer test.",
-			0x4CE120697751C072
-		},
-		{
+			"Whether we're currently engaged in a timer test."
+		),
+		create_var_record(
 			"hkai_storeClearanceRecalcStats",
-			"Store results of refilling teh clearance cache to file.",
-			0x224659262CC519D1
-		},
-		{
+			"Store results of refilling teh clearance cache to file."
+		),
+		create_var_record(
 			"hkai_dumpMemoryLeaks",
-			"Dump the outstanding havok memory allocations the next time HKAI_FreeMapData is called.",
-			0xF41557C84B102F2
-		},
-		{
+			"Dump the outstanding havok memory allocations the next time HKAI_FreeMapData is called."
+		),
+		create_var_record(
 			"hkai_warnPathFindFailures",
-			"Show on screen print-warning if an actor fails to find a path",
-			0x11F904550C88DB48
-		},
-		{
+			"Show on screen print-warning if an actor fails to find a path"
+		),
+		create_var_record(
 			"dw_sendBufSize",
-			"Size in bytes for socketrouter's socket OS send buffer",
-			0x332A652B0EB9C9AD
-		},
-		{
+			"Size in bytes for socketrouter's socket OS send buffer"
+		),
+		create_var_record(
 			"dwNetMaxWaitMs",
-			"Milliseconds we'll wait in dwgetlocalcommonaddr before giving up",
-			0x74F856896FA90DC6
-		},
-		{
+			"Milliseconds we'll wait in dwgetlocalcommonaddr before giving up"
+		),
+		create_var_record(
 			"tu5_dwNetFatalErrors",
-			"Should errors encountered during DTLS handling be fatal",
-			0x6633CCC2EA57A597
-		},
-		{
+			"Should errors encountered during DTLS handling be fatal"
+		),
+		create_var_record(
 			"live_social_quickjoin",
-			"Enable quickjoin widget: 0-disabled, 1-friends, 2-friends+groups",
-			0x474143D29C242A6B
-		},
-		{
+			"Enable quickjoin widget: 0-disabled, 1-friends, 2-friends+groups"
+		),
+		create_var_record(
 			"live_social_quickjoin_count",
-			"number of freinds/group members in the quickjoin list",
-			0x131B67E51F2A16E3
-		},
-		{
+			"number of freinds/group members in the quickjoin list"
+		),
+		create_var_record(
 			"live_social_quickjoin_cache",
-			"QuickJoin presence cache autoupdate",
-			0x7EF63D384E7B7CD6
-		},
-		{
+			"QuickJoin presence cache autoupdate"
+		),
+		create_var_record(
 			"contracts_enabled_mp",
-			"enables contracts",
-			0x1B5AFF095BA580F6
-		},
-		{
+			"enables contracts"
+		),
+		create_var_record(
 			"noDW",
-			"Use DW",
-			0x3C2F09BAD1862417
-		},
-		{
+			"Use DW"
+		),
+		create_var_record(
 			"totalSampleRateQoS",
-			"Total sample rate for sandbox - random + static - for QoS channel",
-			0x525F34304F9BAAEE
-		},
-		{
+			"Total sample rate for sandbox - random + static - for QoS channel"
+		),
+		create_var_record(
 			"totalSampleRateBlackBox",
-			"Total sample rate for sandbox - random + static - for BB channel",
-			0x4DA2489E226B28ED
-		},
-		{
+			"Total sample rate for sandbox - random + static - for BB channel"
+		),
+		create_var_record(
 			"totalSampleRateSurvey",
-			"Total sample rate for sandbox - random + static - for Survey channel",
-			0x78C2FC960283DCA7
-		},
-		{
+			"Total sample rate for sandbox - random + static - for Survey channel"
+		),
+		create_var_record(
 			"totalSampleClientTrack",
-			"Total sample rate for sandbox - random + static - for Survey channel",
-			0x6FC1DFC8F3F2A237
-		},
-		{
+			"Total sample rate for sandbox - random + static - for Survey channel"
+		),
+		create_var_record(
 			"dwConsideredConnectedTime",
-			"Time in milliseconds between the disconnect from Demonware happens and a Com_Error for that reason is thrown.",
-			0x68DF6EA751918D38
-		},
-		{
+			"Time in milliseconds between the disconnect from Demonware happens and a Com_Error for that reason is thrown."
+		),
+		create_var_record(
 			"live_useUno",
-			"Use Uno Account Features",
-			0x424F5443BC394E81
-		},
-		{
+			"Use Uno Account Features"
+		),
+		create_var_record(
 			"live_useUmbrella",
-			"Use Umbrella Account Features",
-			0x65B6131438338453
-		},
-		{
+			"Use Umbrella Account Features"
+		),
+		create_var_record(
 			"live_connect_mode",
-			"LiveConnect operation mode:0-disabled, 1:auto, 2:initial auto+manual reconnect, 3:manual",
-			0x6C851E2925BC63E4
-		},
-		{
+			"LiveConnect operation mode:0-disabled, 1:auto, 2:initial auto+manual reconnect, 3:manual"
+		),
+		create_var_record(
 			"motdDelay",
-			"Delay after which the MOTD is shown again.",
-			0x6BCD346E1EA28F68
-		},
-		{
+			"Delay after which the MOTD is shown again."
+		),
+		create_var_record(
 			"motd_enabled",
-			"Dvar to enable/disable the Treyarch MOTD message.",
-			0x304FF2012C26D8FB
-		},
-		{
+			"Dvar to enable/disable the Treyarch MOTD message."
+		),
+		create_var_record(
 			"liveNeverHostServer",
-			"Set dvar to true if you like the client to never host.",
-			0xDD0E0921DED03A2
-		},
-		{
+			"Set dvar to true if you like the client to never host."
+		),
+		create_var_record(
 			"liveDedicatedOnly",
-			"Set dvar to true if dedicated-only playlist",
-			0x4E506F1662EB2DF6
-		},
-		{
+			"Set dvar to true if dedicated-only playlist"
+		),
+		create_var_record(
 			"allowAllNAT",
-			"",
-			0x47B0B453BFEB728
-		},
-		{
+			""
+		),
+		create_var_record(
 			"live_statscaching",
-			"If true will cache statchanged msgs from server and apply atomically",
-			0x6F1D92299A221B60
-		},
-		{
+			"If true will cache statchanged msgs from server and apply atomically"
+		),
+		create_var_record(
 			"ui_enableConnectionMetricGraphs",
-			"Control showing the Connection Metrics graph in the game options menu. 1 will turn on mode 1, 2 mode 2, 3 both. 0 would turn both off",
-			0x76C3A47AF788F9D2
-		},
-		{
+			"Control showing the Connection Metrics graph in the game options menu. 1 will turn on mode 1, 2 mode 2, 3 both. 0 would turn both off"
+		),
+		create_var_record(
 			"partyChatDisallowed",
-			"Whether to disallow Xbox Live Party Chat",
-			0x4E21BBE3614F731D
-		},
-		{
+			"Whether to disallow Xbox Live Party Chat"
+		),
+		create_var_record(
 			"live_autoEventPumpDelay",
-			"Update delay for auto events",
-			0x2E3D83ED91FA41A
-		},
-		{
+			"Update delay for auto events"
+		),
+		create_var_record(
 			"live_autoEventPumpTime",
-			"Next pump time",
-			0xB6BF07547EA7712
-		},
-		{
+			"Next pump time"
+		),
+		create_var_record(
 			"live_autoEventEnabled",
-			"Enable/disable the autoevent system",
-			0x67112C4349F6F3CE
-		},
-		{
+			"Enable/disable the autoevent system"
+		),
+		create_var_record(
 			"survey_chance",
-			"Chance that a match will have post-game surveys shown",
-			0x1583519CFDFE4574
-		},
-		{
+			"Chance that a match will have post-game surveys shown"
+		),
+		create_var_record(
 			"survey_count",
-			"Number of active surveys",
-			0x1BCC8BA98DA6B407
-		},
-		{
+			"Number of active surveys"
+		),
+		create_var_record(
 			"qos_minProbes",
-			"Minimum probe results required before early outing qos",
-			0x1F123BB720024336
-		},
-		{
+			"Minimum probe results required before early outing qos"
+		),
+		create_var_record(
 			"qos_minPercent",
-			"Minimum percentage of probe results required before early outing qos",
-			0xBF3D51224EADDAA
-		},
-		{
+			"Minimum percentage of probe results required before early outing qos"
+		),
+		create_var_record(
 			"qos_firstUpdateMS",
-			"MS to wait before deciding to early out qos",
-			0x95ED89C6C609D26
-		},
-		{
+			"MS to wait before deciding to early out qos"
+		),
+		create_var_record(
 			"qos_lastUpdateMS",
-			"MS since last update required to early out qos",
-			0x3127D354AE4B1E8A
-		},
-		{
+			"MS since last update required to early out qos"
+		),
+		create_var_record(
 			"qos_maxProbeWait",
-			"Max MS for matchmaking QoS. Used only for percentage estimation.",
-			0x21188DC24F4B9776
-		},
-		{
+			"Max MS for matchmaking QoS. Used only for percentage estimation."
+		),
+		create_var_record(
 			"qos_minEchoServers",
-			"Minimum number of echo servers per pop. Code will pad echo servers to this number. Set to zero to disable padding.",
-			0x15F32F91BBB1326C
-		},
-		{
+			"Minimum number of echo servers per pop. Code will pad echo servers to this number. Set to zero to disable padding."
+		),
+		create_var_record(
 			"qos_echo_chance",
-			"Percent chance to run and capture qos echo results",
-			0x6F12E145A026520F
-		},
-		{
+			"Percent chance to run and capture qos echo results"
+		),
+		create_var_record(
 			"bandwidth_retry_interval",
-			"Interval at which Bandwidth test will be retried",
-			0x77BDC1245ED90121
-		},
-		{
+			"Interval at which Bandwidth test will be retried"
+		),
+		create_var_record(
 			"reportUserInterval",
-			"The interval in minutes you wait before getting another vote on this console as long as the console is turned on.",
-			0x6E26804EB71C551
-		},
-		{
+			"The interval in minutes you wait before getting another vote on this console as long as the console is turned on."
+		),
+		create_var_record(
 			"live_presence_platform",
-			"Presence through first party, 0:none, 1:basic(online/offline), 2:intitle, 3:extended(in title details), 4:extended+party",
-			0x4EB27945E931C905
-		},
-		{
+			"Presence through first party, 0:none, 1:basic(online/offline), 2:intitle, 3:extended(in title details), 4:extended+party"
+		),
+		create_var_record(
 			"live_presence_incremental_fail_delay",
-			"Every time console presence fails to set, the retry delay is incremented by << 1ms. This will limit exponential delay growth.",
-			0x3FCF04213052818B
-		},
-		{
+			"Every time console presence fails to set, the retry delay is incremented by << 1ms. This will limit exponential delay growth."
+		),
+		create_var_record(
 			"live_presence_party",
-			"Support list of party members in the presence",
-			0x5AC48222CED6A732
-		},
-		{
+			"Support list of party members in the presence"
+		),
+		create_var_record(
 			"live_presence_features",
-			"Bitmask for various presence features",
-			0xA8BA2294A7603F1
-		},
-		{
+			"Bitmask for various presence features"
+		),
+		create_var_record(
 			"live_friends_enabled",
-			"Platform Friends system is enabled",
-			0xA9F5FC541DA5097
-		},
-		{
+			"Platform Friends system is enabled"
+		),
+		create_var_record(
 			"live_friends_max",
-			"Friends/Recent sorrting, 0-unsorted, 1-Most REcent, 2-Alphabetical",
-			0x21E7A7B2114172AC
-		},
-		{
+			"Friends/Recent sorrting, 0-unsorted, 1-Most REcent, 2-Alphabetical"
+		),
+		create_var_record(
 			"live_friends_batch_size",
-			"Platform Friends system batched fetch, batch size",
-			0x254AC3CB1B9104DA
-		},
-		{
+			"Platform Friends system batched fetch, batch size"
+		),
+		create_var_record(
 			"live_friends_update_interval",
-			"Minimum time required before friends can be updated again.",
-			0x399F5C63B7975825
-		},
-		{
+			"Minimum time required before friends can be updated again."
+		),
+		create_var_record(
 			"live_friends_sort",
-			"Friends sorrting, 0-unsorted, 1-Most Recent Ingame/Online/Offline, 2-Alphabetical",
-			0x3ED8A520F194AACA
-		},
-		{
+			"Friends sorrting, 0-unsorted, 1-Most Recent Ingame/Online/Offline, 2-Alphabetical"
+		),
+		create_var_record(
 			"live_friends_features",
-			"Bitmask for various presence features",
-			0x651EC207263FB25D
-		},
-		{
+			"Bitmask for various presence features"
+		),
+		create_var_record(
 			"groups_enabled",
-			"This is used to enable the groups feature.",
-			0x41E464135723AE03
-		},
-		{
+			"This is used to enable the groups feature."
+		),
+		create_var_record(
 			"groups_self_groups_refresh_time",
-			"Time to periodically update our own groups.",
-			0x54EF72964B3C7EB7
-		},
-		{
+			"Time to periodically update our own groups."
+		),
+		create_var_record(
 			"groups_admins_refresh_time",
-			"Time to periodically update admins for each group.",
-			0x3E99730627DFD44E
-		},
-		{
+			"Time to periodically update admins for each group."
+		),
+		create_var_record(
 			"groups_invites_refresh_time",
-			"Time to periodically update group invites.",
-			0xEF40B6CFA80F7F4
-		},
-		{
+			"Time to periodically update group invites."
+		),
+		create_var_record(
 			"groups_applications_refresh_time",
-			"Time to periodically update group join requests.",
-			0xAAE3B9B281F217F
-		},
-		{
+			"Time to periodically update group join requests."
+		),
+		create_var_record(
 			"groups_quickjoin_players_refresh_time",
-			"Time to periodically update quickjoin list with group members.",
-			0x36E74BC20938CCAC
-		},
-		{
+			"Time to periodically update quickjoin list with group members."
+		),
+		create_var_record(
 			"groups_service_failure_backoff_time",
-			"Time to back off before sending off any more tasks in case teams service is off.",
-			0x58F9DA716EA2F405
-		},
-		{
+			"Time to back off before sending off any more tasks in case teams service is off."
+		),
+		create_var_record(
 			"groups_presence_refresh_time",
-			"Interval between refreshing presence for fetched group members, 0 is disabled",
-			0x10ABABCD3F4F79E1
-		},
-		{
+			"Interval between refreshing presence for fetched group members, 0 is disabled"
+		),
+		create_var_record(
 			"ui_hideLeaderboards",
-			"Hide leaderboard buttons in the UI",
-			0x62C8BE4B980621A0
-		},
-		{
+			"Hide leaderboard buttons in the UI"
+		),
+		create_var_record(
 			"live_leaderboardResetTime",
-			"Amount of time to wait for the leaderboard reset task to finish before canceling",
-			0x5512AB9A52712167
-		},
-		{
+			"Amount of time to wait for the leaderboard reset task to finish before canceling"
+		),
+		create_var_record(
 			"liveVoteTaskDelay",
-			"Delay between consequent vote history page tasks",
-			0x74BF17E7AC8ADCA1
-		},
-		{
+			"Delay between consequent vote history page tasks"
+		),
+		create_var_record(
 			"liveVoteErrorBackoff",
-			"Backoff time if a vote history page task fails",
-			0x356505486BCDE425
-		},
-		{
+			"Backoff time if a vote history page task fails"
+		),
+		create_var_record(
 			"keyarchiveWriteDelay",
-			"Minimum delay between writes to keyarchive",
-			0x7F63A76B09D09120
-		},
-		{
+			"Minimum delay between writes to keyarchive"
+		),
+		create_var_record(
 			"inventory_enabled",
-			"This is used to enable the user inventory feature.",
-			0x2FF6459C5809D381
-		},
-		{
+			"This is used to enable the user inventory feature."
+		),
+		create_var_record(
 			"inventory_maxPages",
-			"Max pages to fetch for player inventory.",
-			0x17CF1E28E946A712
-		},
-		{
+			"Max pages to fetch for player inventory."
+		),
+		create_var_record(
 			"inventory_itemsPerPage",
-			"Number of items to fetch per inventory page.",
-			0x53C15C57528BB850
-		},
-		{
+			"Number of items to fetch per inventory page."
+		),
+		create_var_record(
 			"inventory_fetch_cooloff",
-			"Time in milliseconds to wait between inventory pages.",
-			0x7643C86B1447FD11
-		},
-		{
+			"Time in milliseconds to wait between inventory pages."
+		),
+		create_var_record(
 			"inventory_retry_delay",
-			"Time in milliseconds to wait between inventory fetch retryies.",
-			0x68DD22741E79C516
-		},
-		{
+			"Time in milliseconds to wait between inventory fetch retryies."
+		),
+		create_var_record(
 			"inventory_retry_max",
-			"Max inventory fetch retryies.",
-			0x5DEB6273E96414EF
-		},
-		{
+			"Max inventory fetch retryies."
+		),
+		create_var_record(
 			"balances_retry_delay",
-			"Time in milliseconds to wait between balance fetch retryies.",
-			0x689D3B2D91721335
-		},
-		{
+			"Time in milliseconds to wait between balance fetch retryies."
+		),
+		create_var_record(
 			"balances_retry_max",
-			"Max balance fetch retryies.",
-			0x15E95E5481231F84
-		},
-		{
+			"Max balance fetch retryies."
+		),
+		create_var_record(
 			"inventory_blocking",
-			"if false, don't wait on the inventory before allowing online play",
-			0x15D2ECA1C83CB4CF
-		},
-		{
+			"if false, don't wait on the inventory before allowing online play"
+		),
+		create_var_record(
 			"rare_crate_bundle_id",
-			"Loot crate Bundle ID.",
-			0x3BE43DD3422DB56E
-		},
-		{
+			"Loot crate Bundle ID."
+		),
+		create_var_record(
 			"weapon_contract_incentive_id",
-			"Special contract incentive item/sku id.",
-			0x2E2BF6D1BCC707BA
-		},
-		{
+			"Special contract incentive item/sku id."
+		),
+		create_var_record(
 			"weapon_contract_max",
-			"Weapon contract max inventory sentinel items.",
-			0x7534937EDEFDEE09
-		},
-		{
+			"Weapon contract max inventory sentinel items."
+		),
+		create_var_record(
 			"weapon_contract_target_value",
-			"Target value needed to complete the weapon contract.",
-			0x39D4B13D578204EA
-		},
-		{
+			"Target value needed to complete the weapon contract."
+		),
+		create_var_record(
 			"enable_weapon_contract",
-			"Special Contract is enabled/disabled",
-			0xD012B74617CA116
-		},
-		{
+			"Special Contract is enabled/disabled"
+		),
+		create_var_record(
 			"daily_contract_cryptokey_reward_count",
-			"Number of cryptokeys to reward for completing a daily contract.",
-			0x3195D6AE64B02E04
-		},
-		{
+			"Number of cryptokeys to reward for completing a daily contract."
+		),
+		create_var_record(
 			"weekly_contract_cryptokey_reward_count",
-			"Number of cryptokeys to reward for completing a set of weekly contracts.",
-			0x36153C059DD14D34
-		},
-		{
+			"Number of cryptokeys to reward for completing a set of weekly contracts."
+		),
+		create_var_record(
 			"weekly_contract_blackjack_contract_reward_count",
-			"Number of Blackjack contracts to reward for completing a set of weekly contracts.",
-			0x6B679E22FF03E151
-		},
-		{
+			"Number of Blackjack contracts to reward for completing a set of weekly contracts."
+		),
+		create_var_record(
 			"skip_contract_rewards",
-			"Skip giving rewards for the special contract and daily/weekly contracts for debug purposes.",
-			0x70473DE34E310162
-		},
-		{
+			"Skip giving rewards for the special contract and daily/weekly contracts for debug purposes."
+		),
+		create_var_record(
 			"incentive_rare_drop_id",
-			"ID for rare crates awarded by contract or season pass incentives",
-			0x2A123E4596C717C3
-		},
-		{
+			"ID for rare crates awarded by contract or season pass incentives"
+		),
+		create_var_record(
 			"incentive_weapon_drop_id",
-			"ID for weapon bribe crates awarded by contract or season pass incentives",
-			0x62D82ADCD1920153
-		},
-		{
+			"ID for weapon bribe crates awarded by contract or season pass incentives"
+		),
+		create_var_record(
 			"platformSessionShowErrorCodes",
-			"Show platform session error codes",
-			0x9D38D804EC061EB
-		},
-		{
+			"Show platform session error codes"
+		),
+		create_var_record(
 			"platformSessionPartyPrivacy",
-			"Show platform session party privacy",
-			0x639176BF65C21B9A
-		},
-		{
+			"Show platform session party privacy"
+		),
+		create_var_record(
 			"platformSessionLaunchInviteJoinProcessDelay",
-			"Platform session launch invite join process delay",
-			0x5670F1660AB82174
-		},
-		{
+			"Platform session launch invite join process delay"
+		),
+		create_var_record(
 			"live_umbrella_maxUmbrellaLoginAttempts",
-			"The maximum # of attempts we will make toauth Umbrella for a given controller",
-			0x7E10B161BE74E264
-		},
-		{
+			"The maximum # of attempts we will make toauth Umbrella for a given controller"
+		),
+		create_var_record(
 			"fshSearchTaskDelay",
-			"Gap in milliseconds between file share search tasks.",
-			0x6F9E730BA10DB9F6
-		},
-		{
+			"Gap in milliseconds between file share search tasks."
+		),
+		create_var_record(
 			"fshThrottleEnabled",
-			"Whether the dcache upload throttling is enabled.",
-			0x6915A46003EC7133
-		},
-		{
+			"Whether the dcache upload throttling is enabled."
+		),
+		create_var_record(
 			"fshThrottleKBytesPerSec",
-			"Dcache upload throttle limit in K Bytes per second.",
-			0x577C012AE260F19E
-		},
-		{
+			"Dcache upload throttle limit in K Bytes per second."
+		),
+		create_var_record(
 			"fileshare_enabled",
-			"Enable or disable the Fileshare feature.",
-			0x456FCD2DEBF35884
-		},
-		{
+			"Enable or disable the Fileshare feature."
+		),
+		create_var_record(
 			"fileshare_tier",
-			"current fileshare tier for all users on this console.",
-			0x764D93244523D85F
-		},
-		{
+			"current fileshare tier for all users on this console."
+		),
+		create_var_record(
 			"fshRecentsXUID",
-			"Override recent games to come from this player instead",
-			0x6A0CF60E8B642C10
-		},
-		{
+			"Override recent games to come from this player instead"
+		),
+		create_var_record(
 			"fshSummaryDelay",
-			"Delay between summary tasks. Tweak to ensure no BD_TOO_MANY_TASKS.",
-			0x1F228C612B53B861
-		},
-		{
+			"Delay between summary tasks. Tweak to ensure no BD_TOO_MANY_TASKS."
+		),
+		create_var_record(
 			"fshRetryDelay",
-			"Delay after which a failed fileshare fetch will be retried",
-			0x3AED76678509D01F
-		},
-		{
+			"Delay after which a failed fileshare fetch will be retried"
+		),
+		create_var_record(
 			"fshEnableRender",
-			"Turn on or off the ability to render clips.",
-			0x26CB0F57709C8BC9
-		},
-		{
+			"Turn on or off the ability to render clips."
+		),
+		create_var_record(
 			"fileshareRetry",
-			"Retry fetching fileshare data on failure.",
-			0x7F571DFAB6ED0368
-		},
-		{
+			"Retry fetching fileshare data on failure."
+		),
+		create_var_record(
 			"fileshareAllowDownload",
-			"Allow Fileshare downloads",
-			0x7560F792B04412B3
-		},
-		{
+			"Allow Fileshare downloads"
+		),
+		create_var_record(
 			"fileshareAllowDownloadingOthersFiles",
-			"Allow downloading other users' Fileshare files",
-			0x2C36A3EDFB2B89E5
-		},
-		{
+			"Allow downloading other users' Fileshare files"
+		),
+		create_var_record(
 			"fileshareAllowPaintjobDownload",
-			"Allow Fileshare Paintjob downloads",
-			0x78A461C8EB7B3384
-		},
-		{
+			"Allow Fileshare Paintjob downloads"
+		),
+		create_var_record(
 			"fileshareAllowEmblemDownload",
-			"Allow Fileshare Emblem downloads",
-			0x3D672BA05F9BEF25
-		},
-		{
+			"Allow Fileshare Emblem downloads"
+		),
+		create_var_record(
 			"emblemVersion",
-			"Version for Emblems.",
-			0x532016D3C3BE9875
-		},
-		{
+			"Version for Emblems."
+		),
+		create_var_record(
 			"paintjobVersion",
-			"Version for Paintjob.",
-			0x7A93BC0BE62DB7A6
-		},
-		{
+			"Version for Paintjob."
+		),
+		create_var_record(
 			"enable_camo_materials_tab",
-			"Enable the camo materials tab.",
-			0x38B4EC18019A2C9A
-		},
-		{
+			"Enable the camo materials tab."
+		),
+		create_var_record(
 			"live_username",
-			"DW userename",
-			0x7BCEE5B863A1078
-		},
-		{
+			"DW userename"
+		),
+		create_var_record(
 			"profileDirtyInterval",
-			"minimum interval (in milliseconds) between updating our profile, except when an update is forced",
-			0x250B6E555808876B
-		},
-		{
+			"minimum interval (in milliseconds) between updating our profile, except when an update is forced"
+		),
+		create_var_record(
 			"profileGetInterval",
-			"minimum interval between own profile retrieval",
-			0x39F6886A5D58B86F
-		},
-		{
+			"minimum interval between own profile retrieval"
+		),
+		create_var_record(
 			"groupUploadInterval",
-			"Minimum interval to wait before setting new group counts",
-			0x5052073EEEE7CE50
-		},
-		{
+			"Minimum interval to wait before setting new group counts"
+		),
+		create_var_record(
 			"groupDownloadInterval",
-			"Minimum interval to wait before getting new group counts",
-			0x158AACA299D61F5
-		},
-		{
+			"Minimum interval to wait before getting new group counts"
+		),
+		create_var_record(
 			"groupCountsVisible",
-			"Toggles the group counts in the lobby and playlist menus.",
-			0x1ADD80F31337B482
-		},
-		{
+			"Toggles the group counts in the lobby and playlist menus."
+		),
+		create_var_record(
 			"pcache_privacy",
-			"Controlls the support for fetching Privacy settings from 1st party through pcache",
-			0xFEBACE7D36303D4
-		},
-		{
+			"Controlls the support for fetching Privacy settings from 1st party through pcache"
+		),
+		create_var_record(
 			"loot_cryptokeyCost",
-			"lootxp required to buy one crypto key. Must match the DW backend modifier.",
-			0x5BAEC7131FED35D5
-		},
-		{
+			"lootxp required to buy one crypto key. Must match the DW backend modifier."
+		),
+		create_var_record(
 			"loot_cryptokeySku",
-			"SKU used to purchase crypto keys by spending lootxp. Exchange rate is governed by 'crypto_key_cost'. Must match sku setup on DW.",
-			0x1A200EE709FDC2C9
-		},
-		{
+			"SKU used to purchase crypto keys by spending lootxp. Exchange rate is governed by 'crypto_key_cost'. Must match sku setup on DW."
+		),
+		create_var_record(
 			"lootxp_multiplier",
-			"multiplier for double lootxp",
-			0x54CB81F80166E79F
-		},
-		{
+			"multiplier for double lootxp"
+		),
+		create_var_record(
 			"loot_commonCrate_dwid",
-			"common crate dw id",
-			0x657DC9FCEB46B345
-		},
-		{
+			"common crate dw id"
+		),
+		create_var_record(
 			"loot_bribeCrate_dwid",
-			"bribe 1 crate dw id",
-			0x42983944283E2F4E
-		},
-		{
+			"bribe 1 crate dw id"
+		),
+		create_var_record(
 			"loot_rareCrate_dwid",
-			"common crate dw id",
-			0x61E6A8834E746E50
-		},
-		{
+			"common crate dw id"
+		),
+		create_var_record(
 			"loot_mpItemVersions",
-			"MP loot item version",
-			0x27EC5101FF8361D3
-		},
-		{
+			"MP loot item version"
+		),
+		create_var_record(
 			"loot_zmItemVersions",
-			"ZM loot item version",
-			0x1FE5ADAF8E375DF
-		},
-		{
+			"ZM loot item version"
+		),
+		create_var_record(
 			"loot_enabled",
-			"Enabled or disables loot",
-			0x3EC641DDC0A465E9
-		},
-		{
+			"Enabled or disables loot"
+		),
+		create_var_record(
 			"loot_cryptoCheckDelay",
-			"Cooloff period checking for lootxp->cryptokey conversion",
-			0x32D8C55014C9A25A
-		},
-		{
+			"Cooloff period checking for lootxp->cryptokey conversion"
+		),
+		create_var_record(
 			"tu11_lootCryptoAutoRetry",
-			"Enabled or disables auto lootxp->cryptokey conversion",
-			0x7889330B0D3267E5
-		},
-		{
+			"Enabled or disables auto lootxp->cryptokey conversion"
+		),
+		create_var_record(
 			"loot_burnBatchSize",
-			"Batch size for burning duplicate items",
-			0x21D791CABDDF87A
-		},
-		{
+			"Batch size for burning duplicate items"
+		),
+		create_var_record(
 			"loot_burnCooloff",
-			"Cooloff period before burning the next batch of items",
-			0x7CF2540405181DE1
-		},
-		{
+			"Cooloff period before burning the next batch of items"
+		),
+		create_var_record(
 			"loot_burnRefetchOnSuccess",
-			"Refetch inventory when a burn is successful",
-			0x10FA7626F75D5DC4
-		},
-		{
+			"Refetch inventory when a burn is successful"
+		),
+		create_var_record(
 			"loot_burnCommonRefund",
-			"Cryptokeys refunded when a Common item is burned",
-			0x1F47DF8371DDB95E
-		},
-		{
+			"Cryptokeys refunded when a Common item is burned"
+		),
+		create_var_record(
 			"loot_burnRareRefund",
-			"Cryptokeys refunded when a Rare item is burned",
-			0x3529C093CB10C247
-		},
-		{
+			"Cryptokeys refunded when a Rare item is burned"
+		),
+		create_var_record(
 			"loot_burnLegendaryRefund",
-			"Cryptokeys refunded when a Legendary item is burned",
-			0x610F1F0B8B9F240
-		},
-		{
+			"Cryptokeys refunded when a Legendary item is burned"
+		),
+		create_var_record(
 			"loot_burnEpicRefund",
-			"Cryptokeys refunded when an Epic item is burned",
-			0x18866B4E6E036D8A
-		},
-		{
+			"Cryptokeys refunded when an Epic item is burned"
+		),
+		create_var_record(
 			"loot_burnMinMegaRequired",
-			"Minimum number of mega gobblegum required to burn",
-			0x7C2541F3FD37CB64
-		},
-		{
+			"Minimum number of mega gobblegum required to burn"
+		),
+		create_var_record(
 			"loot_burnMinRareRequired",
-			"Minimum number of rare gobblegum required to burn",
-			0x679FDEC337F446A2
-		},
-		{
+			"Minimum number of rare gobblegum required to burn"
+		),
+		create_var_record(
 			"loot_burnMinUltraRequired",
-			"Minimum number of ultra gobblegum required to burn",
-			0xBA9673DB515C92A
-		},
-		{
+			"Minimum number of ultra gobblegum required to burn"
+		),
+		create_var_record(
 			"live_store_enable",
-			"Enable/Disable Store button in UI.",
-			0x514F69F96CEB06F9
-		},
-		{
+			"Enable/Disable Store button in UI."
+		),
+		create_var_record(
 			"live_store_enable_inventory",
-			"Enable/Disable inventory fetch.",
-			0x1861A7458471BFC6
-		},
-		{
+			"Enable/Disable inventory fetch."
+		),
+		create_var_record(
 			"store_item_viewed_timer",
-			"Minimum time (in ms) player should look at a store item to register a comscore event",
-			0x6B1BF1B329DA7BA7
-		},
-		{
+			"Minimum time (in ms) player should look at a store item to register a comscore event"
+		),
+		create_var_record(
 			"live_store_show_details",
-			"Enable/Disable product browse.",
-			0x4DF1F8667B658AF6
-		},
-		{
+			"Enable/Disable product browse."
+		),
+		create_var_record(
 			"live_store_disable_lang",
-			"Disable store for the available language based on value of dvar loc_availableLanguages.",
-			0xED2201F94165577
-		},
-		{
+			"Disable store for the available language based on value of dvar loc_availableLanguages."
+		),
+		create_var_record(
 			"live_store_disable_region",
-			"Disable store for the given SKU region.",
-			0x3A06182194A98F5F
-		},
-		{
+			"Disable store for the given SKU region."
+		),
+		create_var_record(
 			"live_enablePolls",
-			"If true, polls will fire off demonware tasks",
-			0x7D6F7033B3CBEFFF
-		},
-		{
+			"If true, polls will fire off demonware tasks"
+		),
+		create_var_record(
 			"xblive_matchEndingSoon",
-			"True if the match is ending soon",
-			0x1930826547682687
-		},
-		{
+			"True if the match is ending soon"
+		),
+		create_var_record(
 			"live_pubSemaphoreCheckIntervalSeconds",
-			"Interval in seconds between checking the backend to see if the pubsemaphore timestamp has changed",
-			0x46298D1906A8D521
-		},
-		{
+			"Interval in seconds between checking the backend to see if the pubsemaphore timestamp has changed"
+		),
+		create_var_record(
 			"live_pubSemaphoreJitterSeconds",
-			"Jitter in seconds to apply to live_pubSemaphoreCheckIntervalSeconds",
-			0x79FB304CA592D50A
-		},
-		{
+			"Jitter in seconds to apply to live_pubSemaphoreCheckIntervalSeconds"
+		),
+		create_var_record(
 			"live_pubSemaphoreForceChange",
-			"If true pubsemaphore will always signal as changed",
-			0xD886CFC3E211B9E
-		},
-		{
+			"If true pubsemaphore will always signal as changed"
+		),
+		create_var_record(
 			"live_pubSemaphoreUserTriggerTime",
-			"time when the user confirmed a game settings changed popup",
-			0x61A5DB82D8C14329
-		},
-		{
+			"time when the user confirmed a game settings changed popup"
+		),
+		create_var_record(
 			"stat_version",
-			"Stats version number",
-			0x2D3ACDB765E3A044
-		},
-		{
+			"Stats version number"
+		),
+		create_var_record(
 			"stats_version_check",
-			"Reset stats if version numbers do not match",
-			0x265573B1313AE7CC
-		},
-		{
+			"Reset stats if version numbers do not match"
+		),
+		create_var_record(
 			"maxStatsBackupInterval",
-			"Maximum number of days before performing stats backup to Demonware User Storage",
-			0x1DF65DE154336663
-		},
-		{
+			"Maximum number of days before performing stats backup to Demonware User Storage"
+		),
+		create_var_record(
 			"zero_stats_check",
-			"Check for zeroed out stats from Demonware",
-			0x511151061E142E78
-		},
-		{
+			"Check for zeroed out stats from Demonware"
+		),
+		create_var_record(
 			"dwFileFetchTryIntervalBase",
-			"Delay in seconds after file fetch fails to the next retry.  Exponential growth each retry.",
-			0x3CCF9927A600C7BB
-		},
-		{
+			"Delay in seconds after file fetch fails to the next retry.  Exponential growth each retry."
+		),
+		create_var_record(
 			"dwFileFetchTryIntervalMax",
-			"Max delay in seconds between file fetch tries.",
-			0x395223811BA33748
-		},
-		{
+			"Max delay in seconds between file fetch tries."
+		),
+		create_var_record(
 			"dwFileFetchTryMaxAttempts",
-			"Max retry attempts before stopping altogether.",
-			0x6589D56B17D70C3D
-		},
-		{
+			"Max retry attempts before stopping altogether."
+		),
+		create_var_record(
 			"waitOnStatsTimeout",
-			"Time in seconds to wait for stats to be fetched while dev mapping.",
-			0x112A3EC30994F0FB
-		},
-		{
+			"Time in seconds to wait for stats to be fetched while dev mapping."
+		),
+		create_var_record(
 			"minDelayForOtherPlayerStatsFetch",
-			"Delay in milliseconds to refetch the stats of a player.",
-			0xEB0B5C7E1D13D45
-		},
-		{
+			"Delay in milliseconds to refetch the stats of a player."
+		),
+		create_var_record(
 			"statsLocationFatal",
-			"If true, a zombie stats error will cause the game to end, if false a warning is printed to the console and the game continues",
-			0x3D6403AE9B540CAF
-		},
-		{
+			"If true, a zombie stats error will cause the game to end, if false a warning is printed to the console and the game continues"
+		),
+		create_var_record(
 			"statsCheckXuidBeforeStatsUpload",
-			"Checks the XUID of the stats before uploading. Used as bitmask for each eMode(1 << mode)",
-			0x2F96F30B7A7EEBC9
-		},
-		{
+			"Checks the XUID of the stats before uploading. Used as bitmask for each eMode(1 << mode)"
+		),
+		create_var_record(
 			"statsErrorNormal",
-			"Error if an invalid stats access is requested on NORMAL stats.",
-			0x3AA8AD957724ADA9
-		},
-		{
+			"Error if an invalid stats access is requested on NORMAL stats."
+		),
+		create_var_record(
 			"statsErrorStable",
-			"Error if an invalid stats access is requested on STABLE stats.",
-			0x63C563C0735A0D
-		},
-		{
+			"Error if an invalid stats access is requested on STABLE stats."
+		),
+		create_var_record(
 			"statsErrorOtherPlayer",
-			"Error if an invalid stats access is requested on OTHERPLAYER stats.",
-			0x5BC9EEC9F12DCE9D
-		},
-		{
+			"Error if an invalid stats access is requested on OTHERPLAYER stats."
+		),
+		create_var_record(
 			"livestorage_fakeNoob",
-			"Force this player to be treated like a noob",
-			0x12ABEB1A03756136
-		},
-		{
+			"Force this player to be treated like a noob"
+		),
+		create_var_record(
 			"purchasedClassSetCount",
-			"Number of class sets available when purchased",
-			0x2142A22063B24F79
-		},
-		{
+			"Number of class sets available when purchased"
+		),
+		create_var_record(
 			"defaultClassSetCount",
-			"Number of class sets available when not purchased",
-			0xFF412D378A4FF95
-		},
-		{
+			"Number of class sets available when not purchased"
+		),
+		create_var_record(
 			"live_timewarp",
-			"Offset calculated live time by this amount of days",
-			0x59E760D0F14AE13B
-		},
-		{
+			"Offset calculated live time by this amount of days"
+		),
+		create_var_record(
 			"tu9_backupBadDecompress",
-			"Create an online backup when decompression fails",
-			0x6A8952240D0AC6F0
-		},
-		{
+			"Create an online backup when decompression fails"
+		),
+		create_var_record(
 			"tu9_backupBadSpace",
-			"Create an online backup when there is insufficient space for decompression",
-			0x57C84253DD30221B
-		},
-		{
+			"Create an online backup when there is insufficient space for decompression"
+		),
+		create_var_record(
 			"tu10_validationFatal",
-			"Disconnect completely when a stats validation error is detected",
-			0x7EF64CF71033AD43
-		},
-		{
+			"Disconnect completely when a stats validation error is detected"
+		),
+		create_var_record(
 			"tu12_delayFFOTD",
-			"ffotd waits on the playlist to first be downloaded, the execs everything in the proper sequence.",
-			0x1BB581108319DD0E
-		},
-		{
+			"ffotd waits on the playlist to first be downloaded, the execs everything in the proper sequence."
+		),
+		create_var_record(
 			"tu10_enableCyclicalDailyChallenges",
-			"Enable cyclical daily challenges",
-			0x4BAA56D6CA76F50
-		},
-		{
+			"Enable cyclical daily challenges"
+		),
+		create_var_record(
 			"skill_teamBeta",
-			"Beta value for team based skill calculation",
-			0x55DAE8F1DBE070F0
-		},
-		{
+			"Beta value for team based skill calculation"
+		),
+		create_var_record(
 			"skill_onboardingEnter",
-			"Initial skill for players entering the onboarding pool",
-			0x5D596089B4139224
-		},
-		{
+			"Initial skill for players entering the onboarding pool"
+		),
+		create_var_record(
 			"skill_onboardingExit",
-			"Initial skill for players leaving the onboarding pool",
-			0x3813AEE9B163746A
-		},
-		{
+			"Initial skill for players leaving the onboarding pool"
+		),
+		create_var_record(
 			"skill_onboardingThreshold",
-			"Skill value that will force players out of the onboarding pool",
-			0x573F2FA1606C09FD
-		},
-		{
+			"Skill value that will force players out of the onboarding pool"
+		),
+		create_var_record(
 			"skill_onboardingGames",
-			"Number of games to player before moving the player out of the onboarding pool",
-			0x1735443A940137E9
-		},
-		{
+			"Number of games to player before moving the player out of the onboarding pool"
+		),
+		create_var_record(
 			"skill_onboardingAdjustOnExit",
-			"Whether of not skill values should be adjusted when exiting onboarding pool",
-			0x359776C98A2ECB4C
-		},
-		{
+			"Whether of not skill values should be adjusted when exiting onboarding pool"
+		),
+		create_var_record(
 			"skill_onboardingEnabled",
-			"Whether or not onboarding is enabled for new players.",
-			0x35FD28B79E60A31F
-		},
-		{
+			"Whether or not onboarding is enabled for new players."
+		),
+		create_var_record(
 			"allowHost_matchesHostedRatio",
-			"Required match completion/hosted ratio. 0 is off.",
-			0x14D959F9CE846C4C
-		},
-		{
+			"Required match completion/hosted ratio. 0 is off."
+		),
+		create_var_record(
 			"allowHost_matchesPlayedRatio",
-			"Required match completion/played ratio. 0 is off.",
-			0x60A221B0500B366C
-		},
-		{
+			"Required match completion/played ratio. 0 is off."
+		),
+		create_var_record(
 			"disableHost_matchesHostedRatio",
-			"Required match hosted completion/failure ratio. 0 is off.",
-			0x2ED3F5BDC6787D0B
-		},
-		{
+			"Required match hosted completion/failure ratio. 0 is off."
+		),
+		create_var_record(
 			"disableHost_matchesPlayedRatio",
-			"Required match played completion/failure ratio. 0 is off.",
-			0x19B1C23FBE338457
-		},
-		{
+			"Required match played completion/failure ratio. 0 is off."
+		),
+		create_var_record(
 			"behaviorTrackerVersionNumber",
-			"Version number for the behavior tracker",
-			0x696D9FC45BE57EA
-		},
-		{
+			"Version number for the behavior tracker"
+		),
+		create_var_record(
 			"probation_version",
-			"",
-			0x15791DA116824B0C
-		},
-		{
+			""
+		),
+		create_var_record(
 			"probation_public_enabled",
-			"Probation enabled",
-			0x1161F73C69A2E4E7
-		},
-		{
+			"Probation enabled"
+		),
+		create_var_record(
 			"probation_public_quitScalar",
-			"How much each quit is factored into the probation",
-			0x4D3075E7488FB0C1
-		},
-		{
+			"How much each quit is factored into the probation"
+		),
+		create_var_record(
 			"probation_public_timeoutScalar",
-			"How much each timeout is factored into the probation",
-			0xC2C15F1DCB07EA5
-		},
-		{
+			"How much each timeout is factored into the probation"
+		),
+		create_var_record(
 			"probation_public_kickScalar",
-			"How much each kick is factored into the probation",
-			0x7F9B6B07BA2C9F38
-		},
-		{
+			"How much each kick is factored into the probation"
+		),
+		create_var_record(
 			"probation_public_matchHistoryWindow",
-			"How many games are evaluated to determin probation.",
-			0x193941C02761329D
-		},
-		{
+			"How many games are evaluated to determin probation."
+		),
+		create_var_record(
 			"probation_public_probationThreshold",
-			"How many violations puts the player over the limit.",
-			0x64D06AFB221D250D
-		},
-		{
+			"How many violations puts the player over the limit."
+		),
+		create_var_record(
 			"probation_public_warningThreshold",
-			"How many violations causes the player to get warned.",
-			0x178D54890E821071
-		},
-		{
+			"How many violations causes the player to get warned."
+		),
+		create_var_record(
 			"probation_public_probationTime",
-			"Time the player gets punished in minutes.",
-			0x7B0E75C7433D0183
-		},
-		{
+			"Time the player gets punished in minutes."
+		),
+		create_var_record(
 			"probation_public_forgiveCount",
-			"How many violations to forgive when probation is given",
-			0x27B7BAD494922037
-		},
-		{
+			"How many violations to forgive when probation is given"
+		),
+		create_var_record(
 			"probation_league_enabled",
-			"Probation enabled",
-			0x2CA03D36EA11AB0B
-		},
-		{
+			"Probation enabled"
+		),
+		create_var_record(
 			"probation_league_quitScalar",
-			"How much each quit is factored into the probation",
-			0x23369C53BFC4A83D
-		},
-		{
+			"How much each quit is factored into the probation"
+		),
+		create_var_record(
 			"probation_league_timeoutScalar",
-			"How much each timeout is factored into the probation",
-			0x512A4ADD52B273C9
-		},
-		{
+			"How much each timeout is factored into the probation"
+		),
+		create_var_record(
 			"probation_league_kickScalar",
-			"How much each kick is factored into the probation",
-			0x2B1667544F18824
-		},
-		{
+			"How much each kick is factored into the probation"
+		),
+		create_var_record(
 			"probation_league_dashboardScalar",
-			"How much each dashboard is factored into the probation",
-			0x19E3BFFA3914C0F6
-		},
-		{
+			"How much each dashboard is factored into the probation"
+		),
+		create_var_record(
 			"probation_league_matchHistoryWindow",
-			"How many games are evaluated to determin probation.",
-			0x296988DCFD7F3FA9
-		},
-		{
+			"How many games are evaluated to determin probation."
+		),
+		create_var_record(
 			"probation_league_probationThreshold",
-			"How many violations puts the player over the limit.",
-			0x58849275CA1E3AE9
-		},
-		{
+			"How many violations puts the player over the limit."
+		),
+		create_var_record(
 			"probation_league_warningThreshold",
-			"How many violations causes the player to get warned.",
-			0x2122E9BA9041C1ED
-		},
-		{
+			"How many violations causes the player to get warned."
+		),
+		create_var_record(
 			"probation_league_probationTime",
-			"Time the player gets punished in minutes.",
-			0x4F631B62128031D7
-		},
-		{
+			"Time the player gets punished in minutes."
+		),
+		create_var_record(
 			"probation_league_forgiveCount",
-			"How many violations to forgive when probation is given",
-			0x7097B82B46A66AC3
-		},
-		{
+			"How many violations to forgive when probation is given"
+		),
+		create_var_record(
 			"fixNegativeLosses",
-			"Fix negative losses in combat record",
-			0x536CD41D57579E2C
-		},
-		{
+			"Fix negative losses in combat record"
+		),
+		create_var_record(
 			"livestats_skipFirstTime",
-			"Disables first time flow for all session modes.",
-			0x62BE8FB76AD6AEA3
-		},
-		{
+			"Disables first time flow for all session modes."
+		),
+		create_var_record(
 			"loot_taskWindow",
-			"time alloted to the reward task, after which a retry will occur",
-			0x1A52CF5F59246D05
-		},
-		{
+			"time alloted to the reward task, after which a retry will occur"
+		),
+		create_var_record(
 			"loot_taskMaxAttempts",
-			"max retries before the reward task is considered a failure",
-			0x17598E3F123CF14B
-		},
-		{
+			"max retries before the reward task is considered a failure"
+		),
+		create_var_record(
 			"tu4_enableCodPoints",
-			"Enable display and spending of COD Points",
-			0x524F4493E0257D85
-		},
-		{
+			"Enable display and spending of COD Points"
+		),
+		create_var_record(
 			"local_media_tier",
-			"current local media tier for all users on this console.",
-			0x4FA6A41CE0F84F78
-		},
-		{
+			"current local media tier for all users on this console."
+		),
+		create_var_record(
 			"statsVersionMP",
-			"design version for MP stats",
-			0x7AEFEDDC58F9E985
-		},
-		{
+			"design version for MP stats"
+		),
+		create_var_record(
 			"statsVersionCP",
-			"design version for CP stats",
-			0x7ACDF1DC58DD09EB
-		},
-		{
+			"design version for CP stats"
+		),
+		create_var_record(
 			"statsVersionZM",
-			"design version for ZM stats",
-			0x7B1BE0DC591F0E59
-		},
-		{
+			"design version for ZM stats"
+		),
+		create_var_record(
 			"statsVersionFR",
-			"design version for FR stats",
-			0x7AD7E1DC58E54340
-		},
-		{
+			"design version for FR stats"
+		),
+		create_var_record(
 			"loadoutVersionMP",
-			"design version for MP loadouts",
-			0x62C3C580035FD180
-		},
-		{
+			"design version for MP loadouts"
+		),
+		create_var_record(
 			"loadoutVersionZM",
-			"design version for ZM loadouts",
-			0x62A5C2800346CED8
-		},
-		{
+			"design version for ZM loadouts"
+		),
+		create_var_record(
 			"lobby_hostBots",
-			"Enables lobby bots",
-			0x547BB8673052413C
-		},
-		{
+			"Enables lobby bots"
+		),
+		create_var_record(
 			"lobbyvm_forceGC",
-			"Force garbage collection after lobby pump to keep memory usage in check",
-			0x550FF919028CC160
-		},
-		{
+			"Force garbage collection after lobby pump to keep memory usage in check"
+		),
+		create_var_record(
 			"ui_lobbyDebugVis",
-			"master switch for turning on or off lobby debug ui",
-			0x868D54ACE3910EB
-		},
-		{
+			"master switch for turning on or off lobby debug ui"
+		),
+		create_var_record(
 			"ui_lobbyDebugClients",
-			"Enables and sets the Lobby Type for Client Debugging",
-			0x7D92D9DB09C4181D
-		},
-		{
+			"Enables and sets the Lobby Type for Client Debugging"
+		),
+		create_var_record(
 			"ui_lobbyDebugOverlay",
-			"Turn Lobby Debug Overlay ON/OFF",
-			0x6EF2722E9DA903F9
-		},
-		{
+			"Turn Lobby Debug Overlay ON/OFF"
+		),
+		create_var_record(
 			"ui_lobbyDebugBaseX",
-			"debug ui base x",
-			0x706255C3ACBF781A
-		},
-		{
+			"debug ui base x"
+		),
+		create_var_record(
 			"ui_lobbyDebugBaseY",
-			"debug ui base x",
-			0x706256C3ACBF79CD
-		},
-		{
+			"debug ui base x"
+		),
+		create_var_record(
 			"ui_lobbyDebugExtraInfoLoc",
-			"game mode loc",
-			0x6DF332536E7673DF
-		},
-		{
+			"game mode loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugSessionSQJ",
-			"Enables/Disables session search debugging",
-			0x5102D263505BECD9
-		},
-		{
+			"Enables/Disables session search debugging"
+		),
+		create_var_record(
 			"ui_lobbyDebugVoice",
-			"Enables/Disables lobby voice debugging",
-			0x47514411BBEAF
-		},
-		{
+			"Enables/Disables lobby voice debugging"
+		),
+		create_var_record(
 			"ui_abortKeyboardOnUIChange",
-			"Abort any onscreen keyboard operations when the lobby system changes the UI screen",
-			0x5FA1AEC845987540
-		},
-		{
+			"Abort any onscreen keyboard operations when the lobby system changes the UI screen"
+		),
+		create_var_record(
 			"tu11_matchmakingPriorityMP",
-			"MP matchmaking priority setting",
-			0x3B7E7D205283F9AA
-		},
-		{
+			"MP matchmaking priority setting"
+		),
+		create_var_record(
 			"tu11_matchmakingPriorityMPIgnoreTime",
-			"MP amount of time that a session will be ignored for",
-			0x393504697ED9246D
-		},
-		{
+			"MP amount of time that a session will be ignored for"
+		),
+		create_var_record(
 			"party_minplayers",
-			"Minimum number of players in a party",
-			0x2500E4DB2F10F5EE
-		},
-		{
+			"Minimum number of players in a party"
+		),
+		create_var_record(
 			"party_maxplayers",
-			"Maximum number of players in a party",
-			0x596545C72F0E4FE4
-		},
-		{
+			"Maximum number of players in a party"
+		),
+		create_var_record(
 			"party_autoteams",
-			"Enables/Disables auto team functionality",
-			0x2482606B77C310A7
-		},
-		{
+			"Enables/Disables auto team functionality"
+		),
+		create_var_record(
 			"lobby_maxLocalPlayers",
-			"Enables/Disables auto team functionality",
-			0x66BAC8B42067D2C5
-		},
-		{
+			"Enables/Disables auto team functionality"
+		),
+		create_var_record(
 			"lobby_forceLAN",
-			"Force LAN lobby if > 0, 1-LAN offline, 2-LAN and connected to dw",
-			0x44DE8F206FD45EEA
-		},
-		{
+			"Force LAN lobby if > 0, 1-LAN offline, 2-LAN and connected to dw"
+		),
+		create_var_record(
 			"lobby_showSVDebug",
-			"shows sv debug info in the frontend",
-			0x28B546FBE4B2AF13
-		},
-		{
+			"shows sv debug info in the frontend"
+		),
+		create_var_record(
 			"lobbymigrate_MaxBWPackets",
-			"number of bw test packets to send when we have the token",
-			0x1CB0320F843FECB
-		},
-		{
+			"number of bw test packets to send when we have the token"
+		),
+		create_var_record(
 			"lobbymigrate_MaxPacketWaitTime",
-			"ms to wait for test packet responses after last packet is sent",
-			0x5E0E655C82BD8DD9
-		},
-		{
+			"ms to wait for test packet responses after last packet is sent"
+		),
+		create_var_record(
 			"lobbymigrate_NomineeWaitMS",
-			"ms to wait for each nominee to send us a partystate",
-			0x3461F602C3EC7F19
-		},
-		{
+			"ms to wait for each nominee to send us a partystate"
+		),
+		create_var_record(
 			"lobbymigrate_HostWaitMS",
-			"ms to send hostannounce packets before sending partystates",
-			0x3D04D8184D5237F6
-		},
-		{
+			"ms to send hostannounce packets before sending partystates"
+		),
+		create_var_record(
 			"lobbymigrate_NomineeRecalcInterval",
-			"ms to wait between recalculating migration nominees",
-			0x63766A793BE4AC8D
-		},
-		{
+			"ms to wait between recalculating migration nominees"
+		),
+		create_var_record(
 			"lobbymigrate_TestInterval",
-			"base ms to wait between test rounds, see lobbymigrate_TestIntervalJitter",
-			0x2D7E4E3258446878
-		},
-		{
+			"base ms to wait between test rounds, see lobbymigrate_TestIntervalJitter"
+		),
+		create_var_record(
 			"lobbymigrate_TestIntervalJitter",
-			"ms jitter between test rounds",
-			0x29CD2D8303C0B9EE
-		},
-		{
+			"ms jitter between test rounds"
+		),
+		create_var_record(
 			"lobbymigrate_MinScoreDiff",
-			"minimum score nominee must differ by before rank will change",
-			0x20EFC56A1BCFC618
-		},
-		{
+			"minimum score nominee must differ by before rank will change"
+		),
+		create_var_record(
 			"lobbymigrate_WirelessLatencyIncrease",
-			"percentage increase for wireless client latency during host selection",
-			0x48EF2DF9DA3140B5
-		},
-		{
+			"percentage increase for wireless client latency during host selection"
+		),
+		create_var_record(
 			"lobbymigrate_useStdDev",
-			"If true we'll use the standard devation of the clients latency as a tie-breaker instead of the clientnum",
-			0x7D62DC2DCC9C357C
-		},
-		{
+			"If true we'll use the standard devation of the clients latency as a tie-breaker instead of the clientnum"
+		),
+		create_var_record(
 			"lobbyMigrate_Enabled",
-			"Set to false to disable lobby migration",
-			0x1B20187487D3509E
-		},
-		{
+			"Set to false to disable lobby migration"
+		),
+		create_var_record(
 			"lobbyMigrate_EnabledLAN",
-			"Set to false to disable lobby migration in LAN mode",
-			0x6210238C373449C1
-		},
-		{
+			"Set to false to disable lobby migration in LAN mode"
+		),
+		create_var_record(
 			"lobbyMigrate_migrateToBestGameHostEnabled",
-			"Set to false to disable migrate to best game host migration",
-			0x77255714A6A48B0A
-		},
-		{
+			"Set to false to disable migrate to best game host migration"
+		),
+		create_var_record(
 			"lobbyMigrate_dedicatedOnly",
-			"only allow dedicated servers to host",
-			0x47EBF1500DC54DA4
-		},
-		{
+			"only allow dedicated servers to host"
+		),
+		create_var_record(
 			"lobbyMigrate_considerStreamingForHostMigration",
-			"When true, will consider the factor of whether the host is streaming or not, when nominating for host migration",
-			0x1403A1EDE03BB4A5
-		},
-		{
+			"When true, will consider the factor of whether the host is streaming or not, when nominating for host migration"
+		),
+		create_var_record(
 			"lobby_clientTimeout",
-			"Seconds with no received packets from host until a timeout occurs",
-			0x6B76B42B0169563E
-		},
-		{
+			"Seconds with no received packets from host until a timeout occurs"
+		),
+		create_var_record(
 			"lobby_clientWarnTimeout",
-			"Seconds with no received packets from host until a host missing warning is displayed",
-			0x3400A1AC84221B6E
-		},
-		{
+			"Seconds with no received packets from host until a host missing warning is displayed"
+		),
+		create_var_record(
 			"lobby_clientContentTimeout",
-			"Milli-Seconds to finish sending the active client data until a timeout occurs",
-			0x7DB3090EE0D467AF
-		},
-		{
+			"Milli-Seconds to finish sending the active client data until a timeout occurs"
+		),
+		create_var_record(
 			"lobby_clientEndCooloffTime",
-			"Miliseconds before dropping net chan channels to host",
-			0x44D076BCC8EA1A3F
-		},
-		{
+			"Miliseconds before dropping net chan channels to host"
+		),
+		create_var_record(
 			"lobby_clientEndFakeSendLoss",
-			"When a match end and are returning to the front end, check if we have full loaded the UI level",
-			0x7B6F8090CE75BC9C
-		},
-		{
+			"When a match end and are returning to the front end, check if we have full loaded the UI level"
+		),
+		create_var_record(
 			"lobby_clientLoadingIntoUICheck",
-			"When a match end and are returning to the front end, check if we have full loaded the UI level",
-			0x21A55E1609045893
-		},
-		{
+			"When a match end and are returning to the front end, check if we have full loaded the UI level"
+		),
+		create_var_record(
 			"lobbyLaunch_fadeToBlackDelay",
-			"Once the launch game timer has started, when the fade to black will happen",
-			0x1F6674CAE730AA08
-		},
-		{
+			"Once the launch game timer has started, when the fade to black will happen"
+		),
+		create_var_record(
 			"lobbyLaunch_gameLaunchDelay",
-			"Once the launch game timer has started, when the launch will happen",
-			0x3AC3D72F21D83F1B
-		},
-		{
+			"Once the launch game timer has started, when the launch will happen"
+		),
+		create_var_record(
 			"lobbyLaunch_fadeToBlackDelayOnConnect",
-			"Once the launch game timer has started, when the fade to black will happen",
-			0xCD73B6D54F107A5
-		},
-		{
+			"Once the launch game timer has started, when the fade to black will happen"
+		),
+		create_var_record(
 			"lobbyLaunch_gameLaunchDelayOnConnect",
-			"Once the launch game timer has started, when the launch will happen",
-			0x68663791C854DEC4
-		},
-		{
+			"Once the launch game timer has started, when the launch will happen"
+		),
+		create_var_record(
 			"lobbyLaunch_waitForClientAckDelay",
-			"Time to wait for acknowledgments from the clients before launching",
-			0x2E0639684531C4C8
-		},
-		{
+			"Time to wait for acknowledgments from the clients before launching"
+		),
+		create_var_record(
 			"lobby_hostTimeout",
-			"seconds without any message from client before they are disconnected",
-			0x3C2A63995EDF4741
-		},
-		{
+			"seconds without any message from client before they are disconnected"
+		),
+		create_var_record(
 			"lobby_hostIntervalState",
-			"lobby state message intervals",
-			0x21ACD63ED36D63B4
-		},
-		{
+			"lobby state message intervals"
+		),
+		create_var_record(
 			"lobby_hostIntervalHeartbeat",
-			"lobby heartbeat message intervals",
-			0x25E441ECA4C55181
-		},
-		{
+			"lobby heartbeat message intervals"
+		),
+		create_var_record(
 			"lobby_hostContentTimeout",
-			"Seconds to finish sending the host content until a timeout occurs",
-			0x39777C9A27DF8E2A
-		},
-		{
+			"Seconds to finish sending the host content until a timeout occurs"
+		),
+		create_var_record(
 			"lobby_enablePSDataStreamingInGame",
-			"Turn on the in-game streaming of paintshop data to all clients marked dirty",
-			0x2836622FCD9AC11F
-		},
-		{
+			"Turn on the in-game streaming of paintshop data to all clients marked dirty"
+		),
+		create_var_record(
 			"lobby_enableLoadoutDataStreamingInGame",
-			"Turn on the in-game streaming of loadout data to all clients marked dirty",
-			0x7867B95DC8C4230A
-		},
-		{
+			"Turn on the in-game streaming of loadout data to all clients marked dirty"
+		),
+		create_var_record(
 			"lobby_hostPSFragmentRetryInterval",
-			"Paintshop data fragment retry interval",
-			0x2600410670BD4182
-		},
-		{
+			"Paintshop data fragment retry interval"
+		),
+		create_var_record(
 			"lobby_enablePSDataStreamingInLobby",
-			"Turn on the paintshop data to be shared in the frontend lobbies",
-			0x7639D7847E1D3B
-		},
-		{
+			"Turn on the paintshop data to be shared in the frontend lobbies"
+		),
+		create_var_record(
 			"lobby_ingamePSDataStreamingBW",
-			"Control In-Game Paintshop data streaming Bandwidth(total bumber of paintshop bytes to be sent per snapshop)",
-			0x49D12FB1ED3F005B
-		},
-		{
+			"Control In-Game Paintshop data streaming Bandwidth(total bumber of paintshop bytes to be sent per snapshop)"
+		),
+		create_var_record(
 			"lobby_moveLobby",
-			"seconds before a lobby move is considered a failure",
-			0x7050EF8E2D8622E7
-		},
-		{
+			"seconds before a lobby move is considered a failure"
+		),
+		create_var_record(
 			"lobby_hostJoinRequestReject",
-			"Have the host reject incomming connections with random reasons",
-			0x2C16E97C130C620C
-		},
-		{
+			"Have the host reject incomming connections with random reasons"
+		),
+		create_var_record(
 			"join_agreementWindow",
-			"all clients must agree to join the new host in this window",
-			0x57043A928B14422A
-		},
-		{
+			"all clients must agree to join the new host in this window"
+		),
+		create_var_record(
 			"join_handshakeWindow",
-			"server must respond to reservation request within this window",
-			0x790D64342518F3FB
-		},
-		{
+			"server must respond to reservation request within this window"
+		),
+		create_var_record(
 			"join_completionWindow",
-			"once a join is complete, the old host remains active for this amount of time before deactivating itself",
-			0x2638FCB20DC52814
-		},
-		{
+			"once a join is complete, the old host remains active for this amount of time before deactivating itself"
+		),
+		create_var_record(
 			"join_infoProbeWindow",
-			"time to wait for an info probe IM response",
-			0x7943C77D227FF348
-		},
-		{
+			"time to wait for an info probe IM response"
+		),
+		create_var_record(
 			"join_retryDelay",
-			"if the host is busy, we'll try re-joining after this cooloff",
-			0x69A67CC8E74D05CF
-		},
-		{
+			"if the host is busy, we'll try re-joining after this cooloff"
+		),
+		create_var_record(
 			"join_retryCount",
-			"if the host is still busy after these many retries, move on",
-			0x5D50F5CB3997496F
-		},
-		{
+			"if the host is still busy after these many retries, move on"
+		),
+		create_var_record(
 			"join_reservationWindow",
-			"host join reservation window in ms",
-			0x2C13C8872AEA0758
-		},
-		{
+			"host join reservation window in ms"
+		),
+		create_var_record(
 			"lobbymsg_prints",
-			"Turns on and off the message debug prints",
-			0xFEFA8EC975C9D0D
-		},
-		{
+			"Turns on and off the message debug prints"
+		),
+		create_var_record(
 			"lobbyDebugLogJoins",
-			"Logs join results to the kvs",
-			0x15325B3EB423F269
-		},
-		{
+			"Logs join results to the kvs"
+		),
+		create_var_record(
 			"lobbyDebugLogJoinSuccess",
-			"Includes join success results while logging",
-			0xBAD693F0A579CA3
-		},
-		{
+			"Includes join success results while logging"
+		),
+		create_var_record(
 			"lobby_ptptimeout",
-			"Time out for connection test",
-			0x10FFB6C091A1744B
-		},
-		{
+			"Time out for connection test"
+		),
+		create_var_record(
 			"partyPrivacyEnabled",
-			"Lobby party privacy on/off",
-			0x1E52CB4B7B32961A
-		},
-		{
+			"Lobby party privacy on/off"
+		),
+		create_var_record(
 			"partyPrivacyPumpEnabled",
-			"Lobby party privacy pump on/off",
-			0x2FF3E7BFBD5CE85C
-		},
-		{
+			"Lobby party privacy pump on/off"
+		),
+		create_var_record(
 			"partyPrivacyCheckInterval",
-			"Party privacy check interval",
-			0x1C018601EF2EA99A
-		},
-		{
+			"Party privacy check interval"
+		),
+		create_var_record(
 			"leaveWithPartyEnabled",
-			"Lobby leave with party on/off",
-			0x61CD7A5D0E152F8D
-		},
-		{
+			"Lobby leave with party on/off"
+		),
+		create_var_record(
 			"lobbyMergeEnabled",
-			"Lobby merge on/off",
-			0x406AB21D919144AA
-		},
-		{
+			"Lobby merge on/off"
+		),
+		create_var_record(
 			"lobbyMergeInterval",
-			"Lobby merge interval",
-			0x747EDB66E0FE444C
-		},
-		{
+			"Lobby merge interval"
+		),
+		create_var_record(
 			"lobbyMergeDedicatedEnabled",
-			"Lobby dedicated merge on/off",
-			0x36D033E0551BFF83
-		},
-		{
+			"Lobby dedicated merge on/off"
+		),
+		create_var_record(
 			"lobbyAdvertiseSkip",
-			"Lobby Advertise: Skip advertisment",
-			0x462E6E8627E5372B
-		},
-		{
+			"Lobby Advertise: Skip advertisment"
+		),
+		create_var_record(
 			"lobbyAdvertiseDirty",
-			"Lobby Advertise: Session is dirty/needs updating",
-			0x60506FA050DCE73C
-		},
-		{
+			"Lobby Advertise: Session is dirty/needs updating"
+		),
+		create_var_record(
 			"lobbyAdvertiseMaxPlayers",
-			"Lobby Advertise Param: Max Players",
-			0x452B5D4465EE5AD8
-		},
-		{
+			"Lobby Advertise Param: Max Players"
+		),
+		create_var_record(
 			"lobbyAdvertiseNumPlayers",
-			"Lobby Advertise Param: Num Players",
-			0x58D7611F93A7FCFE
-		},
-		{
+			"Lobby Advertise Param: Num Players"
+		),
+		create_var_record(
 			"lobbyAdvertiseServerType",
-			"Lobby Advertise Param: server type",
-			0x64EC2C20CC5CBE0F
-		},
-		{
+			"Lobby Advertise Param: server type"
+		),
+		create_var_record(
 			"lobbyAdvertiseShowInMatchmaking",
-			"Lobby Advertise Param: Show in matchmaking",
-			0x50E5350E8F7BD556
-		},
-		{
+			"Lobby Advertise Param: Show in matchmaking"
+		),
+		create_var_record(
 			"lobbyAdvertiseNetcodeVersion",
-			"Lobby Advertise Param: Netcode version",
-			0x21B1541ECD98A72
-		},
-		{
+			"Lobby Advertise Param: Netcode version"
+		),
+		create_var_record(
 			"lobbyAdvertiseMapPacks",
-			"Lobby Advertise Param: Map packs",
-			0x7A96CE8EF5319D80
-		},
-		{
+			"Lobby Advertise Param: Map packs"
+		),
+		create_var_record(
 			"lobbyAdvertisePlaylistVersion",
-			"Lobby Advertise Param: Playlist Version",
-			0x460990550E224156
-		},
-		{
+			"Lobby Advertise Param: Playlist Version"
+		),
+		create_var_record(
 			"lobbyAdvertisePlaylistNumber",
-			"Lobby Advertise Param: Playlist Number",
-			0x705B789559A59177
-		},
-		{
+			"Lobby Advertise Param: Playlist Number"
+		),
+		create_var_record(
 			"lobbyAdvertiseIsEmpty",
-			"Lobby Advertise Param: Is Empty",
-			0x688AAC69E4F7C18D
-		},
-		{
+			"Lobby Advertise Param: Is Empty"
+		),
+		create_var_record(
 			"lobbyAdvertiseTeamSizeMax",
-			"Lobby Advertise Param: Team Size Max",
-			0x2A90AF2FA81CF8EA
-		},
-		{
+			"Lobby Advertise Param: Team Size Max"
+		),
+		create_var_record(
 			"lobbyAdvertiseSkill",
-			"Lobby Advertise Param: Skill level",
-			0x264614F5CA9FF2B9
-		},
-		{
+			"Lobby Advertise Param: Skill level"
+		),
+		create_var_record(
 			"lobbyAdvertiseGeo1",
-			"Lobby Advertise Param: Geographical loc 1",
-			0x3C83EFEB4F222B40
-		},
-		{
+			"Lobby Advertise Param: Geographical loc 1"
+		),
+		create_var_record(
 			"lobbyAdvertiseGeo2",
-			"Lobby Advertise Param: Geographical loc 2",
-			0x3C83F2EB4F223059
-		},
-		{
+			"Lobby Advertise Param: Geographical loc 2"
+		),
+		create_var_record(
 			"lobbyAdvertiseGeo3",
-			"Lobby Advertise Param: Geographical loc 3",
-			0x3C83F1EB4F222EA6
-		},
-		{
+			"Lobby Advertise Param: Geographical loc 3"
+		),
+		create_var_record(
 			"lobbyAdvertiseGeo4",
-			"Lobby Advertise Param: Geographical loc 4",
-			0x3C83F4EB4F2233BF
-		},
-		{
+			"Lobby Advertise Param: Geographical loc 4"
+		),
+		create_var_record(
 			"lobbyAdvertiseServerLocation",
-			"Server location to advertise",
-			0x27D325BF9B693A80
-		},
-		{
+			"Server location to advertise"
+		),
+		create_var_record(
 			"lobbyAdvertiseLatencyBand",
-			"Server latency band to advertise",
-			0x2686027EBE0C93F5
-		},
-		{
+			"Server latency band to advertise"
+		),
+		create_var_record(
 			"lobbyAdvertiseMap",
-			"Lobby Advertise Param: Map",
-			0x61F1674454C3251A
-		},
-		{
+			"Lobby Advertise Param: Map"
+		),
+		create_var_record(
 			"lobbySearchSkip",
-			"Lobby Search: Skip searches",
-			0x1654E95D79AE2D20
-		},
-		{
+			"Lobby Search: Skip searches"
+		),
+		create_var_record(
 			"lobbyDedicatedSearchSkip",
-			"Lobby Search: Skip dedicated server searches",
-			0x7E7A52A88079870B
-		},
-		{
+			"Lobby Search: Skip dedicated server searches"
+		),
+		create_var_record(
 			"lobbySearchDelay",
-			"Lobby Search: Time delay between searches",
-			0x58CAF432075AC8A
-		},
-		{
+			"Lobby Search: Time delay between searches"
+		),
+		create_var_record(
 			"lobbySearchGeoMin",
-			"Lobby Search: Minimum number of geo tiers that must match",
-			0x7E01BF4D20878528
-		},
-		{
+			"Lobby Search: Minimum number of geo tiers that must match"
+		),
+		create_var_record(
 			"lobbySearchQueryId",
-			"Lobby Search Param: Query ID",
-			0xD6F0384367E76DC
-		},
-		{
+			"Lobby Search Param: Query ID"
+		),
+		create_var_record(
 			"lobbySearchGameSecurityId",
-			"Lobby Search Param: Game security id, used in communication encryption",
-			0x180772AC2D5D37FA
-		},
-		{
+			"Lobby Search Param: Game security id, used in communication encryption"
+		),
+		create_var_record(
 			"lobbySearchShowInMatchmaking",
-			"Lobby Search Param: Show in matchmaking, flag for shown or hidden games",
-			0x778CB42E7042F8CB
-		},
-		{
+			"Lobby Search Param: Show in matchmaking, flag for shown or hidden games"
+		),
+		create_var_record(
 			"lobbySearchNetcodeVersion",
-			"Lobby Search Param: Netcode Version, of the code base",
-			0x1B6D149B6BCE7B6D
-		},
-		{
+			"Lobby Search Param: Netcode Version, of the code base"
+		),
+		create_var_record(
 			"lobbySearchMapPacks",
-			"Lobby Search Param: Search for emabled map packs",
-			0x5FD32115F3E81D0F
-		},
-		{
+			"Lobby Search Param: Search for emabled map packs"
+		),
+		create_var_record(
 			"lobbySearchPlaylistVersion",
-			"Lobby Search Param: Playlist version of session",
-			0x71DCDE4E59ACB1DF
-		},
-		{
+			"Lobby Search Param: Playlist version of session"
+		),
+		create_var_record(
 			"lobbySearchPlaylistNumber",
-			"Lobby Search Param: Playlist number of session",
-			0x257D6B84159AE9C8
-		},
-		{
+			"Lobby Search Param: Playlist number of session"
+		),
+		create_var_record(
 			"lobbySearchServerType",
-			"Lobby Search Param: Server type of session",
-			0x2107859BFDA22E40
-		},
-		{
+			"Lobby Search Param: Server type of session"
+		),
+		create_var_record(
 			"lobbySearchIsEmpty",
-			"Lobby Search Param: If the session is empty",
-			0x420D3B772483054C
-		},
-		{
+			"Lobby Search Param: If the session is empty"
+		),
+		create_var_record(
 			"lobbySearchTeamSize",
-			"Lobby Search Param: Team size",
-			0x7F60C6CF17A46E6B
-		},
-		{
+			"Lobby Search Param: Team size"
+		),
+		create_var_record(
 			"lobbySearchSkill",
-			"Lobby Search Param: Session skill level",
-			0x20D4F5D5C347C308
-		},
-		{
+			"Lobby Search Param: Session skill level"
+		),
+		create_var_record(
 			"lobbySearchSkillWeight",
-			"Lobby Search Param: Session skill level weight",
-			0x4BD1AD7AFB19CD88
-		},
-		{
+			"Lobby Search Param: Session skill level weight"
+		),
+		create_var_record(
 			"lobbySearchGeo1",
-			"Lobby Search Param: Geographical loc 1",
-			0x7F78BBF8409E5E7F
-		},
-		{
+			"Lobby Search Param: Geographical loc 1"
+		),
+		create_var_record(
 			"lobbySearchGeo2",
-			"Lobby Search Param: Geographical loc 2",
-			0x7F78BCF8409E6032
-		},
-		{
+			"Lobby Search Param: Geographical loc 2"
+		),
+		create_var_record(
 			"lobbySearchGeo3",
-			"Lobby Search Param: Geographical loc 3",
-			0x7F78BDF8409E61E5
-		},
-		{
+			"Lobby Search Param: Geographical loc 3"
+		),
+		create_var_record(
 			"lobbySearchGeo4",
-			"Lobby Search Param: Geographical loc 4",
-			0x7F78B6F8409E5600
-		},
-		{
+			"Lobby Search Param: Geographical loc 4"
+		),
+		create_var_record(
 			"lobbySearchPingBand",
-			"Lobby search param: Ping band",
-			0x3BD37C49236A4C70
-		},
-		{
+			"Lobby search param: Ping band"
+		),
+		create_var_record(
 			"lobbySearchDediUnparkPingLimit",
-			"Limit on RTT in milliseconds to a given serverloc we'll consider for unparking",
-			0x339E15BDB813DCCB
-		},
-		{
+			"Limit on RTT in milliseconds to a given serverloc we'll consider for unparking"
+		),
+		create_var_record(
 			"lobbySearchServerLocation1",
-			"Lobby search param: Server location 1",
-			0x2599C296FF29D0A
-		},
-		{
+			"Lobby search param: Server location 1"
+		),
+		create_var_record(
 			"lobbySearchServerLocation2",
-			"Lobby search param: Server location 2",
-			0x2599B296FF29B57
-		},
-		{
+			"Lobby search param: Server location 2"
+		),
+		create_var_record(
 			"lobbySearchServerLocation3",
-			"Lobby search param: Server location 3",
-			0x2599A296FF299A4
-		},
-		{
+			"Lobby search param: Server location 3"
+		),
+		create_var_record(
 			"lobbySearchServerLocation4",
-			"Lobby search param: Server location 4",
-			0x25999296FF297F1
-		},
-		{
+			"Lobby search param: Server location 4"
+		),
+		create_var_record(
 			"lobbySearchServerLocation5",
-			"Lobby search param: Server location 5",
-			0x25998296FF2963E
-		},
-		{
+			"Lobby search param: Server location 5"
+		),
+		create_var_record(
 			"lobbySearchPingBandWeight1",
-			"Lobby Search Param: Ping band weight1 for dedicated matchmaking query",
-			0x786E5B4B359DD833
-		},
-		{
+			"Lobby Search Param: Ping band weight1 for dedicated matchmaking query"
+		),
+		create_var_record(
 			"lobbySearchPingBandWeight2",
-			"Lobby Search Param: Ping band weight2 for dedicated matchmaking query",
-			0x786E5C4B359DD9E6
-		},
-		{
+			"Lobby Search Param: Ping band weight2 for dedicated matchmaking query"
+		),
+		create_var_record(
 			"lobbySearchPingBandWeight3",
-			"Lobby Search Param: Ping band weight3 for dedicated matchmaking query",
-			0x786E5D4B359DDB99
-		},
-		{
+			"Lobby Search Param: Ping band weight3 for dedicated matchmaking query"
+		),
+		create_var_record(
 			"lobbySearchPingBandWeight4",
-			"Lobby Search Param: Ping band weight4 for dedicated matchmaking query",
-			0x786E5E4B359DDD4C
-		},
-		{
+			"Lobby Search Param: Ping band weight4 for dedicated matchmaking query"
+		),
+		create_var_record(
 			"lobbySearchPingBandWeight5",
-			"Lobby Search Param: Ping band weight5 for dedicated matchmaking query",
-			0x786E5F4B359DDEFF
-		},
-		{
+			"Lobby Search Param: Ping band weight5 for dedicated matchmaking query"
+		),
+		create_var_record(
 			"lobbySearchForceLocation",
-			"If true we'll ignore qos results and only search for sessions in this location",
-			0x60A007B37323C55D
-		},
-		{
+			"If true we'll ignore qos results and only search for sessions in this location"
+		),
+		create_var_record(
 			"lobbySearchDatacenterType",
-			"Do we look for Gameservers or Thunderhead datacenters?",
-			0x1811D3265B27B866
-		},
-		{
+			"Do we look for Gameservers or Thunderhead datacenters?"
+		),
+		create_var_record(
 			"lobbySearchDatacenterTypeGeo",
-			"Gameservers/Thunderhead geo-filter",
-			0x7AF990C759653E57
-		},
-		{
+			"Gameservers/Thunderhead geo-filter"
+		),
+		create_var_record(
 			"lobbySearchDatacenterTypeOverride",
-			"Do we look for Gameservers or Thunderhead datacenters - override if != ANY?",
-			0x40BF9CEA4DBF2906
-		},
-		{
+			"Do we look for Gameservers or Thunderhead datacenters - override if != ANY?"
+		),
+		create_var_record(
 			"lobbySearchGeo1Weight",
-			"Lobby Search Param: Geographical loc latitude weight for weighted distance matchmaking queries",
-			0x66A0C9D1B5E5E5BB
-		},
-		{
+			"Lobby Search Param: Geographical loc latitude weight for weighted distance matchmaking queries"
+		),
+		create_var_record(
 			"lobbySearchGeo2Weight",
-			"Lobby Search Param: Geographical loc latitude weight for weighted distance matchmaking queries",
-			0x4C6A5C1204B980DA
-		},
-		{
+			"Lobby Search Param: Geographical loc latitude weight for weighted distance matchmaking queries"
+		),
+		create_var_record(
 			"lobbySearchGeo3Weight",
-			"Lobby Search Param: Geographical loc latitude weight for weighted distance matchmaking queries",
-			0xB39CA390B7FC7D9
-		},
-		{
+			"Lobby Search Param: Geographical loc latitude weight for weighted distance matchmaking queries"
+		),
+		create_var_record(
 			"lobbySearchGeo4Weight",
-			"Lobby Search Param: Geographical loc latitude weight for weighted distance matchmaking queries",
-			0x7C17DF3E855A4940
-		},
-		{
+			"Lobby Search Param: Geographical loc latitude weight for weighted distance matchmaking queries"
+		),
+		create_var_record(
 			"lobbySearchMaxLatencyBandDiff",
-			"Max diff in latency before we reject this host as a possible host",
-			0x5C37AB5C77EECFBB
-		},
-		{
+			"Max diff in latency before we reject this host as a possible host"
+		),
+		create_var_record(
 			"lobbySearchMinDediSearchTime",
-			"The minimum amount of time required to search/unpark dedi before any listen search",
-			0x71372F42FAD45694
-		},
-		{
+			"The minimum amount of time required to search/unpark dedi before any listen search"
+		),
+		create_var_record(
 			"lobbySearchMinDediSearchClientAdd",
-			"The amount of time added to minimum dedi search/unpark for each party member",
-			0x3A5FA123002E0DAD
-		},
-		{
+			"The amount of time added to minimum dedi search/unpark for each party member"
+		),
+		create_var_record(
 			"lobbySearchBaseSkillRange",
-			"Base skill range for public matchmaking",
-			0x1AED798FF3820324
-		},
-		{
+			"Base skill range for public matchmaking"
+		),
+		create_var_record(
 			"lobbySearchSkillRangeMultiplier",
-			"Rate at which skill range increases for each stage retry",
-			0x73D85BE005E3364E
-		},
-		{
+			"Rate at which skill range increases for each stage retry"
+		),
+		create_var_record(
 			"lobbySearchForceUnparkLobbySize",
-			"Party size that will force a dedicated server unpark",
-			0x7A3A27C2D1E550D6
-		},
-		{
+			"Party size that will force a dedicated server unpark"
+		),
+		create_var_record(
 			"lobbySearchSkipUnparkProbability",
-			"Probability that we skip unparking",
-			0x608CF9277DBC2F6A
-		},
-		{
+			"Probability that we skip unparking"
+		),
+		create_var_record(
 			"lobbySearchSkipDLCProbability",
-			"Probability we'll search for original maps instead of DLC1",
-			0x728AC8324738DCB0
-		},
-		{
+			"Probability we'll search for original maps instead of DLC1"
+		),
+		create_var_record(
 			"lobbySearchPingBandEnabled",
-			"If true set the lobbySearchPingBand value before the search",
-			0x398C582C5C1D64D1
-		},
-		{
+			"If true set the lobbySearchPingBand value before the search"
+		),
+		create_var_record(
 			"lobbySearchExperimentDatacenter",
-			"Datacenter to use for pingband experiment",
-			0x5449839A25C9ABE9
-		},
-		{
+			"Datacenter to use for pingband experiment"
+		),
+		create_var_record(
 			"lobbySearchForceXuid",
-			"If set, all search results will be discarded except for specified xuid",
-			0x4C7745FD758DB978
-		},
-		{
+			"If set, all search results will be discarded except for specified xuid"
+		),
+		create_var_record(
 			"qosPreferredPing",
-			"QoS preferred ping",
-			0x7B331A08D4780C2B
-		},
-		{
+			"QoS preferred ping"
+		),
+		create_var_record(
 			"qosMaxAllowedPing",
-			"QoS max allowed ping",
-			0x2D12B3AE4A4BEBB8
-		},
-		{
+			"QoS max allowed ping"
+		),
+		create_var_record(
 			"qosLocklessQueue",
-			"If true we'll queue up qos results locklessly and push them to the VM on the main thread later",
-			0x722E69B3B9F428D3
-		},
-		{
+			"If true we'll queue up qos results locklessly and push them to the VM on the main thread later"
+		),
+		create_var_record(
 			"excellentPing",
-			"Anything less than this is consider excellent",
-			0x19A8F14A21E7424D
-		},
-		{
+			"Anything less than this is consider excellent"
+		),
+		create_var_record(
 			"goodPing",
-			"Anything less thant this is considered decent",
-			0x38E0DBD8C71F9D10
-		},
-		{
+			"Anything less thant this is considered decent"
+		),
+		create_var_record(
 			"terriblePing",
-			"Just awful, limit of playability",
-			0xB2C59B4EE116AEA
-		},
-		{
+			"Just awful, limit of playability"
+		),
+		create_var_record(
 			"lobbyTimerStartInterval",
-			"Lobby timer interval for start match",
-			0x21A227834B17E155
-		},
-		{
+			"Lobby timer interval for start match"
+		),
+		create_var_record(
 			"lobbyCPTimerStartInterval",
-			"Lobby CP timer interval for start match",
-			0x44832F85F8B2FA6A
-		},
-		{
+			"Lobby CP timer interval for start match"
+		),
+		create_var_record(
 			"lobbyCPZMTimerStartInterval",
-			"Lobby CPZM or Nightmares timer interval for start match",
-			0x405CFC2E0315533
-		},
-		{
+			"Lobby CPZM or Nightmares timer interval for start match"
+		),
+		create_var_record(
 			"lobbyTimerStatusVotingInterval",
-			"Lobby timer interval for voting",
-			0x4A0A01C39967B404
-		},
-		{
+			"Lobby timer interval for voting"
+		),
+		create_var_record(
 			"lobbyTimerStatusBeginInterval",
-			"Lobby timer interval for match begin",
-			0x18A58F5C4D4B8CBE
-		},
-		{
+			"Lobby timer interval for match begin"
+		),
+		create_var_record(
 			"lobbyTimerStatusStartInterval",
-			"Lobby timer interval for match start",
-			0x1AEDDAFEB3887F37
-		},
-		{
+			"Lobby timer interval for match start"
+		),
+		create_var_record(
 			"lobbyTimerStatusPostGameInterval",
-			"Lobby timer interval for post match",
-			0x5F28A3041BBCDF83
-		},
-		{
+			"Lobby timer interval for post match"
+		),
+		create_var_record(
 			"lobbyTimerStatusVotingInterval_Arena",
-			"Lobby timer interval for arena pro voting",
-			0x4140BB40F5D43CAC
-		},
-		{
+			"Lobby timer interval for arena pro voting"
+		),
+		create_var_record(
 			"lobbyTimerZMStartInterval",
-			"Lobby timer interval for zm start match",
-			0x7676A47FE42DA15A
-		},
-		{
+			"Lobby timer interval for zm start match"
+		),
+		create_var_record(
 			"lobbyMapVotePrevMapPlayCount",
-			"Number of times a previous map cazn be voted for",
-			0x2FDE55C3193279A9
-		},
-		{
+			"Number of times a previous map cazn be voted for"
+		),
+		create_var_record(
 			"lobby_beginPlay",
-			"use to signal UI_CoD_KeyEvent to force beginPlay on the Main thread",
-			0x66CCDF6439ECB1EF
-		},
-		{
+			"use to signal UI_CoD_KeyEvent to force beginPlay on the Main thread"
+		),
+		create_var_record(
 			"lobby_readyUpPercentRequired",
-			"The fraction of the waiting players who need to be ready for a party to start",
-			0x8A2424003E8E98A
-		},
-		{
+			"The fraction of the waiting players who need to be ready for a party to start"
+		),
+		create_var_record(
 			"lobbyProbedXuidOverride",
-			"How long to check new connecting clients against the probed xuids of already connected clients",
-			0x3935876169435D5F
-		},
-		{
+			"How long to check new connecting clients against the probed xuids of already connected clients"
+		),
+		create_var_record(
 			"lobby_MatchmakingLoggingLevel",
-			"0 = off, 1 = all on, etc.",
-			0x4E2F4F37C098A2A1
-		},
-		{
+			"0 = off, 1 = all on, etc."
+		),
+		create_var_record(
 			"lobby_MatchmakingLoggingChance",
-			"Probability of uploading a telemetry event record.  Throttle control.",
-			0x42170DC52C04ACA5
-		},
-		{
+			"Probability of uploading a telemetry event record.  Throttle control."
+		),
+		create_var_record(
 			"ui_lobbyDebugJoinLoc",
-			"lobby Join debug loc",
-			0x4D0BB6AA5A213F17
-		},
-		{
+			"lobby Join debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugMsgLoc",
-			"lobby Msg debug loc",
-			0x1AA41CEB2A0F867A
-		},
-		{
+			"lobby Msg debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugReservationLoc",
-			"lobby Reservation debug loc",
-			0xE4596014B16CF17
-		},
-		{
+			"lobby Reservation debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugResCountLoc",
-			"lobby ResCount debug loc",
-			0x33481A4A36A771AC
-		},
-		{
+			"lobby ResCount debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugAgreementLoc",
-			"lobby Agreement debug loc",
-			0x47EDF2B82532CC4D
-		},
-		{
+			"lobby Agreement debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugAgreeCountLoc",
-			"lobby AgreeCount debug loc",
-			0x7F0B910B664147FA
-		},
-		{
+			"lobby AgreeCount debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugPrivateHostSessionLoc",
-			"lobby PrivateHostSession debug loc",
-			0x194F549185C1A50A
-		},
-		{
+			"lobby PrivateHostSession debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugPrivateClientSessionLoc",
-			"lobby PrivateClientSession debug loc",
-			0x413FCDA52C5CD2BB
-		},
-		{
+			"lobby PrivateClientSession debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugGameHostSessionLoc",
-			"lobby GameHostSession debug loc",
-			0x5B7EA066041EA125
-		},
-		{
+			"lobby GameHostSession debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugGameClientSessionLoc",
-			"lobby GameClientSession debug loc",
-			0x32FF1036F4665D70
-		},
-		{
+			"lobby GameClientSession debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugDWSessionLoc",
-			"lobby DWSession debug loc",
-			0xF527311279E40B4
-		},
-		{
+			"lobby DWSession debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugLobbyTasksLoc",
-			"lobby LobbyTasks debug loc",
-			0x67FC6A044DF7E4C9
-		},
-		{
+			"lobby LobbyTasks debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugVoiceHostLoc",
-			"lobby VoiceHost debug loc",
-			0x7F992163F8807079
-		},
-		{
+			"lobby VoiceHost debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugVoiceClientLoc",
-			"lobby VoiceClient debug loc",
-			0x4FD12895DE1C7E36
-		},
-		{
+			"lobby VoiceClient debug loc"
+		),
+		create_var_record(
 			"ui_lobbyDebugPlatformSessionLoc",
-			"lobby PlatformSession debug loc",
-			0x37C37EA31BFE7056
-		},
-		{
+			"lobby PlatformSession debug loc"
+		),
+		create_var_record(
 			"lpc_forceDownloadFiles",
-			"Force downloading of files even when they pass the FSCK",
-			0x161764104EC9A361
-		},
-		{
+			"Force downloading of files even when they pass the FSCK"
+		),
+		create_var_record(
 			"marketing_enabled",
-			"Used to turn off/on the marketing mtx comms system",
-			0xE0901B68E1F4FF1
-		},
-		{
+			"Used to turn off/on the marketing mtx comms system"
+		),
+		create_var_record(
 			"marketing_refreshTime",
-			"The refresh time for the marketing messsages.",
-			0x168B66C54B816252
-		},
-		{
+			"The refresh time for the marketing messsages."
+		),
+		create_var_record(
 			"marketing_autorefresh",
-			"Automatically download new messages after reporting any message read",
-			0x21FC65B413AD213A
-		},
-		{
+			"Automatically download new messages after reporting any message read"
+		),
+		create_var_record(
 			"marketing_waitTimeOnLogin",
-			"Used to enable the wait on fetching marketing messages on login. Time value in ms.",
-			0x75DD9083C75B9B66
-		},
-		{
+			"Used to enable the wait on fetching marketing messages on login. Time value in ms."
+		),
+		create_var_record(
 			"constBaseline_allow",
-			"If true, enable use of const baselines",
-			0x4AA780B9C974A68D
-		},
-		{
+			"If true, enable use of const baselines"
+		),
+		create_var_record(
 			"net_ip",
-			"Network IP address",
-			0x14BBB153CC56743C
-		},
-		{
+			"Network IP address"
+		),
+		create_var_record(
 			"net_port",
-			"Network port",
-			0x3208549148778326
-		},
-		{
+			"Network port"
+		),
+		create_var_record(
 			"playlist_debug",
-			"Enable the debug display for additional playlist information",
-			0x5F2487E6FB3C1ECB
-		},
-		{
+			"Enable the debug display for additional playlist information"
+		),
+		create_var_record(
 			"playlist_linearMapCycle",
-			"We will cycle through the maps linearly if this is true.",
-			0x8FB704DB4195CBD
-		},
-		{
+			"We will cycle through the maps linearly if this is true."
+		),
+		create_var_record(
 			"playlist_linearMapCycleRandom",
-			"We will cycle through the maps linearly if this is true but picks a random start map.",
-			0x63F3D820E8C560EA
-		},
-		{
+			"We will cycle through the maps linearly if this is true but picks a random start map."
+		),
+		create_var_record(
 			"playlist_excludeMap",
-			"",
-			0x6E821F385A3BDAD0
-		},
-		{
+			""
+		),
+		create_var_record(
 			"playlist_excludeGametype",
-			"",
-			0x5D2D4B0CC74E8DD4
-		},
-		{
+			""
+		),
+		create_var_record(
 			"playlist_allowdevmaps",
-			"Allow maps that aren't in the map/presence table to be selected",
-			0x2D295AE4CBA401DB
-		},
-		{
+			"Allow maps that aren't in the map/presence table to be selected"
+		),
+		create_var_record(
 			"playlist_forceEvent",
-			"Force a particular playlist event to be active",
-			0x5C6628C09B69B14D
-		},
-		{
+			"Force a particular playlist event to be active"
+		),
+		create_var_record(
 			"playlist_autoEvent",
-			"Playlist event currently active as set by the autoevent schedule",
-			0x477094C6DDA9299
-		},
-		{
+			"Playlist event currently active as set by the autoevent schedule"
+		),
+		create_var_record(
 			"playlist_autoEventsEnabled",
-			"Allow autoevent scheduler to run playlist events",
-			0x3A5446A46890E11B
-		},
-		{
+			"Allow autoevent scheduler to run playlist events"
+		),
+		create_var_record(
 			"com_profileLoadingForceSend",
-			"Force Blackbox send after loading done",
-			0x4D32C3E41139CD1D
-		},
-		{
+			"Force Blackbox send after loading done"
+		),
+		create_var_record(
 			"com_smoothFrames",
-			"Enable frame times smoothing.",
-			0x4E0D20851CFAA043
-		},
-		{
+			"Enable frame times smoothing."
+		),
+		create_var_record(
 			"com_maxclients",
-			"Maximum amount of clients on the server",
-			0x65A2E5EE8014325D
-		},
-		{
+			"Maximum amount of clients on the server"
+		),
+		create_var_record(
 			"sv_maxclients",
-			"The maximum number of clients that can connect to a server",
-			0x5EC68A2C5682907F
-		},
-		{
+			"The maximum number of clients that can connect to a server"
+		),
+		create_var_record(
 			"ui_level_sv",
-			"Load the UI level and start a listen server",
-			0x77E97FB748A90E2E
-		},
-		{
+			"Load the UI level and start a listen server"
+		),
+		create_var_record(
 			"ui_execdemo",
-			"Show or hide certain options in the UI for demo purposes.",
-			0x1E017690F8837DD6
-		},
-		{
+			"Show or hide certain options in the UI for demo purposes."
+		),
+		create_var_record(
 			"ui_execdemo_cp",
-			"Show or hide certain options in the UI for demo purposes, for campaign demos only.",
-			0x139AC704E09BFB98
-		},
-		{
+			"Show or hide certain options in the UI for demo purposes, for campaign demos only."
+		),
+		create_var_record(
 			"ui_execdemo_beta",
-			"Show or hide certain options in the UI for demo purposes, for public beta only.",
-			0x242A6A3568FF9F81
-		},
-		{
+			"Show or hide certain options in the UI for demo purposes, for public beta only."
+		),
+		create_var_record(
 			"ui_execdemo_gamescom",
-			"Show or hide certain options in the UI for demo purposes, for gamescom only.",
-			0x5F52444CC548D39F
-		},
-		{
+			"Show or hide certain options in the UI for demo purposes, for gamescom only."
+		),
+		create_var_record(
 			"ui_execdemo_gamescom_host",
-			"Show or hide certain options in the UI for demo purposes, for gamescom host machine only.",
-			0x14AEFFF49B0FCC12
-		},
-		{
+			"Show or hide certain options in the UI for demo purposes, for gamescom host machine only."
+		),
+		create_var_record(
 			"ui_disablePSControlWidgets",
-			"Disable all the control widgets in PS. This dvar is added for recording video for DPS Demo.",
-			0x2619094D06AF4CBF
-		},
-		{
+			"Disable all the control widgets in PS. This dvar is added for recording video for DPS Demo."
+		),
+		create_var_record(
 			"com_maxfps",
-			"Cap frames per second",
-			0x4A1149C362763AF2
-		},
-		{
+			"Cap frames per second"
+		),
+		create_var_record(
 			"ui_error_callstack_ship",
-			"Enable LUI error callstack reporting to show in the UI",
-			0x6BBE933116225B20
-		},
-		{
+			"Enable LUI error callstack reporting to show in the UI"
+		),
+		create_var_record(
 			"ui_timescale",
-			"Scale time of each frame of LUI animation",
-			0x6CFC8AA220A5D8F9
-		},
-		{
+			"Scale time of each frame of LUI animation"
+		),
+		create_var_record(
 			"ui_disable_blur",
-			"Disable LUI blur",
-			0x381EC2D6BD9DBE18
-		},
-		{
+			"Disable LUI blur"
+		),
+		create_var_record(
 			"zombie_devgui",
-			"",
-			0x1C968190FE36E472
-		},
-		{
+			""
+		),
+		create_var_record(
 			"zm_private_rankedmatch",
-			"Zombies private online match will be ranked and no join in progress is allowed",
-			0x48CA6583B1EFAB4B
-		},
-		{
+			"Zombies private online match will be ranked and no join in progress is allowed"
+		),
+		create_var_record(
 			"com_fixedtime_float",
-			"Use a fixed time rate for each frame",
-			0x30831B5184168C87
-		},
-		{
+			"Use a fixed time rate for each frame"
+		),
+		create_var_record(
 			"long_blocking_call",
-			"Enable SCR_DrawPleaseWait dialog",
-			0x146BF4F090F03BB4
-		},
-		{
+			"Enable SCR_DrawPleaseWait dialog"
+		),
+		create_var_record(
 			"sv_paused",
-			"Pause the server",
-			0x3F07F66E96FC06C7
-		},
-		{
+			"Pause the server"
+		),
+		create_var_record(
 			"cl_paused",
-			"Pause the client",
-			0x4BF32EA04B74B241
-		},
-		{
+			"Pause the client"
+		),
+		create_var_record(
 			"cl_gamepadCheatsEnabled",
-			"Enable God and Demigod controller cheats",
-			0x68729BCBA76FFC13
-		},
-		{
+			"Enable God and Demigod controller cheats"
+		),
+		create_var_record(
 			"com_sv_running",
-			"Server is running",
-			0x74A8CF2E4D0E6736
-		},
-		{
+			"Server is running"
+		),
+		create_var_record(
 			"com_forceSVLockStep",
-			"Only allow the server frame to run when it gets told to by the client thread",
-			0x39FFAE4F4746F20E
-		},
-		{
+			"Only allow the server frame to run when it gets told to by the client thread"
+		),
+		create_var_record(
 			"com_wideScreen",
-			"True if the game video is running in 16x9 aspect, false if 4x3.",
-			0x3E634AF40BAA3108
-		},
-		{
+			"True if the game video is running in 16x9 aspect, false if 4x3."
+		),
+		create_var_record(
 			"log_filename",
-			"Open log file with a given filename",
-			0x39767A2C213B3A67
-		},
-		{
+			"Open log file with a given filename"
+		),
+		create_var_record(
 			"showMapErrors",
-			"Show pointless error message after quitting level",
-			0x3B90D40A821362F5
-		},
-		{
+			"Show pointless error message after quitting level"
+		),
+		create_var_record(
 			"ui_mapname",
-			"Current map name",
-			0x873561D7387A6D9
-		},
-		{
+			"Current map name"
+		),
+		create_var_record(
 			"ui_enableAllHeroes",
-			"Enables all Heroes.",
-			0x9E317343EDF4396
-		},
-		{
+			"Enables all Heroes."
+		),
+		create_var_record(
 			"ui_tu11_splitscreen_scoreboard_snap_check",
-			"Enables a force update of the scoreboard for splitscreen clients on the first snapshot.",
-			0x77E1104928E25049
-		},
-		{
+			"Enables a force update of the scoreboard for splitscreen clients on the first snapshot."
+		),
+		create_var_record(
 			"tu11_maxQuadCacheAlloc",
-			"Splits up large quadCache allocations into smaller ones, to fix a UI out of memory error with long strings.",
-			0x1B1FCFB3B23177D5
-		},
-		{
+			"Splits up large quadCache allocations into smaller ones, to fix a UI out of memory error with long strings."
+		),
+		create_var_record(
 			"ui_errorUndefLocals",
-			"Turns on whether LUI will error or warning for undefined local variables.",
-			0x296B7991ACA20308
-		},
-		{
+			"Turns on whether LUI will error or warning for undefined local variables."
+		),
+		create_var_record(
 			"ui_deadquote",
-			"",
-			0x41ECE7435D602BE
-		},
-		{
+			""
+		),
+		create_var_record(
 			"ui_errorMessage",
-			"Most recent error message",
-			0x35C7129C26B55101
-		},
-		{
+			"Most recent error message"
+		),
+		create_var_record(
 			"ui_autoContinue",
-			"Automatically 'click to continue' after loading a level",
-			0x51B3A199470FFC52
-		},
-		{
+			"Automatically 'click to continue' after loading a level"
+		),
+		create_var_record(
 			"ui_playLogoMovie",
-			"Play the initial loading movie with the company logos",
-			0x404C70893D7EA01B
-		},
-		{
+			"Play the initial loading movie with the company logos"
+		),
+		create_var_record(
 			"ui_allowDisplayContinue",
-			"if true, allow the skip button to be displayed during loading cinematic",
-			0x725305F6F4755B1C
-		},
-		{
+			"if true, allow the skip button to be displayed during loading cinematic"
+		),
+		create_var_record(
 			"scr_hostmigrationtest",
-			"",
-			0x17A381319703271E
-		},
-		{
+			""
+		),
+		create_var_record(
 			"debug_show_viewpos",
-			"",
-			0x289F07B47495E02E
-		},
-		{
+			""
+		),
+		create_var_record(
 			"scr_killcam",
-			"",
-			0x4E9123863104C903
-		},
-		{
+			""
+		),
+		create_var_record(
 			"nextarena",
-			"",
-			0x7472515618429E7
-		},
-		{
+			""
+		),
+		create_var_record(
 			"ClickToContinue",
-			"",
-			0x33060DEBB7B116F3
-		},
-		{
+			""
+		),
+		create_var_record(
 			"saved_gameskill",
-			"",
-			0x1715F21BBCA499A8
-		},
-		{
+			""
+		),
+		create_var_record(
 			"upload_bps_dedicated",
-			"dedicated server bandwidth req'd",
-			0x1EBD3BA96FF47B5A
-		},
-		{
+			"dedicated server bandwidth req'd"
+		),
+		create_var_record(
 			"testMissingContentPacks",
-			"When the DLC flag changes for a player, sent the result to Demonware.",
-			0x443D55B29B2317B6
-		},
-		{
+			"When the DLC flag changes for a player, sent the result to Demonware."
+		),
+		create_var_record(
 			"addMapPackFlagsUserInfo",
-			"Send availableMappackFlags out with the User info.",
-			0x4259A4A90D12FC5D
-		},
-		{
+			"Send availableMappackFlags out with the User info."
+		),
+		create_var_record(
 			"missingCommandWillError",
-			"When true a missing command or config file will cause an ERR_DROP.",
-			0x6CEDC002A76A2D4E
-		},
-		{
+			"When true a missing command or config file will cause an ERR_DROP."
+		),
+		create_var_record(
 			"doAutoExecDevConfig",
-			"Exec autoexec developer config files.",
-			0x2152755F67286EDF
-		},
-		{
+			"Exec autoexec developer config files."
+		),
+		create_var_record(
 			"doAutoExecUserConfig",
-			"Exec autoexec user config files.",
-			0x38DE9F32E6BA54DB
-		},
-		{
+			"Exec autoexec user config files."
+		),
+		create_var_record(
 			"tu6_doublePistolSpreadAmmo",
-			"Show double ammo in the HUD for pistol spread weapons",
-			0x2560E60DB190DF0A
-		},
-		{
+			"Show double ammo in the HUD for pistol spread weapons"
+		),
+		create_var_record(
 			"tu9_skipPerlocalClientAllocation",
-			"",
-			0x2A389B201BD3752A
-		},
-		{
+			""
+		),
+		create_var_record(
 			"tu10_ClearWeapNextHeldInputOnSwitchWeaponCmd",
-			"clear cl->weapNextHeld in the SVSCMD_SWITCH_WEAPON response. We should not allow controller input to weapon cycling on the same frame that the server tells us to switch weapons.",
-			0x255705FD12C32E19LL
-		},
-		{
+			"clear cl->weapNextHeld in the SVSCMD_SWITCH_WEAPON response. We should not allow controller input to weapon cycling on the same frame that the server tells us to switch weapons."
+		),
+		create_var_record(
 			"scr_xpscaleCP",
-			"Controls the xp scaling for CP",
-			0x61E39CDFEB605A5D
-		},
-		{
+			"Controls the xp scaling for CP"
+		),
+		create_var_record(
 			"scr_xpscaleMP",
-			"Controls the xp scaling for MP",
-			0x61F880DFEB7286D3
-		},
-		{
+			"Controls the xp scaling for MP"
+		),
+		create_var_record(
 			"scr_xpscaleZM",
-			"Controls the xp scaling for ZM",
-			0x62319BDFEBA279FB
-		},
-		{
+			"Controls the xp scaling for ZM"
+		),
+		create_var_record(
 			"scr_xpscaleZMPromo",
-			"Controls the xp scaling for the ZM DoubleXP Promo",
-			0x5EFDC8092AE5DA76
-		},
-		{
+			"Controls the xp scaling for the ZM DoubleXP Promo"
+		),
+		create_var_record(
 			"scr_vialsAwardedScale",
-			"Controls how many vials are awarded to the player",
-			0x7536E9929D361703
-		},
-		{
+			"Controls how many vials are awarded to the player"
+		),
+		create_var_record(
 			"scr_gunxpscaleCP",
-			"Controls the gun xp scaling for CP",
-			0xC9129B7B2A939CF
-		},
-		{
+			"Controls the gun xp scaling for CP"
+		),
+		create_var_record(
 			"scr_gunxpscaleMP",
-			"Controls the gun xp scaling for MP",
-			0xC9735B7B2ADB9E1
-		},
-		{
+			"Controls the gun xp scaling for MP"
+		),
+		create_var_record(
 			"scr_gunxpscaleZM",
-			"Controls the gun xp scaling for ZM",
-			0xCDF40B7B2EB8235
-		},
-		{
+			"Controls the gun xp scaling for ZM"
+		),
+		create_var_record(
 			"scr_scorestreaks",
-			"",
-			0x779A6F3044AFFE65
-		},
-		{
+			""
+		),
+		create_var_record(
 			"scr_scorestreaks_maxstacking",
-			"",
-			0x57E72F51FA6FF960
-		},
-		{
+			""
+		),
+		create_var_record(
 			"scr_rampagebonusscale",
-			"",
-			0x60D40843E7CC6090
-		},
-		{
+			""
+		),
+		create_var_record(
 			"scr_disableChallenges",
-			"",
-			0x1E8C2F621BF6361E
-		},
-		{
+			""
+		),
+		create_var_record(
 			"scr_disableStatTracking",
-			"",
-			0x62BF0AA3DA13811F
-		},
-		{
+			""
+		),
+		create_var_record(
 			"scr_disableSetDStat",
-			"",
-			0x237B114DC8A1EEDE
-		},
-		{
+			""
+		),
+		create_var_record(
 			"com_logfile",
-			"Write to log file - 0 = disabled, 1 = async file write, 2 = Sync every write",
-			0x56204B9D7E74AB6D
-		},
-		{
+			"Write to log file - 0 = disabled, 1 = async file write, 2 = Sync every write"
+		),
+		create_var_record(
 			"tu9_highestAvailableDLC",
-			"Highest DLC to show purchase prompts for.  Should be ovewritten in playlists.info when DLC is released",
-			0x2C1AA405FFD7FE8E
-		},
-		{
+			"Highest DLC to show purchase prompts for.  Should be ovewritten in playlists.info when DLC is released"
+		),
+		create_var_record(
 			"tu10_enableHighestAvailableDLCEntitlementCheck",
-			"Enable/Disable the highest available DLC entitlement check.",
-			0xA9045D6278B9AB0
-		},
-		{
+			"Enable/Disable the highest available DLC entitlement check."
+		),
+		create_var_record(
 			"net_broadcast_ip",
-			"IP address to use for broadcast packets",
-			0x1BE72842E3F0F668
-		},
-		{
+			"IP address to use for broadcast packets"
+		),
+		create_var_record(
 			"netstats_dummy_tracker_data",
-			"Turn on dummy random data generation for the netstats tracker",
-			0x5032E7C7436812EC
-		},
-		{
+			"Turn on dummy random data generation for the netstats tracker"
+		),
+		create_var_record(
 			"netchan_debugSpew",
-			"Print very verbose debug info about netchan traffic",
-			0x6080BA478FB700F7
-		},
-		{
+			"Print very verbose debug info about netchan traffic"
+		),
+		create_var_record(
 			"netchan_debugSpewChan",
-			"If turned on, debug spew for this channel will be displayed",
-			0x3554CFC5A2660F2B
-		},
-		{
+			"If turned on, debug spew for this channel will be displayed"
+		),
+		create_var_record(
 			"netchan_fakeLoad",
-			"Additional ms lard to add to netchan frame to simulate heavy load / context switch",
-			0x755D3806119FB980
-		},
-		{
+			"Additional ms lard to add to netchan frame to simulate heavy load / context switch"
+		),
+		create_var_record(
 			"net_emu_latency",
-			"Emulated network latency in ms",
-			0x578086F2DA99CAB3
-		},
-		{
+			"Emulated network latency in ms"
+		),
+		create_var_record(
 			"net_emu_jitter",
-			"Emulated network latency jitter in ms",
-			0x6A69D4ECF9FE4829
-		},
-		{
+			"Emulated network latency jitter in ms"
+		),
+		create_var_record(
 			"net_emu_packet_loss",
-			"Emulated network %% packet loss",
-			0x584C87C7E223C767
-		},
-		{
+			"Emulated network %% packet loss"
+		),
+		create_var_record(
 			"net_emu_server",
-			"Server network emulation info string",
-			0x7DB6414CC9DA9F38
-		},
-		{
+			"Server network emulation info string"
+		),
+		create_var_record(
 			"net_emu_client",
-			"Client network emulation info string",
-			0x6526FB7A61BAB7C
-		},
-		{
+			"Client network emulation info string"
+		),
+		create_var_record(
 			"streamMBPerSecond",
-			"Throttle the streamer to the specified megabytes per second",
-			0x3FD16FBB21B5CF85
-		},
-		{
+			"Throttle the streamer to the specified megabytes per second"
+		),
+		create_var_record(
 			"sv_connectionLogProbability",
-			"Probability of uploading connection log data.",
-			0x2479F0A6D085F098
-		},
-		{
+			"Probability of uploading connection log data."
+		),
+		create_var_record(
 			"sv_connectionLogSamplesPerSecond",
-			"Number of samples per second per client.",
-			0x656231BE534BDD67
-		},
-		{
+			"Number of samples per second per client."
+		),
+		create_var_record(
 			"sv_mapname",
-			"Current map name",
-			0x3B7B241B78207C96
-		},
-		{
+			"Current map name"
+		),
+		create_var_record(
 			"sv_mapcrc",
-			"crc of the map file",
-			0x3C727A79C9E602C9
-		},
-		{
+			"crc of the map file"
+		),
+		create_var_record(
 			"cp_queued_level",
-			"Queued level",
-			0x78D438D99BE5C86F
-		},
-		{
+			"Queued level"
+		),
+		create_var_record(
 			"sv_skipto",
-			"Current skipto",
-			0x70FA26C2326002DB
-		},
-		{
+			"Current skipto"
+		),
+		create_var_record(
 			"sv_saveGameSkipto",
-			"Skipto that gets saved to the save game",
-			0x1D8621150BCF0C0C
-		},
-		{
+			"Skipto that gets saved to the save game"
+		),
+		create_var_record(
 			"sv_privateClients",
-			"Maximum number of private clients allowed on the server",
-			0x6D4930096BA3E4D4
-		},
-		{
+			"Maximum number of private clients allowed on the server"
+		),
+		create_var_record(
 			"sv_privateClientsForClients",
-			"The # of private clients (we send this to clients)",
-			0x12A1B7450A49430D
-		},
-		{
+			"The # of private clients (we send this to clients)"
+		),
+		create_var_record(
 			"sv_hostname",
-			"Host name of the server",
-			0x37C96E4191305118
-		},
-		{
+			"Host name of the server"
+		),
+		create_var_record(
 			"sv_noname",
-			"Player name assigned to players that fail name validation",
-			0x181B1023195812AD
-		},
-		{
+			"Player name assigned to players that fail name validation"
+		),
+		create_var_record(
 			"sv_penetrationCount",
-			"Maximum number of private clients allowed on the server",
-			0xF93473F7D04DCE5
-		},
-		{
+			"Maximum number of private clients allowed on the server"
+		),
+		create_var_record(
 			"sv_connectTimeout",
-			"seconds without any message when a client is loading",
-			0x36A999BA53305150
-		},
-		{
+			"seconds without any message when a client is loading"
+		),
+		create_var_record(
 			"sv_writeConfigStrings",
-			"Write out the config string file",
-			0x1A5A3BDD393BD184
-		},
-		{
+			"Write out the config string file"
+		),
+		create_var_record(
 			"scr_writeConfigStrings",
-			"Special script mode for writing config string files",
-			0x46704500104207ED
-		},
-		{
+			"Special script mode for writing config string files"
+		),
+		create_var_record(
 			"sv_generateConstBaselines",
-			"Whether or not to generate the const baseline files.",
-			0x3572DBDFC80618CB
-		},
-		{
+			"Whether or not to generate the const baseline files."
+		),
+		create_var_record(
 			"sv_cheats",
-			"Enable cheats on the server",
-			0x2F2097BC767C1B1
-		},
-		{
+			"Enable cheats on the server"
+		),
+		create_var_record(
 			"sv_sendCmdAngles",
-			"Send cmdAngles to clients for increased viewangles fidelity during killcam",
-			0x6022021F1A5EE5CD
-		},
-		{
+			"Send cmdAngles to clients for increased viewangles fidelity during killcam"
+		),
+		create_var_record(
 			"sv_mapRotation",
-			"List of maps for the server to play",
-			0x40285E3E4165AE4F
-		},
-		{
+			"List of maps for the server to play"
+		),
+		create_var_record(
 			"sv_mapRotationCurrent",
-			"Current map in the map rotation",
-			0x248FA32EBFBBEE40
-		},
-		{
+			"Current map in the map rotation"
+		),
+		create_var_record(
 			"sv_rateBoosting",
-			"Determines whether we should allow rate boosting: 0 - disabled, 1 - enabled based on huristic, 2 - force enabled",
-			0x6470CCD761596532
-		},
-		{
+			"Determines whether we should allow rate boosting: 0 - disabled, 1 - enabled based on huristic, 2 - force enabled"
+		),
+		create_var_record(
 			"sv_maxRate",
-			"Maximum server->client rate",
-			0x4E15EFBF1B205C0F
-		},
-		{
+			"Maximum server->client rate"
+		),
+		create_var_record(
 			"sv_zlib_threshold",
-			"Message size threshold which triggers more aggressive compression",
-			0x3A39BC141F6CD4E0
-		},
-		{
+			"Message size threshold which triggers more aggressive compression"
+		),
+		create_var_record(
 			"sv_timeout",
-			"seconds without any message",
-			0x4056F2DCDC894774
-		},
-		{
+			"seconds without any message"
+		),
+		create_var_record(
 			"sv_mapSwitch",
-			"in-game map switching: 0,disabled|1,enabled|(default)2,enabled but devmap will turn it off",
-			0x786D1EF57C183CA1
-		},
-		{
+			"in-game map switching: 0,disabled|1,enabled|(default)2,enabled but devmap will turn it off"
+		),
+		create_var_record(
 			"sv_potm_debug",
-			"Debug info for the Play of the Match system",
-			0x17ABBB7F8E9C8C87
-		},
-		{
+			"Debug info for the Play of the Match system"
+		),
+		create_var_record(
 			"migration_blocksperframe",
-			"Number of blocks to send out each server frame.  A value of 0 means base it off our tested bandwidth.",
-			0x6A6B27E043217AE2
-		},
-		{
+			"Number of blocks to send out each server frame.  A value of 0 means base it off our tested bandwidth."
+		),
+		create_var_record(
 			"migration_msgtimeout",
-			"timeout time in ms of migration messages",
-			0x62859B8FF4AB9C18
-		},
-		{
+			"timeout time in ms of migration messages"
+		),
+		create_var_record(
 			"migration_timeBetween",
-			"milliseconds between migration_limit dvar's value of migrations.",
-			0x7AB6A203C9196427
-		},
-		{
+			"milliseconds between migration_limit dvar's value of migrations."
+		),
+		create_var_record(
 			"migration_forceHost",
-			"force a particular client index to be host.",
-			0x48B07629370FF5D9
-		},
-		{
+			"force a particular client index to be host."
+		),
+		create_var_record(
 			"migration_soak",
-			"Soak test the migration. Migrate every migrationTimeBetween milliseconds",
-			0x55D2448BFF1A461A
-		},
-		{
+			"Soak test the migration. Migrate every migrationTimeBetween milliseconds"
+		),
+		create_var_record(
 			"storage_offline",
-			"Live features are stored locally instead of on Demownare.",
-			0x7EF5B59EA5F493E2
-		},
-		{
+			"Live features are stored locally instead of on Demownare."
+		),
+		create_var_record(
 			"storage_maxfailures",
-			"Number of failures before maxing out backoff increases.",
-			0x53854EF6368F3310
-		},
-		{
+			"Number of failures before maxing out backoff increases."
+		),
+		create_var_record(
 			"storage_backoff",
-			"Base for backing off exponentially",
-			0xEE22CA89B1CE239
-		},
-		{
+			"Base for backing off exponentially"
+		),
+		create_var_record(
 			"loc_availableLanguages",
-			"",
-			0x746B5D9C4A7CE4C0
-		},
-		{
+			""
+		),
+		create_var_record(
 			"loc_language",
-			"Language",
-			0x3A97AE527D90FB24
-		},
-		{
+			"Language"
+		),
+		create_var_record(
 			"loc_systemLanguage",
-			"System language",
-			0x22A8E1B081BE1169
-		},
-		{
+			"System language"
+		),
+		create_var_record(
 			"loc_forceEnglish",
-			"Force english localized strings",
-			0x762BB067CC1A6FF3
-		},
-		{
+			"Force english localized strings"
+		),
+		create_var_record(
 			"loc_warnings",
-			"Enable localization warnings",
-			0x361B832B45F743AB
-		},
-		{
+			"Enable localization warnings"
+		),
+		create_var_record(
 			"loc_warningsAsErrors",
-			"Throw an error for any unlocalized string",
-			0x27B8B7C2DAED657C
-		},
-		{
+			"Throw an error for any unlocalized string"
+		),
+		create_var_record(
 			"loc_languageSaved",
-			"Has a language value been chosen and saved",
-			0x4A833C8D8F59EE5F
-		},
-		{
+			"Has a language value been chosen and saved"
+		),
+		create_var_record(
 			"st_LODDistScale",
-			"Distance scale for terrain LOD - when this increases, detail at a given distance is reduced",
-			0x3834D608A126064C
-		},
-		{
+			"Distance scale for terrain LOD - when this increases, detail at a given distance is reduced"
+		),
+		create_var_record(
 			"ui_emblemDisableGroups",
-			"Disable the emblem group feature.",
-			0x3211555FF0E63362
-		},
-		{
+			"Disable the emblem group feature."
+		),
+		create_var_record(
 			"ui_creditSkipTo",
-			"Line number to skip to in the credits?",
-			0x47104A72C3388B7B
-		},
-		{
+			"Line number to skip to in the credits?"
+		),
+		create_var_record(
 			"ui_smallFont",
-			"Small font scale",
-			0x75C89B766727AA1A
-		},
-		{
+			"Small font scale"
+		),
+		create_var_record(
 			"ui_bigFont",
-			"Big font scale",
-			0xE3775D5A36206AB
-		},
-		{
+			"Big font scale"
+		),
+		create_var_record(
 			"ui_demoname",
-			"Current selected demo name",
-			0x4CB3FA6C5D46BBA8
-		},
-		{
+			"Current selected demo name"
+		),
+		create_var_record(
 			"ui_liveEventViewerOpen",
-			"If the liveEventViewer menu is currently open",
-			0x5CE320CFE22FBC0
-		},
-		{
+			"If the liveEventViewer menu is currently open"
+		),
+		create_var_record(
 			"ui_keyboardtitle",
-			"",
-			0x709BA994593CFF9D
-		},
-		{
+			""
+		),
+		create_var_record(
 			"ui_keyboard_dvar_edit",
-			"",
-			0x61FF91986A2313BC
-		},
-		{
+			""
+		),
+		create_var_record(
 			"scr_hardcore",
-			"",
-			0x67646047091E1652
-		},
-		{
+			""
+		),
+		create_var_record(
 			"ui_hud_showobjicons",
-			"",
-			0x46ABEE835CBEF546
-		},
-		{
+			""
+		),
+		create_var_record(
 			"ui_hud_obituaries",
-			"",
-			0x31F420F8D8A1D739
-		},
-		{
+			""
+		),
+		create_var_record(
 			"ui_currMenuNameList",
-			"Current menu name list set in lua, for debug display.",
-			0x7FEB365B406388
-		},
-		{
+			"Current menu name list set in lua, for debug display."
+		),
+		create_var_record(
 			"ui_currFocusList",
-			"Current focus stack in lua, for debug display and ship crash dumps.",
-			0x3B8B4D0064475D4
-		},
-		{
+			"Current focus stack in lua, for debug display and ship crash dumps."
+		),
+		create_var_record(
 			"ui_currFocusStates",
-			"Current focus stack, with states, set in lua, for debug display.",
-			0x2196FDA5E89973C6
-		},
-		{
+			"Current focus stack, with states, set in lua, for debug display."
+		),
+		create_var_record(
 			"ui_usingFreeCursor",
-			"Turns the free cursor on/off in console builds.",
-			0x48E0F129D51A415C
-		},
-		{
+			"Turns the free cursor on/off in console builds."
+		),
+		create_var_record(
 			"ui_scrollSpeed",
-			"",
-			0x129E807CE7642720
-		},
-		{
+			""
+		),
+		create_var_record(
 			"ui_hud_hardcore",
-			"Whether the HUD should be suppressed for hardcore mode",
-			0x70BBA44D358FF7CC
-		},
-		{
+			"Whether the HUD should be suppressed for hardcore mode"
+		),
+		create_var_record(
 			"ui_allow_classchange",
-			"Whether the UI should allow changing class",
-			0x32A7215CE28F3782
-		},
-		{
+			"Whether the UI should allow changing class"
+		),
+		create_var_record(
 			"ui_hud_visible",
-			"Whether the 2D HUD should be displayed or not.",
-			0x737582CB19486988
-		},
-		{
+			"Whether the 2D HUD should be displayed or not."
+		),
+		create_var_record(
 			"ls_gametype",
-			"",
-			0x6D55675CD612876F
-		},
-		{
+			""
+		),
+		create_var_record(
 			"ls_mapname",
-			"",
-			0x7E247074D08441DA
-		},
-		{
+			""
+		),
+		create_var_record(
 			"ui_busyBlockIngameMenu",
-			"1 if ingame menu should be blocked for pending action",
-			0x54488B7C651BD0EC
-		},
-		{
+			"1 if ingame menu should be blocked for pending action"
+		),
+		create_var_record(
 			"ui_heatMapColor",
-			"Heat Map Blob Color",
-			0x460242CEAD08594F
-		},
-		{
+			"Heat Map Blob Color"
+		),
+		create_var_record(
 			"ui_heatMapColorForPlayer",
-			"Heat Map Blob Color for player deaths only",
-			0x5BA69E7B82A5FC53
-		},
-		{
+			"Heat Map Blob Color for player deaths only"
+		),
+		create_var_record(
 			"ui_useloadingmovie",
-			"Play and render a loading movie instead of static screen (mapname_load)",
-			0x7BD8C108B14CF06B
-		},
-		{
+			"Play and render a loading movie instead of static screen (mapname_load)"
+		),
+		create_var_record(
 			"ui_badWordSeverity",
-			"1 to block partial and full profanity matches, 2 to only block full matches",
-			0x6339CAD319524344
-		},
-		{
+			"1 to block partial and full profanity matches, 2 to only block full matches"
+		),
+		create_var_record(
 			"ui_badWordMaxTaskWaits",
-			"The number of cycles *10 ms for a remoteTask before we decide to cancel the isBadWord task",
-			0x2052CA8D71E32144
-		},
-		{
+			"The number of cycles *10 ms for a remoteTask before we decide to cancel the isBadWord task"
+		),
+		create_var_record(
 			"ui_friendsListOpen",
-			"True when viewing Friends List.",
-			0x1F305A5C795ADA5D
-		},
-		{
+			"True when viewing Friends List."
+		),
+		create_var_record(
 			"mp_prototype",
-			"Enabled T8 prototype features (int because this was used as a command line int-only property)",
-			0x5D15C63764CE79B9
-		},
-		{
+			"Enabled T8 prototype features (int because this was used as a command line int-only property)"
+		),
+		create_var_record(
 			"ui_autoControlledPlayer",
-			"Enables the player to select a ui option to transfer the player's control to Bot",
-			0x1A94323F2C9E094C
-		},
-		{
+			"Enables the player to select a ui option to transfer the player's control to Bot"
+		),
+		create_var_record(
 			"blackboxMode",
-			"",
-			0x44F8B711C6A78FFA
-		},
-		{
+			""
+		),
+		create_var_record(
 			"cg_drawFramePerformanceWarnings",
-			"Draw onscreen timers for client, server, and gps if they exceed their frame budgets.",
-			0x5F9C1EEA7170D2E
-		},
-		{
+			"Draw onscreen timers for client, server, and gps if they exceed their frame budgets."
+		),
+		create_var_record(
 			"devmaponline",
-			"devmap into online mode",
-			0x5A76FEC4DAB557D1
-		},
-		{
+			"devmap into online mode"
+		),
+		create_var_record(
 			"phys_player_step_on_actors",
-			"phys_player_step_on_actors",
-			0x4C1224C82006E50D
-		},
-		{
+			"phys_player_step_on_actors"
+		),
+		create_var_record(
 			"snd_losOcclusion",
-			"occlusion based off of LOS",
-			0x78C926CA413487C2
-		},
-		{
+			"occlusion based off of LOS"
+		),
+		create_var_record(
 			"ui_drawCrosshair",
-			"Whether to draw crosshairs.",
-			0x3147A8F5BF451AA6
-		},
-		{
+			"Whether to draw crosshairs."
+		),
+		create_var_record(
 			"voice_enabled",
-			"Voice communication enabled",
-			0x52A69EB47F9E465F
-		},
-		{
+			"Voice communication enabled"
+		),
+		create_var_record(
 			"cg_fov_default",
-			"User default field of view angle in degrees",
-			0x57ED85B05E9BCDB9
-		},
-		{
+			"User default field of view angle in degrees"
+		),
+		create_var_record(
 			"compassFriendlyHeight",
-			"The size of the friendly icon on the compass",
-			0x1F5D7DB9E25EC97F
-		},
-		{
+			"The size of the friendly icon on the compass"
+		),
+		create_var_record(
 			"compassFriendlyWidth",
-			"The size of the friendly icon on the compass",
-			0x44D392B641449348
-		},
-		{
+			"The size of the friendly icon on the compass"
+		),
+		create_var_record(
 			"cg_weaponCycleDelay",
-			"The delay after cycling to a new weapon to prevent holding down the cycle weapon button from cycling too fast",
-			0x4EB1835CF0F023D
-		},
-		{
+			"The delay after cycling to a new weapon to prevent holding down the cycle weapon button from cycling too fast"
+		),
+		create_var_record(
 			"cl_packetdup",
-			"Enable packet duplication",
-			0x7F3427FA1A7374C8
-		},
-		{
+			"Enable packet duplication"
+		),
+		create_var_record(
 			"debug_audio",
-			"Enables debug rendering for audio.",
-			0x3A868AD5FB0774F9
-		},
-		{
+			"Enables debug rendering for audio."
+		),
+		create_var_record(
 			"debug_mover",
-			"Turns on mover debug mode",
-			0x1DE09BE0EE1A8012
-		},
-		{
+			"Turns on mover debug mode"
+		),
+		create_var_record(
 			"demo_drawdebuginformation",
-			"Used to draw debug information.",
-			0x5D02584AB86AA8C2
-		},
-		{
+			"Used to draw debug information."
+		),
+		create_var_record(
 			"g_reviveTime",
-			"The time it takes to revive a player in last stand (do not change as it is tied to the third person animations)",
-			0x6F1B1794F8F39B93
-		},
-		{
+			"The time it takes to revive a player in last stand (do not change as it is tied to the third person animations)"
+		),
+		create_var_record(
 			"slide_subsequentSlideScale",
-			"Percent the slide speed should be scaled down by per subsequent slide",
-			0x1B823EBA6DD7C7CB
-		},
-		{
+			"Percent the slide speed should be scaled down by per subsequent slide"
+		),
+		create_var_record(
 			"player_swimSprintSpeedScale",
-			"Scale the swim speed by this amount when sprinting",
-			0x7DB976AB518CA222
-		},
-		{
+			"Scale the swim speed by this amount when sprinting"
+		),
+		create_var_record(
 			"melee_attachmentMultiplier",
-			"If the melee attachment is equipped, the melee base damage is multiplied by this amount",
-			0x2A89C38ADF39A3EA
-		},
-		{
+			"If the melee attachment is equipped, the melee base damage is multiplied by this amount"
+		),
+		create_var_record(
 			"tm_taskTrackerOn",
-			"If true, tasks will be tracked by the tracking system",
-			0x2AB491F3E86C44DF
-		},
-		{
+			"If true, tasks will be tracked by the tracking system"
+		),
+		create_var_record(
 			"tm_taskManagerDebug",
-			"Shows more information as the number is increased",
-			0x716C5A7404912A18
-		},
-		{
+			"Shows more information as the number is increased"
+		),
+		create_var_record(
 			"tm_startedThreshold",
-			"If this many tasks of a single definition are started, a warning message will pop-up.",
-			0x1FB1BC2C2EFCEE0F
-		},
-		{
+			"If this many tasks of a single definition are started, a warning message will pop-up."
+		),
+		create_var_record(
 			"tm_failsThreshold",
-			"If this many tasks of a single definition fail, a warning message will pop-up.",
-			0x3CA374003C95549B
-		},
-		{
+			"If this many tasks of a single definition fail, a warning message will pop-up."
+		),
+		create_var_record(
 			"tm_succeedsThreshold",
-			"If this many tasks of a single definition succeed, a warning message will pop-up.",
-			0x4EA659694387C23D
-		},
-		{
+			"If this many tasks of a single definition succeed, a warning message will pop-up."
+		),
+		create_var_record(
 			"tm_pendingeThreshold",
-			"If this many tasks of a single definition are concurrently pending, a warning message will pop-up.",
-			0xD5441818C92A64
-		},
-		{
+			"If this many tasks of a single definition are concurrently pending, a warning message will pop-up."
+		),
+		create_var_record(
 			"tm_typeToDisplay",
-			"Chooses which type of task to display in the log",
-			0x27835F42462F0E68
-		},
-		{
+			"Chooses which type of task to display in the log"
+		),
+		create_var_record(
 			"tm_logTimeLimit",
-			"In seconds, how long should pass before an event is shown in the log",
-			0x2247CB6C6F557F3D
-		},
-		{
+			"In seconds, how long should pass before an event is shown in the log"
+		),
+		create_var_record(
 			"tm_currentErrorPage",
-			"In seconds, how long should pass before an event is shown in the log",
-			0x632902C39A5AA12D
-		},
-		{
+			"In seconds, how long should pass before an event is shown in the log"
+		),
+		create_var_record(
 			"sv_cheats",
-			"External Dvar",
-			0x2F2097BC767C1B1
-		},
-		{
+			"External Dvar"
+		),
+		create_var_record(
 			"allClientDvarsEnabled",
-			"Allow host to set all client dvars",
-			0x60C8FCA8AB2A735C
-		},
-		{
+			"Allow host to set all client dvars"
+		),
+		create_var_record(
 			"profileDwUpdateInterval",
-			"Interval (in seconds) between updating recorded performance information in DW (negative value disable recording)",
-			0xE8DC9F4D91759DF
-		},
-		{
+			"Interval (in seconds) between updating recorded performance information in DW (negative value disable recording)"
+		),
+		create_var_record(
 			"reliableResendTime",
-			"Amount of time (in ms) to wait before resending an unack'd reliable message",
-			0x22B6677D5D184B9
-		},
-		{
+			"Amount of time (in ms) to wait before resending an unack'd reliable message"
+		),
+		create_var_record(
 			"reliableTimeoutTime",
-			"Amount of time (in ms) to wait before timing out a client for not ack'ing a message",
-			0x3FDFE198FF2CC267
-		},
-		{
+			"Amount of time (in ms) to wait before timing out a client for not ack'ing a message"
+		),
+		create_var_record(
 			"phys_gravity",
-			"Physics gravity in units/sec^2.",
-			0x569DC74596BBB254
-		},
-		{
+			"Physics gravity in units/sec^2."
+		),
+		create_var_record(
 			"phys_gravity_dir",
-			"Sets the gravity direction.",
-			0x4B6BB42074C7A840
-		},
-		{
+			"Sets the gravity direction."
+		),
+		create_var_record(
 			"phys_buoyancy",
-			"Used to turn on/off buoyancy",
-			0x75CEE65DE741344
-		},
-		{
+			"Used to turn on/off buoyancy"
+		),
+		create_var_record(
 			"phys_ragdoll_buoyancy",
-			"Used to turn on/off the buoyancy for he ragdolls",
-			0x2DAC8B2B9D305718
-		},
-		{
+			"Used to turn on/off the buoyancy for he ragdolls"
+		),
+		create_var_record(
 			"phys_disableEntsAndDynEntsCollision",
-			"Disable rigid body collision with dyn ents and regular entities as an optimization.  Vehicles do not apply.",
-			0x24FE8BEB1C5AD1D6
-		},
-		{
+			"Disable rigid body collision with dyn ents and regular entities as an optimization.  Vehicles do not apply."
+		),
+		create_var_record(
 			"enable_moving_paths",
-			"enable moving paths",
-			0x214D5952AABA3E6A
-		},
-		{
+			"enable moving paths"
+		),
+		create_var_record(
 			"enable_new_prone_check",
-			"enable new prone check",
-			0x3C40F1AD7C84AAB9
-		},
-		{
+			"enable new prone check"
+		),
+		create_var_record(
 			"phys_wind_enabled",
-			"Used to turn off/on physics wind sim",
-			0x60A2BCF45461E9CA
-		},
-		{
+			"Used to turn off/on physics wind sim"
+		),
+		create_var_record(
 			"phys_wind_vehicle_scale",
-			"Scale the vehicle wind reactions by this value",
-			0x3EDB64F8EFE5F48E
-		},
-		{
+			"Scale the vehicle wind reactions by this value"
+		),
+		create_var_record(
 			"snd_speakerConfiguration",
-			"Speaker configuration",
-			0x53BB4B101A1369B8
-		},
-		{
+			"Speaker configuration"
+		),
+		create_var_record(
 			"glassDamageMultiplier",
-			"Multiplier the damage applied to the glass (server).",
-			0x4B8A7BB010C32F6D
-		},
-		{
+			"Multiplier the damage applied to the glass (server)."
+		),
+		create_var_record(
 			"maxAIGlassHits",
-			"Maximum number of hits it takes an AI to break the glass.",
-			0x23AEA643B2775AD7
-		},
-		{
+			"Maximum number of hits it takes an AI to break the glass."
+		),
+		create_var_record(
 			"demo_enabled",
-			"Used to turn the system on/off.",
-			0x561CEAA988616530
-		},
-		{
+			"Used to turn the system on/off."
+		),
+		create_var_record(
 			"demo_recordPrivateMatch",
-			"Used to turn the private match recording on/off.",
-			0x67284532BECB20B2
-		},
-		{
+			"Used to turn the private match recording on/off."
+		),
+		create_var_record(
 			"demo_recordSystemlinkMatch",
-			"Used to turn the systemlink match recording on/off.",
-			0x27E3565C7550EDF0
-		},
-		{
+			"Used to turn the systemlink match recording on/off."
+		),
+		create_var_record(
 			"demo_recordOfflineMatch",
-			"Used to turn the offline match recording on/off.",
-			0x5BFDFC14138D3B06
-		},
-		{
+			"Used to turn the offline match recording on/off."
+		),
+		create_var_record(
 			"demo_debug",
-			"Debug info for the Server Snapshot Demo system",
-			0x1E197923F31FE4A2
-		},
-		{
+			"Debug info for the Server Snapshot Demo system"
+		),
+		create_var_record(
 			"demo_client",
-			"Current viewing player",
-			0x72DE091D1D0C2B8C
-		},
-		{
+			"Current viewing player"
+		),
+		create_var_record(
 			"demo_recordingrate",
-			"Used to tweak the rate(in msec) at which we write a super snapshot",
-			0x2772FD9F0557FBF4
-		},
-		{
+			"Used to tweak the rate(in msec) at which we write a super snapshot"
+		),
+		create_var_record(
 			"demo_fileblockWriteRate",
-			"Used to tweak the rate(in sec) at which we write the file blocks during demo recording",
-			0x3266962B55BCDEF
-		},
-		{
+			"Used to tweak the rate(in sec) at which we write the file blocks during demo recording"
+		),
+		create_var_record(
 			"demo_keyframerate",
-			"Used to specify the rate(in sec) at which we generate a keyframe during playback.",
-			0x104BE62213ED4629
-		},
-		{
+			"Used to specify the rate(in sec) at which we generate a keyframe during playback."
+		),
+		create_var_record(
 			"demo_pause",
-			"Used to pause a demo playback.",
-			0x2FF56845FD43D403
-		},
-		{
+			"Used to pause a demo playback."
+		),
+		create_var_record(
 			"demo_pauseOnNextSnapshot",
-			"Used to jump to the next snapshot during network analysis.",
-			0x5B081E0BCDCD8993
-		},
-		{
+			"Used to jump to the next snapshot during network analysis."
+		),
+		create_var_record(
 			"demo_maxTimeScale",
-			"The maximum timescale rate we will support.",
-			0x665BE4626D4D30D0
-		},
-		{
+			"The maximum timescale rate we will support."
+		),
+		create_var_record(
 			"demo_downloadEntireFile",
-			"Used toggle the ability to download the entire file instead of parts.",
-			0x2A048F122F8470A0
-		},
-		{
+			"Used toggle the ability to download the entire file instead of parts."
+		),
+		create_var_record(
 			"demo_livestreaming",
-			"Used to turn the live streaming system on/off",
-			0x4B22DC55CD99A0CF
-		},
-		{
+			"Used to turn the live streaming system on/off"
+		),
+		create_var_record(
 			"demo_downloadLiveStreamThrottleTime",
-			"The maximum amount of time (in msec) we can starve the download of live stream callback.",
-			0x562235A0A6CFE3DC
-		},
-		{
+			"The maximum amount of time (in msec) we can starve the download of live stream callback."
+		),
+		create_var_record(
 			"demo_summaryReadEnabled",
-			"Used to turn meta summary read on/off",
-			0xE1DEC861F6BF51E
-		},
-		{
+			"Used to turn meta summary read on/off"
+		),
+		create_var_record(
 			"demo_writePaintShopInformation",
-			"Used to turn on/off the paintshop data write into the demo file",
-			0x4BD70EF582CFA310
-		},
-		{
+			"Used to turn on/off the paintshop data write into the demo file"
+		),
+		create_var_record(
 			"demo_bookmarkEventThresholdTime",
-			"The time duration for which we want to show the bookmark event image in the demo timeline.",
-			0x39E372A043D4A591
-		},
-		{
+			"The time duration for which we want to show the bookmark event image in the demo timeline."
+		),
+		create_var_record(
 			"demo_freeCameraLockOnOrbitRadius",
-			"Radius of the lockon orbit.",
-			0x11D58469A34F979E
-		},
-		{
+			"Radius of the lockon orbit."
+		),
+		create_var_record(
 			"demo_highlightReelPlayerFilter",
-			"Demo Highlight Reel player filter control",
-			0x5FF295469C16F65A
-		},
-		{
+			"Demo Highlight Reel player filter control"
+		),
+		create_var_record(
 			"demo_highlightReelTransitionFilter",
-			"Demo Highlight Reel transition filter control",
-			0x102761C252F95DF4
-		},
-		{
+			"Demo Highlight Reel transition filter control"
+		),
+		create_var_record(
 			"demo_highlightReelStylesFilter",
-			"Demo Highlight Reel styles filter control",
-			0x592196442EA9D201
-		},
-		{
+			"Demo Highlight Reel styles filter control"
+		),
+		create_var_record(
 			"demo_highlightReelNumberOfSegments",
-			"Demo Highlight Reel number of segments",
-			0x795C6EE8CF31F403
-		},
-		{
+			"Demo Highlight Reel number of segments"
+		),
+		create_var_record(
 			"demo_highlightReelMinimumStarsFilter",
-			"Minimum stars used for the filtering of events in the highlight.",
-			0x5FA6C62A685B3352
-		},
-		{
+			"Minimum stars used for the filtering of events in the highlight."
+		),
+		create_var_record(
 			"demo_highlightReelGameResultFilter",
-			"Demo highlight reel round outcome filter.",
-			0x27F56CCA950310C0
-		},
-		{
+			"Demo highlight reel round outcome filter."
+		),
+		create_var_record(
 			"demo_packetsPerSecondMin",
-			"Min amount of packets to send per second before throttling.",
-			0x6771EE54572E19ED
-		},
-		{
+			"Min amount of packets to send per second before throttling."
+		),
+		create_var_record(
 			"demo_bytesPerSecondMin",
-			"Min amount of bytes to send per second before throttling.",
-			0x43ECC22C3CD4C007
-		},
-		{
+			"Min amount of bytes to send per second before throttling."
+		),
+		create_var_record(
 			"demo_packetsPerSecondMax",
-			"Max amount of packets to send per second before throttling.",
-			0x6756D85457172CD3
-		},
-		{
+			"Max amount of packets to send per second before throttling."
+		),
+		create_var_record(
 			"demo_bytesPerSecondMax",
-			"Max amount of bytes to send per second before throttling.",
-			0x4407B02C3CEB6929
-		},
-		{
+			"Max amount of bytes to send per second before throttling."
+		),
+		create_var_record(
 			"demo_inLobbyThrottleBandwidthPercent",
-			"Bandwidth percent to be released when we are not going to throttle in the lobby.",
-			0x531AE3C9B8F3E1EA
-		},
-		{
+			"Bandwidth percent to be released when we are not going to throttle in the lobby."
+		),
+		create_var_record(
 			"demo_inGameThrottleBandwidthPercent",
-			"Bandwidth percent to be released when we are not going to throttle inside the game.",
-			0x647D504203ADF4A4
-		},
-		{
+			"Bandwidth percent to be released when we are not going to throttle inside the game."
+		),
+		create_var_record(
 			"demo_streamingAdjustmentFactor",
-			"The adjustment factor for howScrewedAreWe in the streaming.",
-			0x55FF38576DFA03C9
-		},
-		{
+			"The adjustment factor for howScrewedAreWe in the streaming."
+		),
+		create_var_record(
 			"demo_enableSvBandwidthLimitThrottle",
-			"Used to enable the server bandwidth based throttling system.",
-			0x324732789DCF2EDD
-		},
-		{
+			"Used to enable the server bandwidth based throttling system."
+		),
+		create_var_record(
 			"demo_svBandwidthLimitThrottleMaxBytesPercent",
-			"The percentage of the max. bandwidth per frame within which we want to apply the throttle.",
-			0x6E6DD67487DD3964LL
-		},
-		{
+			"The percentage of the max. bandwidth per frame within which we want to apply the throttle."
+		),
+		create_var_record(
 			"demo_svBandwidthLimitThrottleTimeout",
-			"The maximum amount of time (in msec) we can starve the write to stream callback, due to the server hitting the maximum bandwidth limit per frame.",
-			0x61B1FD239D69A10DLL
-		},
-		{
+			"The maximum amount of time (in msec) we can starve the write to stream callback, due to the server hitting the maximum bandwidth limit per frame."
+		),
+		create_var_record(
 			"demo_streamingSendSocketBuffSizeForRecording",
-			"The send socket buffer size which will be used for recording",
-			0x15A37D18D6A1B438
-		},
-		{
+			"The send socket buffer size which will be used for recording"
+		),
+		create_var_record(
 			"demo_streamingSendSocketBuffSizeForOtherUploads",
-			"The send socket buffer size which will be used for other uploads",
-			0x56E207A2D8B2E2B1
-		},
-		{
+			"The send socket buffer size which will be used for other uploads"
+		),
+		create_var_record(
 			"demo_downloadStreamThrottleTime",
-			"The maximum amount of time (in msec) we can starve the download stream callback.",
-			0x3CF9A5CF8FF93606
-		},
-		{
+			"The maximum amount of time (in msec) we can starve the download stream callback."
+		),
+		create_var_record(
 			"demo_downloadStreamRetryWaitTime",
-			"The maximum amount of time (in msec) we will have to wait before we retry the download.",
-			0x20B2FAE4FB152DDF
-		},
-		{
+			"The maximum amount of time (in msec) we will have to wait before we retry the download."
+		),
+		create_var_record(
 			"demo_downloadStreamMaxRetryAttemps",
-			"The maximum number of retry attempts before we mark the downloadstream as failed..",
-			0x18CECC6FF1929FF1
-		},
-		{
+			"The maximum number of retry attempts before we mark the downloadstream as failed.."
+		),
+		create_var_record(
 			"perk_weapReloadMultiplier",
-			"Percentage of weapon reload time to use",
-			0x4458F4E852DB0E55
-		},
-		{
+			"Percentage of weapon reload time to use"
+		),
+		create_var_record(
 			"perk_killstreakReduction",
-			"Reduced number of kills required to obtain a killstreak.",
-			0x30DB5C3D6375C831
-		},
-		{
+			"Reduced number of kills required to obtain a killstreak."
+		),
+		create_var_record(
 			"perk_killstreakMomentumMultiplier",
-			"Multiplies the amount of momentum received by the player",
-			0x52BCDEC14ED72605
-		},
-		{
+			"Multiplies the amount of momentum received by the player"
+		),
+		create_var_record(
 			"perk_killstreakAnteUpResetValue",
-			"Scorestreak reset value when the ante up perk is in use.",
-			0x2D6BDF06C07C91FD
-		},
-		{
+			"Scorestreak reset value when the ante up perk is in use."
+		),
+		create_var_record(
 			"perk_delayExplosiveTime",
-			"Time in seconds to delay a proximity explosive",
-			0x62D6967E8CA82E61
-		},
-		{
+			"Time in seconds to delay a proximity explosive"
+		),
+		create_var_record(
 			"perk_disarmExplosiveTime",
-			"Time in seconds to disarm a proximity explosive",
-			0x63DA9311C0D217AA
-		},
-		{
+			"Time in seconds to disarm a proximity explosive"
+		),
+		create_var_record(
 			"perk_deathStreakCountRequired",
-			"Number of deaths required to obtain a deathstreak.",
-			0x7C155EA09F9D8070
-		},
-		{
+			"Number of deaths required to obtain a deathstreak."
+		),
+		create_var_record(
 			"perk_healthRegenMultiplier",
-			"Multiplier to the time which the player starts to regenerate health after damage",
-			0x7B66853FFF18AF66
-		},
-		{
+			"Multiplier to the time which the player starts to regenerate health after damage"
+		),
+		create_var_record(
 			"perk_flakJacket",
-			"Percent of explosive damage done that will apply to player.",
-			0x3EAF6A2850D1FCCE
-		},
-		{
+			"Percent of explosive damage done that will apply to player."
+		),
+		create_var_record(
 			"perk_flakJacket_hardcore",
-			"Percent of explosive damage done that will apply to player in hardcore.",
-			0x70CF0DA8B63FB1D9
-		},
-		{
+			"Percent of explosive damage done that will apply to player in hardcore."
+		),
+		create_var_record(
 			"perk_fireproof",
-			"Percent to reduce flame damage done to the player.",
-			0x23FF287409E487B4
-		},
-		{
+			"Percent to reduce flame damage done to the player."
+		),
+		create_var_record(
 			"perk_gpsjammer_min_speed",
-			"Minimum speed a player must be moving for gpsjammer to protect them from UAV sweeps.  Based on player speed used in g_speed (I believe this is units/sec).  If 0, player will always be protected from UAV sweeps with this specialty.",
-			0x57DB5142A091AE9DLL
-		},
-		{
+			"Minimum speed a player must be moving for gpsjammer to protect them from UAV sweeps.  Based on player speed used in g_speed (I believe this is units/sec).  If 0, player will always be protected from UAV sweeps with this specialty."
+		),
+		create_var_record(
 			"perk_gpsjammer_min_distance",
-			"Minimum distance a player must have moved in a time period for gpsjammer to protect them from UAV sweeps.  If 0, player will always be protected from UAV sweeps with this specialty.",
-			0x162F55DAA69B421LL
-		},
-		{
+			"Minimum distance a player must have moved in a time period for gpsjammer to protect them from UAV sweeps.  If 0, player will always be protected from UAV sweeps with this specialty."
+		),
+		create_var_record(
 			"perk_gpsjammer_time_period",
-			"Time period inbetween checks, in MSec. Please use multiples of 50 msec as that is the period of server script ",
-			0x66B53538163C5622
-		},
-		{
+			"Time period inbetween checks, in MSec. Please use multiples of 50 msec as that is the period of server script "
+		),
+		create_var_record(
 			"perk_gpsjammer_graceperiods",
-			"Number of time period a player can be below the required velocity before removing protection.",
-			0x5D3C723F26B11B75
-		},
-		{
+			"Number of time period a player can be below the required velocity before removing protection."
+		),
+		create_var_record(
 			"perk_sgjammer_min_speed",
-			"Minimum speed a player must be moving for gpsjammer to protect them from Sensor Grenade sweeps.  Based on player speed used in g_speed (I believe this is units/sec).  If 0, player will always be protected from Sensor Grenade sweeps with this specialty.",
-			0x4A76E168621E07D7LL
-		},
-		{
+			"Minimum speed a player must be moving for gpsjammer to protect them from Sensor Grenade sweeps.  Based on player speed used in g_speed (I believe this is units/sec).  If 0, player will always be protected from Sensor Grenade sweeps with this specialty."
+		),
+		create_var_record(
 			"perk_sgjammer_min_distance",
-			"Minimum distance a player must have moved in a time period for gpsjammer to protect them from Sensor Grenade sweeps.  If 0, player will always be protected from UAV sweeps with this specialty.",
-			0x6FF59096FF8B6487LL
-		},
-		{
+			"Minimum distance a player must have moved in a time period for gpsjammer to protect them from Sensor Grenade sweeps.  If 0, player will always be protected from UAV sweeps with this specialty."
+		),
+		create_var_record(
 			"perk_sgjammer_time_period",
-			"Time period inbetween checks, in MSec. Please use multiples of 50 msec as that is the period of server script ",
-			0x75B67E026EB962B4
-		},
-		{
+			"Time period inbetween checks, in MSec. Please use multiples of 50 msec as that is the period of server script "
+		),
+		create_var_record(
 			"perk_sgjammer_graceperiods",
-			"Number of time period a player can be below the required velocity before removing protection.",
-			0x5E68178D11E9D667
-		},
-		{
+			"Number of time period a player can be below the required velocity before removing protection."
+		),
+		create_var_record(
 			"perk_nottargetedbyai_min_speed",
-			"Minimum speed a player must be moving for nottargetedbyai to protect them from AI controlled killstreaks. If 0, player will always be protected from AI controlled killstreaks with this specialty.",
-			0x47982F834510FFFBLL
-		},
-		{
+			"Minimum speed a player must be moving for nottargetedbyai to protect them from AI controlled killstreaks. If 0, player will always be protected from AI controlled killstreaks with this specialty."
+		),
+		create_var_record(
 			"perk_nottargetedbyai_graceperiod",
-			"Time after which the player drops below min_gpsjammer_speed that they are still protected from ai support targetting.  0-10000 int (in milliseconds), 0 default.",
-			0x42A7884708587E8ALL
-		},
-		{
+			"Time after which the player drops below min_gpsjammer_speed that they are still protected from ai support targetting.  0-10000 int (in milliseconds), 0 default."
+		),
+		create_var_record(
 			"perk_tracker_fx_foot_height",
-			"Height of footsteps for tracker perk.",
-			0x56DE6E0B6C136484
-		},
-		{
+			"Height of footsteps for tracker perk."
+		),
+		create_var_record(
 			"perk_tracker_fx_fly_height",
-			"Height of flying markers for tracker perk.",
-			0x4A3DF32AEBF30903
-		},
-		{
+			"Height of flying markers for tracker perk."
+		),
+		create_var_record(
 			"enable_global_wind",
-			"enable wind effect",
-			0x76C3F9094AEEF287
-		},
-		{
+			"enable wind effect"
+		),
+		create_var_record(
 			"enable_grass_wind",
-			"enable grass wind effect",
-			0x350A9A0FDAFE92BE
-		},
-		{
+			"enable grass wind effect"
+		),
+		create_var_record(
 			"wind_global_vector",
-			"global wind force in units/sec. This is also the hi-level wind",
-			0x52F7C1DFF8F57DCF
-		},
-		{
+			"global wind force in units/sec. This is also the hi-level wind"
+		),
+		create_var_record(
 			"wind_global_low_altitude",
-			"altitude of global low-level wind",
-			0x67FA4884FE9A2BE9
-		},
-		{
+			"altitude of global low-level wind"
+		),
+		create_var_record(
 			"wind_global_hi_altitude",
-			"altitude of global hi-level wind",
-			0x2048DC9AD2E7D6EA
-		},
-		{
+			"altitude of global hi-level wind"
+		),
+		create_var_record(
 			"wind_global_low_strength_percent",
-			"strength of global low-level wind, expressed as a percentage of wind_global_vector",
-			0x262DB7094325F8BC
-		},
-		{
+			"strength of global low-level wind, expressed as a percentage of wind_global_vector"
+		),
+		create_var_record(
 			"wind_leaf_scale",
-			"global wind grass tension (stiffness)",
-			0x5945330E01E3D861
-		},
-		{
+			"global wind grass tension (stiffness)"
+		),
+		create_var_record(
 			"wind_grass_gustinterval",
-			"global wind force gust interval",
-			0x6F2BE374CBBF4099
-		},
-		{
+			"global wind force gust interval"
+		),
+		create_var_record(
 			"wind_grass_scale",
-			"global wind force scaler",
-			0x34A90FB9F8A09F27
-		},
-		{
+			"global wind force scaler"
+		),
+		create_var_record(
 			"wind_grass_tension",
-			"global wind grass tension (stiffness)",
-			0x290FCF75EFEB5373
-		},
-		{
+			"global wind grass tension (stiffness)"
+		),
+		create_var_record(
 			"wind_grass_gust_speed",
-			"speed multiplier for gusts",
-			0x664AC6A4D7D61778
-		},
-		{
+			"speed multiplier for gusts"
+		),
+		create_var_record(
 			"wind_grass_gust_radius",
-			"size of global wind gust effector",
-			0x5648FE2DCB2B8F8B
-		},
-		{
+			"size of global wind gust effector"
+		),
+		create_var_record(
 			"wind_grass_gust_distance",
-			"max distance at which to place gusts",
-			0x2C6E04600BBE184A
-		},
-		{
+			"max distance at which to place gusts"
+		),
+		create_var_record(
 			"aim_target_closest_first",
-			"Target the closest AI based on 3d distance",
-			0x419BA7D17BB018C7
-		},
-		{
+			"Target the closest AI based on 3d distance"
+		),
+		create_var_record(
 			"aim_autoaim_enabled",
-			"Turn on auto aim",
-			0x2DE12E2AFE23ADCF
-		},
-		{
+			"Turn on auto aim"
+		),
+		create_var_record(
 			"bg_viewKickScale",
-			"The scale to apply to the damage done to caluclate damage view kick",
-			0x4BF878D35CAD6F8A
-		},
-		{
+			"The scale to apply to the damage done to caluclate damage view kick"
+		),
+		create_var_record(
 			"bg_viewKickMax",
-			"The maximum view kick",
-			0x393CD911FFBB3B46
-		},
-		{
+			"The maximum view kick"
+		),
+		create_var_record(
 			"bg_viewKickMin",
-			"The minimum view kick",
-			0x3921CB11FFA45BC4
-		},
-		{
+			"The minimum view kick"
+		),
+		create_var_record(
 			"bg_viewKickDeflectTime",
-			"The random direction scale view kick",
-			0x268E1E3AA428B72A
-		},
-		{
+			"The random direction scale view kick"
+		),
+		create_var_record(
 			"bg_viewKickRecoverTime",
-			"The random direction scale view kick",
-			0xAE16241B8D06F6D
-		},
-		{
+			"The random direction scale view kick"
+		),
+		create_var_record(
 			"bg_viewKickScaleAds",
-			"The scale to apply to the damage done to caluclate damage view kick",
-			0x298FEF62A5A1CCB4
-		},
-		{
+			"The scale to apply to the damage done to caluclate damage view kick"
+		),
+		create_var_record(
 			"bg_viewKickMaxAds",
-			"The maximum view kick",
-			0x7BF23BA0928AC620
-		},
-		{
+			"The maximum view kick"
+		),
+		create_var_record(
 			"bg_viewKickMinAds",
-			"The minimum view kick",
-			0x55C59F681B31E1F6
-		},
-		{
+			"The minimum view kick"
+		),
+		create_var_record(
 			"bg_viewKickDeflectTimeAds",
-			"The random direction scale view kick",
-			0x5BC2B1A69CB282D4
-		},
-		{
+			"The random direction scale view kick"
+		),
+		create_var_record(
 			"bg_viewKickRecoverTimeAds",
-			"The random direction scale view kick",
-			0x672E3C15A41C1C69
-		},
-		{
+			"The random direction scale view kick"
+		),
+		create_var_record(
 			"bg_scriptCanDisableStances",
-			"Whether script is allowed to disable stances",
-			0x138E0DBBCCF56F1B
-		},
-		{
+			"Whether script is allowed to disable stances"
+		),
+		create_var_record(
 			"bg_useThrowButtonForDetonatorGrenades",
-			"Whether the throw button should be returned as the fire button for grenades and mines that have a detonator",
-			0x87286E123370AC4
-		},
-		{
+			"Whether the throw button should be returned as the fire button for grenades and mines that have a detonator"
+		),
+		create_var_record(
 			"bg_heavyWeaponsAlwaysPlayFirstRaise",
-			"Always play the first raise animation when switching to heavy weapons",
-			0xF8628384A6BF6F2
-		},
-		{
+			"Always play the first raise animation when switching to heavy weapons"
+		),
+		create_var_record(
 			"player_useWaterFriction",
-			"Change the players walk friction when in water, using water friction scales",
-			0x8932E7EFEE3D6CD
-		},
-		{
+			"Change the players walk friction when in water, using water friction scales"
+		),
+		create_var_record(
 			"player_useWaterWadeScale",
-			"Scale the players command based on their depth in the water",
-			0x327565589F891CD6
-		},
-		{
+			"Scale the players command based on their depth in the water"
+		),
+		create_var_record(
 			"bg_friendlyFire",
-			"Friendly fire status",
-			0x225326DCF1D8C634
-		},
-		{
+			"Friendly fire status"
+		),
+		create_var_record(
 			"bg_friendlyFireMode",
-			"Enables friendly fire mode, cannot shoot down friendlies at close range",
-			0x4D80B80B9ED81737
-		},
-		{
+			"Enables friendly fire mode, cannot shoot down friendlies at close range"
+		),
+		create_var_record(
 			"bg_grenadeMinimumThrowbackTime",
-			"Time added to grenade countdown to stop it from blowing up during throwback.",
-			0x3E6D6D1E70394899
-		},
-		{
+			"Time added to grenade countdown to stop it from blowing up during throwback."
+		),
+		create_var_record(
 			"bg_weaponCompatibleIfSharedAmmo",
-			"Allow leeching ammo from weapons touched on the ground if the player has a weapon with matching shared ammo",
-			0x2E6A89AD001FE5A9
-		},
-		{
+			"Allow leeching ammo from weapons touched on the ground if the player has a weapon with matching shared ammo"
+		),
+		create_var_record(
 			"disableLookAtEntityLogic",
-			"Disables the Player_UpdateLookAtEntity logic (expensive)",
-			0x5CF9AE63F3BFE638
-		},
-		{
+			"Disables the Player_UpdateLookAtEntity logic (expensive)"
+		),
+		create_var_record(
 			"player_lastStandBleedoutTime",
-			"The time taken by the player to completely bleedout when in last stand (pro version).",
-			0x414B968F85361F6
-		},
-		{
+			"The time taken by the player to completely bleedout when in last stand (pro version)."
+		),
+		create_var_record(
 			"player_lastStandDistScale",
-			"Tweaks some of the movement in last stand.",
-			0x6EEEC609104F37FF
-		},
-		{
+			"Tweaks some of the movement in last stand."
+		),
+		create_var_record(
 			"player_ProneMinPitchDiff",
-			"Minimum pitch difference allowed to move in prone.",
-			0x6D16F2F249198008
-		},
-		{
+			"Minimum pitch difference allowed to move in prone."
+		),
+		create_var_record(
 			"player_ProneLaststandFreeMove",
-			"Allow freer movement in last stand than normal prone movement",
-			0x29E2C87F14934BC
-		},
-		{
+			"Allow freer movement in last stand than normal prone movement"
+		),
+		create_var_record(
 			"player_lastStandCrawlTransition",
-			"Transition to the last stand crawl set, and not regular last stand animation",
-			0x429EB921B546A6F1
-		},
-		{
+			"Transition to the last stand crawl set, and not regular last stand animation"
+		),
+		create_var_record(
 			"bg_useT7Melee",
-			"use the T7 melee system.",
-			0x2A78F8D99222AC09
-		},
-		{
+			"use the T7 melee system."
+		),
+		create_var_record(
 			"player_meleeChargeMaxSpeed",
-			"Max speed to clamp when doing a charge melee",
-			0x4F0998E4E4BA6BB6
-		},
-		{
+			"Max speed to clamp when doing a charge melee"
+		),
+		create_var_record(
 			"player_meleeChargeMinSpeed",
-			"Min speed to clamp when doing a charge melee",
-			0x7A62D62E37F7A5F0
-		},
-		{
+			"Min speed to clamp when doing a charge melee"
+		),
+		create_var_record(
 			"player_meleeLungeAcceleration",
-			"Dvar to control the acceleration for the lunge attack",
-			0x94D4FAB8CE278AE
-		},
-		{
+			"Dvar to control the acceleration for the lunge attack"
+		),
+		create_var_record(
 			"player_meleeLungeUnderwaterSpeedScale",
-			"Scaler for the underwater lunge speed",
-			0x3FF643A885AAEB28
-		},
-		{
+			"Scaler for the underwater lunge speed"
+		),
+		create_var_record(
 			"player_meleeLungeSpeedCutoff",
-			"Cutoff the lunge attacks if the velocity falls bellow this value",
-			0x34414D4498355154
-		},
-		{
+			"Cutoff the lunge attacks if the velocity falls bellow this value"
+		),
+		create_var_record(
 			"player_meleeLungeTimeCutoff",
-			"Max duration of the lunge attack",
-			0x1946DDA26B1162B2
-		},
-		{
+			"Max duration of the lunge attack"
+		),
+		create_var_record(
 			"vehicle_riding",
-			"Turning this on enables players to walk around on top of vehicles",
-			0x559448DC6708AFDD
-		},
-		{
+			"Turning this on enables players to walk around on top of vehicles"
+		),
+		create_var_record(
 			"vehicle_selfCollision",
-			"Enabled the vehicle to shoot itself with it's own turret.",
-			0x43496C21C39056FA
-		},
-		{
+			"Enabled the vehicle to shoot itself with it's own turret."
+		),
+		create_var_record(
 			"tu11_IgnoreItemsWithPLevel100InIsItemLockedForChallenge",
-			"Treats items with PLevel 100 or more as never unlocked in IsItemLockedForChallenge().",
-			0x6C09B0BFF51AC81C
-		},
-		{
+			"Treats items with PLevel 100 or more as never unlocked in IsItemLockedForChallenge()."
+		),
+		create_var_record(
 			"bg_disableWeaponPlantingGroundTrace",
-			"Disables the ground trace check for weapon planting.",
-			0x4392DE0CF30D6CCE
-		},
-		{
+			"Disables the ground trace check for weapon planting."
+		),
+		create_var_record(
 			"slide_forceBaseSlide",
-			"Force the player to use the base slide, do not allow boost reduced or boost",
-			0x4C6022373CF3066C
-		},
-		{
+			"Force the player to use the base slide, do not allow boost reduced or boost"
+		),
+		create_var_record(
 			"actors_walkable",
-			"Players can walk on AI without sliding off",
-			0x125B4A64B58DC66D
-		},
-		{
+			"Players can walk on AI without sliding off"
+		),
+		create_var_record(
 			"trm_enabled",
-			"Enable or disable the player's mantle",
-			0x54E4287F98A644F4
-		},
-		{
+			"Enable or disable the player's mantle"
+		),
+		create_var_record(
 			"juke_enabled",
-			"Enable player evasive move",
-			0x30BC3CBFB08B248A
-		},
-		{
+			"Enable player evasive move"
+		),
+		create_var_record(
 			"sprint_capSpeedEnabled",
-			"Enable physics cap on speed during sprinting",
-			0x234789E28481E1D2
-		},
-		{
+			"Enable physics cap on speed during sprinting"
+		),
+		create_var_record(
 			"weaponrest_enabled",
-			"Enable weapon rest, player turns gun so that it does not appear to intersect geo",
-			0xA92A344E2E38925
-		},
-		{
+			"Enable weapon rest, player turns gun so that it does not appear to intersect geo"
+		),
+		create_var_record(
 			"traverse_mode",
-			"1 = new traversal 2 = pre-BO3 mantle system",
-			0x6C71BF6810FA346F
-		},
-		{
+			"1 = new traversal 2 = pre-BO3 mantle system"
+		),
+		create_var_record(
 			"sprint_allowRestore",
-			"Restore the players sprint state after certain actions, wallrun, traverse etc.  ",
-			0x62FA420611F210F3
-		},
-		{
+			"Restore the players sprint state after certain actions, wallrun, traverse etc.  "
+		),
+		create_var_record(
 			"bg_weaponSwitchHero",
-			"The HeroWeaponType to switch to on a press of button WEAPON_SWITCH_HERO.",
-			0x2F5602FEACAEB597
-		},
-		{
+			"The HeroWeaponType to switch to on a press of button WEAPON_SWITCH_HERO."
+		),
+		create_var_record(
 			"bg_specialOffhandInventorySwitch",
-			"The HeroWeaponType to switch to on a press of button OFFHAND_SPECIAL.",
-			0x641EB1218246D20A
-		},
-		{
+			"The HeroWeaponType to switch to on a press of button OFFHAND_SPECIAL."
+		),
+		create_var_record(
 			"bg_specialOffhandInventoryAllowBallSwitch",
-			"When true the special offhand input switch to inventory weapon allows ball switch.",
-			0x1BA8872A25A6A67A
-		},
-		{
+			"When true the special offhand input switch to inventory weapon allows ball switch."
+		),
+		create_var_record(
 			"friendlyContentOutlines",
-			"Use this to enable the outlines on friendlies and disable the icons",
-			0x7F6CF93A7A55D6A8
-		},
-		{
+			"Use this to enable the outlines on friendlies and disable the icons"
+		),
+		create_var_record(
 			"player_dpad_gadget_scheme",
-			"Dpad gadget control scheme,  0 - mp system, 1 - career mode (dapd controls 3 gadgets)",
-			0x57ABDD7E4A691B01
-		},
-		{
+			"Dpad gadget control scheme,  0 - mp system, 1 - career mode (dapd controls 3 gadgets)"
+		),
+		create_var_record(
 			"compassObjectiveIconWidth",
-			"The size of the objective on the full map",
-			0x2127B85AA4AD5C49
-		},
-		{
+			"The size of the objective on the full map"
+		),
+		create_var_record(
 			"compassObjectiveIconHeight",
-			"The size of the objective on the full map",
-			0x623281D39B08B738
-		},
-		{
+			"The size of the objective on the full map"
+		),
+		create_var_record(
 			"compassDrawLastStandIcon",
-			"Draw the last stand icon on the minimap",
-			0x58369F73B6EF74AE
-		},
-		{
+			"Draw the last stand icon on the minimap"
+		),
+		create_var_record(
 			"waypointOffscreenPadLeft",
-			"Offset from the edge.",
-			0x16611D1C3A11368D
-		},
-		{
+			"Offset from the edge."
+		),
+		create_var_record(
 			"waypointOffscreenPadRight",
-			"Offset from the edge.",
-			0x5E8218284D9BB186
-		},
-		{
+			"Offset from the edge."
+		),
+		create_var_record(
 			"waypointOffscreenPadTop",
-			"Offset from the edge.",
-			0x50694F1B92EB913F
-		},
-		{
+			"Offset from the edge."
+		),
+		create_var_record(
 			"waypointOffscreenPadBottom",
-			"Offset from the edge.",
-			0xBC868C8D709B137
-		},
-		{
+			"Offset from the edge."
+		),
+		create_var_record(
 			"cg_aggressiveCullRadius",
-			"The radius to use for entity CG_ProcessEntity frustrus culling. 0 means disabled.",
-			0x72E5D4F083B92862
-		},
-		{
+			"The radius to use for entity CG_ProcessEntity frustrus culling. 0 means disabled."
+		),
+		create_var_record(
 			"slam_blur_enabled",
-			"Is screen blur enabled for slam",
-			0x58950029C9E7384A
-		},
-		{
+			"Is screen blur enabled for slam"
+		),
+		create_var_record(
 			"cg_drawBreathHint",
-			"Draw a 'hold breath to steady' hint",
-			0x4825068A6A96C54D
-		},
-		{
+			"Draw a 'hold breath to steady' hint"
+		),
+		create_var_record(
 			"cg_hudDamageIconTime",
-			"The amount of time for the damage icon to stay on screen after damage is taken",
-			0x4B30A71B20B23194
-		},
-		{
+			"The amount of time for the damage icon to stay on screen after damage is taken"
+		),
+		create_var_record(
 			"cg_crosshairVehicleSentientCheck",
-			"Whether to show colored crosshairs when targetting vehicles iff sentient exists",
-			0x44548156F075E666
-		},
-		{
+			"Whether to show colored crosshairs when targetting vehicles iff sentient exists"
+		),
+		create_var_record(
 			"cg_updateScoreboardAfterGameEnded",
-			"Controls whether to update or freeze the scoreboard when the game ends.",
-			0x44C35D5960CC531B
-		},
-		{
+			"Controls whether to update or freeze the scoreboard when the game ends."
+		),
+		create_var_record(
 			"cg_DrawRemoteVehiclePlayerNames",
-			"Player's gamertag displayed above remote controlled vehicles",
-			0x7C1B72369DF3CBC7
-		},
-		{
+			"Player's gamertag displayed above remote controlled vehicles"
+		),
+		create_var_record(
 			"cg_DrawPlayerNamesWhileInVehicle",
-			"Player's gamertags are displayed to player who is in vehicle",
-			0x650C3842D88563E7
-		},
-		{
+			"Player's gamertags are displayed to player who is in vehicle"
+		),
+		create_var_record(
 			"cg_DrawOnlyFriendlyPlayerNamesWhileInVehicle",
-			"Only Friendly Player's gamertags are displayed to player who is in vehicle",
-			0x241E40FA8E872528
-		},
-		{
+			"Only Friendly Player's gamertags are displayed to player who is in vehicle"
+		),
+		create_var_record(
 			"cg_DrawOnScreenFriendlyAI",
-			"Draws all friendly AI names who are currently on screen.",
-			0x63FDE83AC1820602
-		},
-		{
+			"Draws all friendly AI names who are currently on screen."
+		),
+		create_var_record(
 			"cg_thirdPersonLastStand",
-			"Uses the third person view when the player is in laststand.",
-			0x3EB163CDE8DA7ACC
-		},
-		{
+			"Uses the third person view when the player is in laststand."
+		),
+		create_var_record(
 			"cg_WeaponButtVictimCameraShakeScale",
-			"Scale of the camera Shake applied to a weapon butt Victim.",
-			0x5AC135B499C4483A
-		},
-		{
+			"Scale of the camera Shake applied to a weapon butt Victim."
+		),
+		create_var_record(
 			"cg_WeaponButtVictimCameraShakeDuration",
-			"Duration in milliseconds of the camera Shake applied to a weapon butt Victim.",
-			0x465C02A95F508068
-		},
-		{
+			"Duration in milliseconds of the camera Shake applied to a weapon butt Victim."
+		),
+		create_var_record(
 			"cl_dpadLeftHeavyWeapon",
-			"When true player switches to the inventory weapon when pressing dpad left.",
-			0x3D5BCFA1163E653E
-		},
-		{
+			"When true player switches to the inventory weapon when pressing dpad left."
+		),
+		create_var_record(
 			"cl_bspmismatchFatal",
-			"If true client will ERR_DROP if its BSP doesn't match the server's",
-			0x39FEE69EFD4711F2
-		},
-		{
+			"If true client will ERR_DROP if its BSP doesn't match the server's"
+		),
+		create_var_record(
 			"cl_bitfieldmismatchFatal",
-			"If true client will ERR_DROP if its bitfield doesn't match the server's",
-			0xC266A8932CF9CEC
-		},
-		{
+			"If true client will ERR_DROP if its bitfield doesn't match the server's"
+		),
+		create_var_record(
 			"dynEnt_disable_rb_collision",
-			"Disable rigid body collision for dyn ents with point or hinge constraints.",
-			0x1AAD2B07AF7736D4
-		},
-		{
+			"Disable rigid body collision for dyn ents with point or hinge constraints."
+		),
+		create_var_record(
 			"dynEnt_small_cylinder_dimension",
-			"Treats dyn ents with small cylinders less than this number in the X or Y as small for the purposes of angular velocity. Applies to dyn ents with point or hinge constraints. Set to 0 to disable.",
-			0x61292D4020F08F5BLL
-		},
-		{
+			"Treats dyn ents with small cylinders less than this number in the X or Y as small for the purposes of angular velocity. Applies to dyn ents with point or hinge constraints. Set to 0 to disable."
+		),
+		create_var_record(
 			"dynEnt_delete_expensive",
-			"Delete expensive dyn ents.",
-			0x4D979C5083D355F
-		},
-		{
+			"Delete expensive dyn ents."
+		),
+		create_var_record(
 			"g_pickupPromptsForDroppedWeapons",
-			"Whether dropped weapons allow a pickup prompt",
-			0x17F313F6BB56ABAE
-		},
-		{
+			"Whether dropped weapons allow a pickup prompt"
+		),
+		create_var_record(
 			"ai_avoidNavBoundaries",
-			"enables/disables the nearby boundary avoidance",
-			0x1F2AEA7F8944E6A4
-		},
-		{
+			"enables/disables the nearby boundary avoidance"
+		),
+		create_var_record(
 			"ai_codeGameskill",
-			"Use code based gameskill buildup accuracy instead of script's implementation.",
-			0x646A06A52703219C
-		},
-		{
+			"Use code based gameskill buildup accuracy instead of script's implementation."
+		),
+		create_var_record(
 			"ai_secondaryThreats",
-			"Allow secondary targets",
-			0x272F8D946AE3E82F
-		},
-		{
+			"Allow secondary targets"
+		),
+		create_var_record(
 			"player_throwbackOuterRadius",
-			"The radius player is allow to throwback a grenade once the player has been in the inner radius",
-			0x5EAF4E0C0373CE31
-		},
-		{
+			"The radius player is allow to throwback a grenade once the player has been in the inner radius"
+		),
+		create_var_record(
 			"player_useRadius",
-			"The radius within which a player can use things",
-			0x1194DB96AF781D52
-		},
-		{
+			"The radius within which a player can use things"
+		),
+		create_var_record(
 			"player_useTouchScore",
-			"The touch score for player use checks",
-			0x3AE4FFCB7525206F
-		},
-		{
+			"The touch score for player use checks"
+		),
+		create_var_record(
 			"g_avoidEnabled",
-			"Disable the vehicle avoidance",
-			0x6420FE8F4634BCC1
-		},
-		{
+			"Disable the vehicle avoidance"
+		),
+		create_var_record(
 			"g_throttleTempEnts",
-			"Whether to throttle the number of temp ents created",
-			0x3D8266A7CC590A3B
-		},
-		{
+			"Whether to throttle the number of temp ents created"
+		),
+		create_var_record(
 			"g_allowLastStandForActiveClients",
-			"Whether last stand is possible by default for active clients",
-			0x53E6EECA9F56D0BF
-		},
-		{
+			"Whether last stand is possible by default for active clients"
+		),
+		create_var_record(
 			"dynEnt_shouldCullEntitiesForSplitscreen",
-			"Cull alternating entities in splitscreen",
-			0x3ABAC99330C30387
-		},
-		{
+			"Cull alternating entities in splitscreen"
+		),
+		create_var_record(
 			"spawnsystem_sight_check_sentient_ai",
-			"Consider AI sentients while evaluating spawnpoint visibility",
-			0x68475AF4558AFA16
-		},
-		{
+			"Consider AI sentients while evaluating spawnpoint visibility"
+		),
+		create_var_record(
 			"r_splitscreenBlurEdges",
-			"Turns on blurring the side edges in splitscreen",
-			0x189B2FBABA6985FF
-		},
-		{
+			"Turns on blurring the side edges in splitscreen"
+		),
+		create_var_record(
 			"r_maxSpotShadowUpdates",
-			"Set the number of spot &omni shadow updates per frame (each omni light account for 6 updates)",
-			0x3D8DDE2C8465F2A
-		},
-		{
+			"Set the number of spot &omni shadow updates per frame (each omni light account for 6 updates)"
+		),
+		create_var_record(
 			"ai_generateNavmeshRegions",
-			"Generate navmesh regions.",
-			0x4E13CC2C0E16356A
-		},
-		{
+			"Generate navmesh regions."
+		),
+		create_var_record(
 			"useClassSets",
-			"Enable class sets",
-			0x23E5A4387FF1BAE5
-		},
-		{
+			"Enable class sets"
+		),
+		create_var_record(
 			"com_pauseSupported",
-			"Whether is pause is ever supported by the game mode",
-			0x72369C90B4ADFCC7
-		},
-		{
+			"Whether is pause is ever supported by the game mode"
+		),
+		create_var_record(
 			"gts_validation_enabled",
-			"Enables gametype settings validation in online modes",
-			0x2882717B2065EA05
-		},
-		{
+			"Enables gametype settings validation in online modes"
+		),
+		create_var_record(
 			"path_checkDangerousNodes",
-			"Whether to mark and check dangerous nodes",
-			0x15A1D9FE7E66AE48
-		},
-		{
+			"Whether to mark and check dangerous nodes"
+		),
+		create_var_record(
 			"path_alwaysFindNearestNode",
-			"Use to force finding some nearest node in, generally to try to ensure getting close enough to melee",
-			0x772A87292B07D429
-		},
-		{
+			"Use to force finding some nearest node in, generally to try to ensure getting close enough to melee"
+		),
+		create_var_record(
 			"path_boundsFudge",
-			"Fudge the size of the ai's bounds when finding the nearest node",
-			0x1883E5500901F485
-		},
-		{
+			"Fudge the size of the ai's bounds when finding the nearest node"
+		),
+		create_var_record(
 			"path_minzBias",
-			"Bias to prevent missing valid cells below the origin",
-			0x430BA728A48A5E4
-		},
-		{
+			"Bias to prevent missing valid cells below the origin"
+		),
+		create_var_record(
 			"path_double_wide_checks",
-			"Whether to do double wide checks when finding a start node for a pathfinding check",
-			0x379B878A381D53E0
-		},
-		{
+			"Whether to do double wide checks when finding a start node for a pathfinding check"
+		),
+		create_var_record(
 			"ui_keepLoadingScreenUntilAllPlayersConnected",
-			"Whether to keep the loading screen up until all players have initially connected",
-			0x40811D6D0A69715D
-		},
-		{
+			"Whether to keep the loading screen up until all players have initially connected"
+		),
+		create_var_record(
 			"upload_bps_demosystem",
-			"demo system bandwidth req'd",
-			0x5D47051C209221EF
-		},
-		{
+			"demo system bandwidth req'd"
+		),
+		create_var_record(
 			"upload_bps_perplayer",
-			"per player bandwidth req'd",
-			0x315659FEDA74DD21
-		},
-		{
+			"per player bandwidth req'd"
+		),
+		create_var_record(
 			"sv_antilagAnim",
-			"Rewind animations during antilag rewind",
-			0x1294D23BCA5F2FE6
-		},
-		{
+			"Rewind animations during antilag rewind"
+		),
+		create_var_record(
 			"g_gametype",
-			"Current game type",
-			0x1FF54369D6573B91
-		},
-		{
+			"Current game type"
+		),
+		create_var_record(
 			"migration_minclientcount",
-			"Minimum real client count, below which the host will not migrate.",
-			0x58BFAAB543C1D66
-		},
-		{
+			"Minimum real client count, below which the host will not migrate."
+		),
+		create_var_record(
 			"migration_limit",
-			"maximum number of migrations within migration_timeBetween dvar's value in milliseconds.",
-			0x434E1DE25E9449DF
-		},
-		{
+			"maximum number of migrations within migration_timeBetween dvar's value in milliseconds."
+		),
+		create_var_record(
 			"phys_usePhysicsForLocalClientIfPossible",
-			"Use the client physics simulation for the local vehicle if possible instead of the server snapshots",
-			0x444A7FAD68CB733B
-		},
-		{
+			"Use the client physics simulation for the local vehicle if possible instead of the server snapshots"
+		),
+		create_var_record(
 			"tu10_cleanupRagdollsOnExit",
-			"Cleanup ragdolls on shutdown.",
-			0x11A578FDEE103601
-		},
-		{
+			"Cleanup ragdolls on shutdown."
+		),
+		create_var_record(
 			"tu11_cleanupRagdollsOnDemoJump",
-			"Cleanup ragdolls on demo jump.",
-			0x461D77AAA527E2FD
-		},
-		{
+			"Cleanup ragdolls on demo jump."
+		),
+		create_var_record(
 			"demo_dollycamLeaveAtPreviousMarker",
-			"Whether to place the camera at the previous dolly cam marker when leaving the mode.",
-			0x2A8C932E8F7EEE21
-		},
-		{
+			"Whether to place the camera at the previous dolly cam marker when leaving the mode."
+		),
+		create_var_record(
 			"demo_freeCameraUseHeliHeightLockAsCeiling",
-			"Whether to treat the heli_height_lock as a ceiling.",
-			0x4EA01EB65008EC48
-		},
-		{
+			"Whether to treat the heli_height_lock as a ceiling."
+		),
+		create_var_record(
 			"demo_freeCameraLockOnMissileAllowed",
-			"Whether missile entities are eligible for lockon",
-			0x2DDDF1803E519648
-		},
-		{
+			"Whether missile entities are eligible for lockon"
+		),
+		create_var_record(
 			"demo_streamUploadKeepAliveFrequency",
-			"Specifies the frequency that we send the keep alive on the upload connection if we are otherwise starved for data to send (0 means not in use), used mainly to account for pause.",
-			0x357723BC86B953BALL
-		},
-		{
+			"Specifies the frequency that we send the keep alive on the upload connection if we are otherwise starved for data to send (0 means not in use), used mainly to account for pause."
+		),
+		create_var_record(
 			"demo_oldposInsteadOfMapCenter",
-			"Use the oldpos instead of CL_GetMapCenter() when in freecam",
-			0x29023B1D815E0BD8
-		},
-		{
+			"Use the oldpos instead of CL_GetMapCenter() when in freecam"
+		),
+		create_var_record(
 			"demo_filmStartInformationScreenStayTime",
-			"How long the film start information screen will stay on screen in ms.",
-			0x1727557D9DA1919F
-		},
-		{
+			"How long the film start information screen will stay on screen in ms."
+		),
+		create_var_record(
 			"demo_viewTraceMask",
-			"The contents mask to use for view traces.",
-			0x412217DB434E3CB7
-		},
-		{
+			"The contents mask to use for view traces."
+		),
+		create_var_record(
 			"demo_useMapNameAsDefaultName",
-			"Use the map name instead of the gametype as the default recording name.",
-			0x4A18A9BCE200B967
-		},
-		{
+			"Use the map name instead of the gametype as the default recording name."
+		),
+		create_var_record(
 			"perk_requireScavengerPerk",
-			"Should the player interact with the scavenger pickup without the perk",
-			0xAD6B56033F77267
-		},
-		{
+			"Should the player interact with the scavenger pickup without the perk"
+		),
+		create_var_record(
 			"allCollectiblesUnlocked",
-			"Allows all Collectibles to be available in the Safehouse",
-			0x41D589BB75561DCA
-		},
-		{
+			"Allows all Collectibles to be available in the Safehouse"
+		),
+		create_var_record(
 			"equipmentAsGadgets",
-			"Enable equipment as gadgets in CAC",
-			0x9F6426BBE2E6248
-		}
+			"Enable equipment as gadgets in CAC"
+		),
 	};
 
 	std::vector<varEntry> commands_table =
 	{
-		{
+		// game functions
+		create_var_record(
 			"quit",
-			"Shutdown the Game [Com_Quit_f]",
-			0x1DEE6107B26F8BB6
-		}
+			"Shutdown the Game [Com_Quit_f]"
+		),
+		create_var_record(
+			"gts",
+			"Set gametype setting, Usage: gts <path> [<value>]"
+		),
+		create_var_record(
+			"gametype_setting",
+			"Set gametype setting, Usage: gametype_setting <path> [<value>]"
+		),
+		create_var_record(
+			"set",
+			"Set dvar value, Usage: set <variable> <value>"
+		),
+		create_var_record(
+			"setdvartotime",
+			"Set dvar value to time, Usage: setdvartotime <variable>"
+		),
+		create_var_record(
+			"reset",
+			"Reset dvar value, Usage: reset <variable>"
+		),
+		create_var_record(
+			"lobby_errorshutdown",
+			"Shutdown lobby with error"
+		),
+		create_var_record(
+			"lobby_reload",
+			"Reload lobby"
+		),
+		create_var_record(
+			"map",
+			"Load map, Usage: map <map>"
+		),
+		create_var_record(
+			"devmap",
+			"Load map in dev mode, Usage: devmap <map>"
+		),
+		create_var_record(
+			"gametype",
+			"Set the gametype, Usage: gametype <gametype>"
+		),
+		create_var_record(
+			"exec",
+			"Exec file, Usage: exec <config>"
+		),
+		create_var_record(
+			"disconnect",
+			"Disconnect from server"
+		),
+		create_var_record(
+			"reconnect",
+			"Reconnect to localhost"
+		),
+		create_var_record(
+			"hostmigration_start",
+			"Start host migration"
+		),
+		create_var_record(
+			"setperk",
+			"Set a perk, Usage: setperk <perk>"
+		),
+		create_var_record(
+			"killserver",
+			"Shutdown the server"
+		),
+		create_var_record(
+			"switchmaps",
+			"Switch now to the map"
+		),
+		create_var_record(
+			"msload",
+			"Start loading map switch, Usage: msload <map>"
+		),
+		create_var_record(
+			"mspreload",
+			"Start loading map switch, Usage: mspreload <map>"
+		),
+		create_var_record(
+			"fast_restart",
+			"Fast restart"
+		),
+		create_var_record(
+			"full_restart",
+			"Full restart"
+		),
+		create_var_record(
+			"clientkick_for_reason",
+			"Kick client with a reason, Usage: clientkick_for_reason <client number> <reason loc string>"
+		),
+		create_var_record(
+			"clientkick",
+			"Kick client, Usage: clientkick <client number>"
+		),
+		create_var_record(
+			"clearpsdata",
+			"clearpsdata"
+		),
+		// shield functions
+		create_var_record(
+			"reload_mods",
+			"Reload the shield mods"
+		),
+		create_var_record(
+			"hash_var",
+			"Hash and print a variable, Usage: hash_var <var>"
+		),
 	};
 
 	std::vector<const char*> get_dvars_list()

@@ -128,7 +128,7 @@ namespace game_console
 			con.screen_max[1] = game::ScrPlace_GetView(0)->realViewportSize[1] - 6.0f;
 
 			con.font_height = static_cast<float>(game::UI_TextHeight(R_DrawTextFont, con.font_scale));
-			con.visible_line_count = static_cast<int>((con.screen_max[1] - con.screen_min[1] - (con.font_height * 2)) - 24.0f) / con.font_height;
+			con.visible_line_count = (int)(static_cast<int>((con.screen_max[1] - con.screen_min[1] - (con.font_height * 2)) - 24.0f) / con.font_height);
 		}
 
 		void draw_box(const float x, const float y, const float w, const float h, float* color)
@@ -283,7 +283,7 @@ namespace game_console
 					draw_hint_text(0, dvars::get_value_string(dvar, &dvar->value->current).data(), con_inputDvarMatchColor, offset_x);
 					draw_hint_text(1, "  default", con_inputDvarInactiveValueColor);
 					draw_hint_text(1, dvars::get_value_string(dvar, &dvar->value->reset).data(), con_inputDvarInactiveValueColor, offset_x);
-					draw_hint_text(2, matches[0].desc, con_inputDescriptionColor, 0);
+					draw_hint_text(2, matches[0].desc.data(), con_inputDescriptionColor, 0);
 
 					auto offset_y = height + 3.f;
 					auto domain_lines = 1;
@@ -297,7 +297,7 @@ namespace game_console
 				{
 					auto offset_x = (con.screen_max[0] - con.screen_pointer.x) / 4.f;
 
-					draw_hint_text(0, matches[0].desc, con_inputCmdMatchColor, offset_x);
+					draw_hint_text(0, matches[0].desc.data(), con_inputCmdMatchColor, offset_x);
 				}
 
 				strncpy_s(con.auto_complete_choice, matches[0].name.data(), 64);
@@ -314,7 +314,7 @@ namespace game_console
 					auto* const dvar = dvars::find_dvar(matches[i].fnv1a);
 
 					draw_hint_text(static_cast<int>(i), matches[i].name.data(), dvar ? con_inputDvarMatchColor : con_inputCmdMatchColor);
-					draw_hint_text(static_cast<int>(i), matches[i].desc, dvar ? con_inputDvarMatchColor : con_inputCmdMatchColor, offset_x * 1.5f);
+					draw_hint_text(static_cast<int>(i), matches[i].desc.data(), dvar ? con_inputDvarMatchColor : con_inputCmdMatchColor, offset_x * 1.5f);
 
 					if (dvar)
 					{
@@ -706,6 +706,36 @@ namespace game_console
 		cl_char_event_hook.invoke<void>(localClientNum, key, isRepeated);
 	}
 
+	void hash_var()
+	{
+		game::CmdArgs* args = game::Sys_GetTLS()->cmdArgs;
+
+		if (args->argc[args->nesting] < 2)
+		{
+			logger::write(logger::LOG_TYPE_ERROR, "%s [var]+", args->argv[args->nesting][0]);
+			return;
+		}
+
+		for (size_t i = 1; i < args->argc[args->nesting]; i++)
+		{
+			const char* varname = args->argv[args->nesting][i];
+
+			uint64_t varhash = fnv1a::generate_hash_pattern(varname);
+
+			auto* const dvar = dvars::find_dvar(varhash);
+
+			if (!dvar)
+			{
+				logger::write(logger::LOG_TYPE_ERROR, "Can't find var %s", varname);
+				continue;
+			}
+
+			std::string varstr = dvars::get_value_string(dvar, &dvar->value->current);
+			logger::write(logger::LOG_TYPE_INFO, "=== %s ===", varname);
+			logger::write(logger::LOG_TYPE_INFO, varstr);
+			logger::write(logger::LOG_TYPE_INFO, dvars::get_domain_string(dvar->type, dvar->domain));
+		}
+	}
 
 	class component final : public component_interface
 	{
@@ -733,6 +763,9 @@ namespace game_console
 
 			con.font_scale = 0.38f;
 			con.max_suggestions = 24;
+
+			// hash and print a variable, todo later by replacing the hash functions of the console
+			Cmd_AddCommand("hash_var", hash_var);
 		}
 	};
 }
