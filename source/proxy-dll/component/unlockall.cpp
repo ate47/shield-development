@@ -166,7 +166,7 @@ namespace unlockall
 		void enable_unlock_hooks()
 		{
 			init_dvars();
-			game::Cbuf_AddText(0, utilities::string::va("set allitemsunlocked  %i;", (unlock["all"] || unlock["itemoptions"])));
+			game::Cbuf_AddText(0, utilities::string::va("set allitemsunlocked %i;", (unlock["all"] || unlock["itemoptions"])));
 			unlock_dvars_enabled = true;
 		}
 
