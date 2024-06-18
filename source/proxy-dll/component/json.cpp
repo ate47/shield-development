@@ -24,6 +24,7 @@ namespace json
 			{
 				iss.clear();
 				iss.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				//logger::write(logger::LOG_TYPE_INFO, "Conversion failed for input: " + str);
 				return T();
 			}
 			return result;

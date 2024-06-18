@@ -166,6 +166,7 @@ namespace unlockall
 		void enable_unlock_hooks()
 		{
 			init_dvars();
+			game::Cbuf_AddText(0, utilities::string::va("set allitemsunlocked  %i;", (unlock["all"] || unlock["itemoptions"])));
 			unlock_dvars_enabled = true;
 		}
 
@@ -466,7 +467,6 @@ namespace unlockall
 			unlock["items"] = utilities::json_config::ReadBoolean("unlock", "items", false);
 			unlock["zm_loot"] = utilities::json_config::ReadBoolean("unlock", "zm_loot", false);
 
-			game::Cbuf_AddText(0,  utilities::string::va("set allitemsunlocked  %i;", (unlock["all"] || unlock["itemoptions"])));
 
 			bg_emblemisentitlementbackgroundgranted_hook.create(0x144184D20_g, bg_emblemisentitlementbackgroundgranted);
 			bg_unlockablesemblemorbackinglockedbychallenge_hook.create(0x1406AC010_g, bg_unlockablesemblemorbackinglockedbychallenge);
