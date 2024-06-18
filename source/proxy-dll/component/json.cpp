@@ -9,6 +9,8 @@
 #include <utilities/json_config.hpp>
 #include <utilities/string.hpp>
 
+#include <sstream>
+
 namespace json
 {
 	namespace
@@ -20,8 +22,9 @@ namespace json
 			std::istringstream iss(str);
 			if (!(iss >> result))
 			{
-				T blank;
-				return blank;
+				iss.clear();
+				iss.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				return T();
 			}
 			return result;
 		}
@@ -50,7 +53,7 @@ namespace json
 		std::string value = params[3];
 		std::string type = utilities::string::to_lower(params[4]);
 		std::string filename = (params.size() >= 6) ? params[5] : utilities::json_config::DEFAULTJSON;
-
+		
 		if (type == "string")
 		{
 			utilities::json_config::WriteString(section.c_str(), key.c_str(), value, filename);
