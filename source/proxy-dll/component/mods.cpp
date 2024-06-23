@@ -13,6 +13,7 @@
 
 #include <utilities/io.hpp>
 #include <utilities/hook.hpp>
+#include <utilities/memory.hpp>
 
 namespace mods {
 	// GSC File magic (8 bytes)
@@ -24,11 +25,41 @@ namespace mods {
 	std::filesystem::path mod_dir = "project-bo4/mods";
 
 	namespace {
+		xassets::gfx_image* create_image(uint64_t name, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipCount, uint32_t imageFlags, xassets::gfx_pixel_format imageFormat, void* initData);
+		xassets::gfx_image* create_image(const char* name, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipCount, uint32_t imageFlags, xassets::gfx_pixel_format imageFormat, void* initData);
+
+		utilities::memory::allocator allocator;
+
 		template<typename T>
 		inline byte* align_ptr(byte* ptr)
 		{
 			return reinterpret_cast<byte*>((reinterpret_cast<uintptr_t>(ptr) + sizeof(T) - 1) & ~(sizeof(T) - 1));
 		}
+
+		struct image_file
+		{
+			uint64_t name;
+			uint32_t width;
+			uint32_t height;
+			uint32_t depth;
+			uint32_t mipCount;
+			uint32_t imageFlags;
+			xassets::gfx_pixel_format imageFormat;
+			byte* pixels{};
+
+			xassets::gfx_image* gfx{};
+
+			void* get_header()
+			{
+				if (!gfx)
+				{
+					gfx = create_image(name, width, height, depth, mipCount, imageFlags, imageFormat, pixels);
+					logger::write(logger::LOG_TYPE_DEBUG, std::format("loaded image {:x}", name));
+				}
+
+				return (void*)gfx;
+			}
+		};
 
 		struct raw_file
 		{
@@ -303,6 +334,7 @@ namespace mods {
 			std::vector<cache_entry> cache_entries{};
 			std::unordered_map<int64_t, int64_t> assets_redirects[xassets::ASSET_TYPE_COUNT] = {};
 			std::vector<xassets::bg_cache_info_def> custom_cache_entries{};
+			std::vector<image_file> images{};
 
 			xassets::bg_cache_info custom_cache
 			{
@@ -337,15 +369,27 @@ namespace mods {
 
 				for (char* str : allocated_strings)
 				{
-					delete str;
+					allocator.free(str);
 				}
+
+				for (image_file& gfx : images)
+				{
+					if (gfx.gfx)
+					{
+						allocator.free(gfx.gfx);
+					}
+					if (gfx.pixels)
+					{
+						allocator.free(gfx.pixels);
+					}
+				}
+
 				allocated_strings.clear();
 			}
 
 			char* allocate_string(const std::string& string)
 			{
-				char* str = new char[string.length() + 1];
-				memcpy(str, string.c_str(), string.length() + 1);
+				char* str = allocator.duplicate_string(string);
 
 				allocated_strings.emplace_back(str);
 
@@ -442,6 +486,14 @@ namespace mods {
 					auto it = std::find_if(localizes.begin(), localizes.end(), [name](const localize& file) { return file.header.name == name; });
 
 					if (it == localizes.end()) return nullptr;
+
+					return it->get_header();
+				}
+				case xassets::ASSET_TYPE_IMAGE:
+				{
+					auto it = std::find_if(images.begin(), images.end(), [name](const image_file& file) { return file.name == name; });
+
+					if (it == images.end()) return nullptr;
 
 					return it->get_header();
 				}
@@ -587,6 +639,85 @@ namespace mods {
 
 					logger::write(logger::LOG_TYPE_DEBUG, std::format("mod {}: loaded raw file {} -> {:x}", mod_name, raw_file_path.string(), tmp.header.name));
 					raw_files.emplace_back(tmp);
+				}
+				else if (!_strcmpi("image", type_val))
+				{
+					auto name_mb = member.FindMember("name");
+					auto path_mb = member.FindMember("path");
+
+					if (
+						name_mb == member.MemberEnd() || path_mb == member.MemberEnd()
+						|| !name_mb->value.IsString() || !path_mb->value.IsString()
+						)
+					{
+						logger::write(logger::LOG_TYPE_WARN, std::format("mod {} is containing a bad image def, missing/bad name or path", mod_name));
+						return false;
+					}
+
+					std::string buffer{};
+
+					std::filesystem::path path_cfg = path_mb->value.GetString();
+					std::filesystem::path file_path = path_cfg.is_absolute() ? path_cfg : (mod_path / path_cfg);
+
+					if (!utilities::io::read_file(file_path.string(), &buffer))
+					{
+						logger::write(logger::LOG_TYPE_ERROR, std::format("can't read image {} for mod {}", file_path.string(), mod_name));
+						return false;
+					}
+
+					byte* image_data = (byte*)buffer.data();
+
+					// TODO: add support for more images
+					// BMP magic
+					if (buffer.size() < 0x22 || *(uint16_t*)image_data != 0x4D42)
+					{
+						logger::write(logger::LOG_TYPE_ERROR, std::format("can't read image {} for mod {}, not a valid BMP image", file_path.string(), mod_name));
+						return false;
+					}
+					// https://en.wikipedia.org/wiki/BMP_file_format Windows BITMAPINFOHEADER
+					uint32_t pixels_offset = *(uint32_t*)(image_data + 0x0a);
+					uint32_t width = *(uint32_t*)(image_data + 0x12);
+					uint32_t height = *(uint32_t*)(image_data + 0x16);
+					uint16_t bits = *(uint16_t*)(image_data + 0x1c);
+					uint32_t compression = *(uint32_t*)(image_data + 0x1e);
+					size_t aligned_size = ((size_t)width * height * bits - 1) / 8 + 1;
+
+					if (aligned_size + pixels_offset > buffer.size())
+					{
+						logger::write(logger::LOG_TYPE_ERROR, std::format("can't read image {} for mod {}, invalid size", file_path.string(), mod_name));
+						return false;
+					}
+
+					xassets::gfx_pixel_format format;
+
+					// todo: cases
+					switch (bits)
+					{
+					case 32:
+						format = xassets::gfx_pixel_format::GFX_PF_A8R8G8B8;
+						break;
+					//case 1:
+					//case 4:
+					//case 8:
+					//case 16:
+					//case 24:
+					default:
+						logger::write(logger::LOG_TYPE_ERROR, std::format("can't read image {} for mod {}, invalid bits {}", file_path.string(), mod_name, bits));
+						return false;
+					}
+
+					if (compression != 0)
+					{
+						logger::write(logger::LOG_TYPE_ERROR, std::format("can't read image {} for mod {}, compressed images aren't supported", file_path.string(), mod_name));
+						return false;
+					}
+					uint64_t hash = fnv1a::generate_hash_pattern(name_mb->value.GetString());
+
+					image_file file{ hash, width, height, 1, 0, xassets::GFXF_2D, format, (byte*)allocator.allocate(aligned_size) };
+					memcpy(file.pixels, image_data + pixels_offset, aligned_size);
+
+					logger::write(logger::LOG_TYPE_DEBUG, std::format("mod {}: preloaded image {} -> {:x}", mod_name, file_path.string(), hash));
+					images.emplace_back(file);
 				}
 				else if (!_strcmpi("localizeentry", type_val))
 				{
@@ -1185,6 +1316,21 @@ namespace mods {
 				return err;
 			}
 		};
+
+		xassets::gfx_image* create_image(uint64_t name, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipCount, uint32_t imageFlags, xassets::gfx_pixel_format imageFormat, void* initData)
+		{
+			xassets::gfx_image* img = allocator.allocate<xassets::gfx_image>();
+
+			img->name = name;
+
+			xassets::Image_Setup(img, width, height, depth, mipCount, imageFlags, imageFormat, initData);
+
+			return img;
+		}
+		xassets::gfx_image* create_image(const char* name, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipCount, uint32_t imageFlags, xassets::gfx_pixel_format imageFormat, void* initData)
+		{
+			return create_image(fnv1a::generate_hash(name), width, height, depth, mipCount, imageFlags, imageFormat, initData);
+		}
 
 		mod_storage storage{};
 

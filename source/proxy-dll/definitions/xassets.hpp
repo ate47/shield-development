@@ -79,6 +79,73 @@ namespace xassets
 		uintptr_t unk56{};
 	};
 
+	enum gfx_pixel_format : int32_t
+	{
+		GFX_PF_INVALID = 0x0,
+		GFX_PF_UNKNOWN = 0x0,
+		GFX_PF_A8R8G8B8 = 21,
+	};
+
+	enum map_type : byte
+	{
+		MAPTYPE_NONE = 0x0,
+		MAPTYPE_2D = 0x1,
+		MAPTYPE_2D_ARRAY = 0x2,
+		MAPTYPE_3D = 0x3,
+		MAPTYPE_CUBE = 0x4,
+		MAPTYPE_CUBE_ARRAY = 0x5,
+		MAPTYPE_COUNT = 0x6,
+	};
+
+	enum gfx_flags : uint32_t
+	{
+		GFXF_2D = 0,
+		GFXF_UNK_2 = 0x2,
+		GFXF_CUBE = 0x4,
+		GFXF_3D = 0x8,
+		GFXF_UNK10 = 0x10,
+		GFXF_UNK20 = 0x20,
+		GFXF_UNK40 = 0x40,
+		GFXF_UNK80 = 0x80,
+		GFXF_UNK100 = 0x100,
+		GFXF_ARRAY = 0x200,
+	};
+
+	struct gfx_image
+	{
+		uintptr_t unk0;
+		uintptr_t unk8;
+		uintptr_t unk10;
+		byte* pixels;
+		uint64_t name{};
+		uint64_t name_null{};
+		uintptr_t unk30;
+		uint64_t unk38;
+		uint64_t unk40;
+		uint64_t unk48;
+		uint64_t unk50;
+		uint32_t imageFlags;
+		uint32_t unk5c;
+		uint32_t totalSize;
+		gfx_pixel_format imageFormat;
+		uint16_t width;
+		uint16_t height;
+		uint16_t depth;
+		uint16_t unk6e;
+		byte unk70;
+		byte unk71;
+		uint16_t unk72;
+		uint16_t unk74;
+		byte unk76;
+		byte alignment;
+		byte unk78;
+		map_type mapType;
+		byte levelCount;
+		byte unk7b;
+		uint32_t unk7c;
+		uint64_t unk80;
+	};
+
 	union xasset_header
 	{
 		raw_file_header* raw_file;
@@ -86,6 +153,7 @@ namespace xassets
 		scriptparsetree_header* scriptparsetree;
 		stringtable_header* stringtable;
 		localize_entry_header* localize;
+		gfx_image* gfx_image;
 		void* ptr;
 	};
 
@@ -343,4 +411,6 @@ namespace xassets
 	const char* DB_GetXAssetTypeName(XAssetType type);
 
 	WEAK game::symbol<xasset_header(XAssetType type, game::BO4_AssetRef_t* name, bool errorIfMissing, int waittime)> DB_FindXAssetHeader{ 0x142EB75B0_g };
+	WEAK game::symbol<void(gfx_image* image, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipCount, uint32_t imageFlags, gfx_pixel_format imageFormat, void* initData)> Image_Setup{ 0x1409213A0_g };
+
 }
