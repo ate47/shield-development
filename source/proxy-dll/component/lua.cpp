@@ -222,7 +222,7 @@ namespace lua {
 				utilities::hook::jump(0x143956090_g, lua_engine_print_warning);
 			}
 
-#ifdef DEBUG
+// #ifdef DEBUG
 			// ChatClientInputTextBoxField: 2224acf9f545df40
 			// chat_client_enabled
 			utilities::hook::jump(0x143A78590_g, lua_return_true);
@@ -230,7 +230,7 @@ namespace lua {
 			utilities::hook::jump(0x143A782D0_g, lua_return_true);
 
 			utilities::hook::jump(0x143A77ED0_g, lua_chatclient_get_channel);
-#endif
+// #endif
 
 			patch_unsafe_lua_functions();
 		}

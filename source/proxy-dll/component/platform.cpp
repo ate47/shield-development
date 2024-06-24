@@ -53,29 +53,29 @@ namespace auth
 		bool is_second_instance()
 		{
 			static const auto is_first = []
-			{
-				static utilities::nt::handle mutex = CreateMutexA(nullptr, FALSE, "shield_mutex");
-				return mutex && GetLastError() != ERROR_ALREADY_EXISTS;
-			}();
+				{
+					static utilities::nt::handle mutex = CreateMutexA(nullptr, FALSE, "shield_mutex");
+					return mutex && GetLastError() != ERROR_ALREADY_EXISTS;
+				}();
 
-			return !is_first;
+				return !is_first;
 		}
 
 		uint64_t get_guid()
 		{
 			static const auto guid = []() -> uint64_t
-			{
-				uint64_t hash = utilities::cryptography::xxh32::compute(get_key().get_public_key());
-				if (is_second_instance())
 				{
-					logger::write(logger::LOG_TYPE_INFO, "second instance: generating random xuid");
-					return hash + 1; // return 0x11000010 | (hash & ~0x80000000);
-				}
+					uint64_t hash = utilities::cryptography::xxh32::compute(get_key().get_public_key());
+					if (is_second_instance())
+					{
+						logger::write(logger::LOG_TYPE_INFO, "second instance: generating random xuid");
+						return hash + 1; // return 0x11000010 | (hash & ~0x80000000);
+					}
 
-				return hash;
-			}();
+					return hash;
+				}();
 
-			return guid;
+				return guid;
 		}
 	}
 }
@@ -177,4 +177,4 @@ namespace platform
 	};
 }
 
-    REGISTER_COMPONENT(platform::component)
+REGISTER_COMPONENT(platform::component)
