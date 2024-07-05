@@ -7,6 +7,7 @@
 #include <utilities/hook.hpp>
 #include <utilities/string.hpp>
 #include <utilities/finally.hpp>
+#include <utilities/json_config.hpp>
 
 namespace
 {
@@ -50,6 +51,13 @@ namespace
 		return GetSystemMetrics(nIndex);
 	}
 
+	void load_logger()
+	{
+		std::string level_name = utilities::json_config::ReadString("common", "log_level", logger::get_level_name(logger::LOG_TYPE_INFO));
+
+		logger::set_log_level(logger::get_level_from_name(level_name.c_str()));
+	}
+
 	void patch_imports()
 	{
 		patch_import("user32.dll", "GetSystemMetrics", get_system_metrics);
@@ -83,6 +91,7 @@ namespace
 
 			try
 			{
+				load_logger();
 				patch_imports();
 				remove_crash_file();
 
@@ -223,13 +232,13 @@ HRESULT D3D11CreateDevice(void* adapter, const uint64_t driver_type,
 	void** immediate_context)
 {
 	static auto func = []
-	{
-		char dir[MAX_PATH]{ 0 };
-		GetSystemDirectoryA(dir, sizeof(dir));
+		{
+			char dir[MAX_PATH]{ 0 };
+			GetSystemDirectoryA(dir, sizeof(dir));
 
-		const auto d3d11 = utilities::nt::library::load(dir + "/d3d11.dll"s);
-		return d3d11.get_proc<decltype(&D3D11CreateDevice)>("D3D11CreateDevice");
-	}();
+			const auto d3d11 = utilities::nt::library::load(dir + "/d3d11.dll"s);
+			return d3d11.get_proc<decltype(&D3D11CreateDevice)>("D3D11CreateDevice");
+		}();
 
 	return func(adapter, driver_type, software, flags, p_feature_levels, feature_levels, sdk_version, device,
 		feature_level, immediate_context);
