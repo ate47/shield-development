@@ -25,6 +25,15 @@ namespace game
 		uint8_t flags;
 	};
 
+	struct GSC_STRINGTABLE_ITEM
+	{
+		uint32_t string;
+		uint8_t num_address;
+		uint8_t type;
+		uint16_t __pad;
+	};
+
+
 	struct GSC_OBJ
 	{
 		byte magic[8];
@@ -38,7 +47,7 @@ namespace game
 		int32_t string_offset;
 		int16_t imports_count;
 		uint16_t fixup_count;
-		int32_t ukn2c;
+		int32_t devblock_string_offset;
 		int32_t exports_offset;
 		int32_t ukn34;
 		int32_t imports_offset;
@@ -47,7 +56,8 @@ namespace game
 		int32_t globalvar_offset;
 		int32_t script_size;
 		int32_t requires_implements_offset;
-		int32_t ukn50;
+		int16_t ukn50;
+		int16_t devblock_string_count;
 		int32_t cseg_size;
 		uint16_t include_count;
 		byte ukn5a;
@@ -66,6 +76,16 @@ namespace game
 		inline uint64_t* get_includes()
 		{
 			return reinterpret_cast<uint64_t*>(magic + include_offset);
+		}
+
+		inline GSC_STRINGTABLE_ITEM* get_stringtable()
+		{
+			return reinterpret_cast<GSC_STRINGTABLE_ITEM*>(magic + string_offset);
+		}
+
+		inline GSC_STRINGTABLE_ITEM* get_devblock_stringtable()
+		{
+			return reinterpret_cast<GSC_STRINGTABLE_ITEM*>(magic + devblock_string_offset);
 		}
 
 		inline GSC_EXPORT_ITEM* get_exports_end()

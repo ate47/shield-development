@@ -1,6 +1,7 @@
 #include <std_include.hpp>
 #include "gsc_custom.hpp"
 #include "gsc_funcs.hpp"
+#include "gsc_checksum.hpp"
 #include "hashes.hpp"
 #include "definitions/game.hpp"
 #include "definitions/xassets.hpp"
@@ -525,6 +526,9 @@ namespace gsc_custom
 
 		// link the detours with the new linked scripts group
 		gsc_custom::link_detours(inst);
+
+		// compute the gsc vm checksum with the added group
+		gsc::checksum::compute_script_checksum(inst);
 	}
 
 	int32_t gsc_obj_resolve_stub(game::scriptInstance_t inst, game::GSC_OBJ* prime_obj)
